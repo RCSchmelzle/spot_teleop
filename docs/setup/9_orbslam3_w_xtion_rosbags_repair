@@ -31,3 +31,16 @@ Current symptom:
 DEBUGGING STEPS
 --------------------------------------------------------------------------------
 
+
+Step 1: Check library compatibility
+-------------------------------------
+$ ldd ~/Projects/teleoperation_spot/cpp/ORB_SLAM3/lib/libORB_SLAM3.so | grep -E "libstdc\+\+|libgcc"
+	libstdc++.so.6 => /lib/x86_64-linux-gnu/libstdc++.so.6 (0x00007d50f0c00000)
+	libgcc_s.so.1 => /lib/x86_64-linux-gnu/libgcc_s.so.1 (0x00007d50f1586000)
+
+$ ldd install/orbslam3/lib/orbslam3/rgbd | grep -E "libstdc\+\+|libgcc"
+	libstdc++.so.6 => /lib/x86_64-linux-gnu/libstdc++.so.6 (0x0000729b12800000)
+	libgcc_s.so.1 => /lib/x86_64-linux-gnu/libgcc_s.so.1 (0x0000729b126e9000)
+
+Result: Both using same libstdc++, no ABI mismatch here.
+

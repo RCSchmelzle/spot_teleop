@@ -18,3 +18,7 @@ xtion_20*.bag/
 .idea/
 *~
 .DS_Store
+
+# Rosbag recordings
+*.bag/
+*.mcap
