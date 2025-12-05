@@ -1,0 +1,25 @@
+-- Install configuration: ""
+-- Up-to-date: /home/rysch01/Projects/teleoperation_spot/system_ws/install/asus_xtion_description/share/asus_xtion_description/launch
+-- Up-to-date: /home/rysch01/Projects/teleoperation_spot/system_ws/install/asus_xtion_description/share/asus_xtion_description/launch/robot_state_publisher.launch.py
+-- Up-to-date: /home/rysch01/Projects/teleoperation_spot/system_ws/install/asus_xtion_description/share/asus_xtion_description/meshes
+-- Up-to-date: /home/rysch01/Projects/teleoperation_spot/system_ws/install/asus_xtion_description/share/asus_xtion_description/meshes/asus_xtion_pro_live.dae
+-- Up-to-date: /home/rysch01/Projects/teleoperation_spot/system_ws/install/asus_xtion_description/share/asus_xtion_description/meshes/asus_xtion_pro_live.png
+-- Up-to-date: /home/rysch01/Projects/teleoperation_spot/system_ws/install/asus_xtion_description/share/asus_xtion_description/urdf
+-- Up-to-date: /home/rysch01/Projects/teleoperation_spot/system_ws/install/asus_xtion_description/share/asus_xtion_description/urdf/asus_xtion.urdf.xacro
+-- Up-to-date: /home/rysch01/Projects/teleoperation_spot/system_ws/install/asus_xtion_description/share/asus_xtion_description/robots
+-- Up-to-date: /home/rysch01/Projects/teleoperation_spot/system_ws/install/asus_xtion_description/share/asus_xtion_description/robots/asus_xtion.urdf.xacro
+-- Up-to-date: /home/rysch01/Projects/teleoperation_spot/system_ws/install/asus_xtion_description/share/ament_index/resource_index/package_run_dependencies/asus_xtion_description
+-- Up-to-date: /home/rysch01/Projects/teleoperation_spot/system_ws/install/asus_xtion_description/share/ament_index/resource_index/parent_prefix_path/asus_xtion_description
+-- Up-to-date: /home/rysch01/Projects/teleoperation_spot/system_ws/install/asus_xtion_description/share/asus_xtion_description/environment/ament_prefix_path.sh
+-- Up-to-date: /home/rysch01/Projects/teleoperation_spot/system_ws/install/asus_xtion_description/share/asus_xtion_description/environment/ament_prefix_path.dsv
+-- Up-to-date: /home/rysch01/Projects/teleoperation_spot/system_ws/install/asus_xtion_description/share/asus_xtion_description/environment/path.sh
+-- Up-to-date: /home/rysch01/Projects/teleoperation_spot/system_ws/install/asus_xtion_description/share/asus_xtion_description/environment/path.dsv
+-- Up-to-date: /home/rysch01/Projects/teleoperation_spot/system_ws/install/asus_xtion_description/share/asus_xtion_description/local_setup.bash
+-- Up-to-date: /home/rysch01/Projects/teleoperation_spot/system_ws/install/asus_xtion_description/share/asus_xtion_description/local_setup.sh
+-- Up-to-date: /home/rysch01/Projects/teleoperation_spot/system_ws/install/asus_xtion_description/share/asus_xtion_description/local_setup.zsh
+-- Up-to-date: /home/rysch01/Projects/teleoperation_spot/system_ws/install/asus_xtion_description/share/asus_xtion_description/local_setup.dsv
+-- Up-to-date: /home/rysch01/Projects/teleoperation_spot/system_ws/install/asus_xtion_description/share/asus_xtion_description/package.dsv
+-- Up-to-date: /home/rysch01/Projects/teleoperation_spot/system_ws/install/asus_xtion_description/share/ament_index/resource_index/packages/asus_xtion_description
+-- Up-to-date: /home/rysch01/Projects/teleoperation_spot/system_ws/install/asus_xtion_description/share/asus_xtion_description/cmake/asus_xtion_descriptionConfig.cmake
+-- Up-to-date: /home/rysch01/Projects/teleoperation_spot/system_ws/install/asus_xtion_description/share/asus_xtion_description/cmake/asus_xtion_descriptionConfig-version.cmake
+-- Up-to-date: /home/rysch01/Projects/teleoperation_spot/system_ws/install/asus_xtion_description/share/asus_xtion_description/package.xml

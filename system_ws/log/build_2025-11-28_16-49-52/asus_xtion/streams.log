@@ -1,0 +1,30 @@
+[0.009s] Invoking command in '/home/rysch01/Projects/teleoperation_spot/system_ws/build/asus_xtion': AMENT_PREFIX_PATH=/home/rysch01/Projects/teleoperation_spot/system_ws/install/asus_xtion_description:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/rysch01/Projects/teleoperation_spot/system_ws/install/asus_xtion_description:/opt/ros/jazzy/opt/gz_math_vendor:/opt/ros/jazzy/opt/gz_utils_vendor:/opt/ros/jazzy/opt/gz_cmake_vendor:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake /home/rysch01/Projects/teleoperation_spot/system_ws/src/ros2_asus_xtion/asus_xtion -DCMAKE_INSTALL_PREFIX=/home/rysch01/Projects/teleoperation_spot/system_ws/install/asus_xtion
+[0.080s] -- The C compiler identification is GNU 13.3.0
+[0.152s] -- The CXX compiler identification is GNU 13.3.0
+[0.175s] -- Detecting C compiler ABI info
+[0.304s] -- Detecting C compiler ABI info - done
+[0.317s] -- Check for working C compiler: /usr/bin/cc - skipped
+[0.318s] -- Detecting C compile features
+[0.319s] -- Detecting C compile features - done
+[0.332s] -- Detecting CXX compiler ABI info
+[0.471s] -- Detecting CXX compiler ABI info - done
+[0.487s] -- Check for working CXX compiler: /usr/bin/c++ - skipped
+[0.488s] -- Detecting CXX compile features
+[0.489s] -- Detecting CXX compile features - done
+[0.492s] -- Found ament_cmake: 2.5.4 (/opt/ros/jazzy/share/ament_cmake/cmake)
+[0.689s] -- Found Python3: /usr/bin/python3 (found version "3.12.3") found components: Interpreter 
+[0.794s] -- Found openni2_camera: 2.2.2 (/opt/ros/jazzy/share/openni2_camera/cmake)
+[0.841s] -- Found rosidl_generator_c: 4.6.6 (/opt/ros/jazzy/share/rosidl_generator_c/cmake)
+[0.852s] -- Found rosidl_generator_cpp: 4.6.6 (/opt/ros/jazzy/share/rosidl_generator_cpp/cmake)
+[0.863s] -- Using all available rosidl_typesupport_c: rosidl_typesupport_fastrtps_c;rosidl_typesupport_introspection_c
+[0.872s] -- Using all available rosidl_typesupport_cpp: rosidl_typesupport_fastrtps_cpp;rosidl_typesupport_introspection_cpp
+[0.922s] -- Found rmw_implementation_cmake: 7.3.2 (/opt/ros/jazzy/share/rmw_implementation_cmake/cmake)
+[0.924s] -- Found rmw_fastrtps_cpp: 8.4.3 (/opt/ros/jazzy/share/rmw_fastrtps_cpp/cmake)
+[1.010s] -- Found OpenSSL: /usr/lib/x86_64-linux-gnu/libcrypto.so (found version "3.0.13")  
+[1.037s] -- Found FastRTPS: /opt/ros/jazzy/include (Required is at least version "2.13") 
+[1.067s] -- Using RMW implementation 'rmw_fastrtps_cpp' as default
+[1.203s] -- Setting yaml-cpp_DIR to: '/opt/ros/jazzy/share/yaml_cpp_vendor/cmake/../../../opt/yaml_cpp_vendor/share/cmake/yaml-cpp'
+[1.240s] -- Found asus_xtion_description: 2.0.1 (/home/rysch01/Projects/teleoperation_spot/system_ws/install/asus_xtion_description/share/asus_xtion_description/cmake)
+[1.289s] -- Configuring done (1.3s)
+[1.292s] -- Generating done (0.0s)
+[1.293s] -- Build files have been written to: /home/rysch01/Projects/teleoperation_spot/system_ws/build/asus_xtion

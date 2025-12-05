@@ -1,0 +1,73 @@
+mkdir -p ~/Projects/teleoperation_spot/system_ws/src
+cd ~/Projects/teleoperation_spot/system_ws/src
+
+
+git clone https://github.com/mgonzs13/ros2_asus_xtion.git
+cd ~/Projects/teleoperation_spot/system_ws
+
+# Make sure ROS 2 Jazzy is sourced
+source /opt/ros/jazzy/setup.bash
+sudo rosdep init
+rosdep update
+rosdep install --from-paths src --ignore-src -r -y
+colcon build --packages-skip asus_xtion_gazebo
+source install/setup.bash
+ros2 launch asus_xtion asus_xtion.launch.py
+
+
+
+# verify in new terminal
+rysch01@rysch01-Legion-Pro-5-2404:~/Projects/teleoperation_spot/system_ws$ source /opt/ros/jazzy/setup.bash
+source ~/Projects/teleoperation_spot/system_ws/install/setup.bash
+ros2 topic list
+source /opt/ros/jazzy/setup.bash
+source ~/Projects/teleoperation_spot/system_ws/install/setup.bash
+
+ros2 run image_tools showimage --ros-args -r image:=/camera/rgb/image_raw
+
+
+
+  Resolution Mode Parameters
+
+  Add these parameters to the parameters=[{...}] section in single_asus_xtion.launch.py:
+
+  parameters=[{
+      'device_id': device_id,
+
+      # Color/RGB resolution modes:
+      'color_mode': '5',   # Options:
+                           # '1' = 320x240 @ 30fps
+                           # '5' = 640x480 @ 30fps (DEFAULT)
+                           # '9' = 1280x1024 @ 30fps (SXGA - max for Xtion)
+
+      # Depth resolution modes:
+      'depth_mode': '5',   # Options:
+                           # '1' = 320x240 @ 30fps (QVGA)
+                           # '5' = 640x480 @ 30fps (VGA - DEFAULT, max for depth)
+                           # Note: Depth is limited to 640x480 by hardware
+
+      # IR resolution modes (if using IR instead of RGB):
+      'ir_mode': '5',      # Same options as depth_mode
+  }],
+
+  Key Points
+
+  - Default: Mode 5 (640x480 @ 30fps) for all streams
+  - Max RGB: Mode 9 (1280x1024 @ 30fps)
+  - Max Depth: Mode 5 (640x480 @ 30fps) - hardware limitation
+  - Lower res options: Mode 1 (320x240) for faster processing/bandwidth
+
+  Example Configurations
+
+  High quality RGB with standard depth:
+  'color_mode': '9',   # 1280x1024
+  'depth_mode': '5',   # 640x480
+
+  Balanced (current default):
+  'color_mode': '5',   # 640x480
+  'depth_mode': '5',   # 640x480
+
+  Low bandwidth/fast processing:
+  'color_mode': '1',   # 320x240
+  'depth_mode': '1',   # 320x240
+

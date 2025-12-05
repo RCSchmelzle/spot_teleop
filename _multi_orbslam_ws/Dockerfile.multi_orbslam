@@ -1,0 +1,17 @@
+FROM osrf/ros:noetic-desktop
+
+# Basic tools + ORB-SLAM dependencies
+RUN apt-get update && apt-get install -y \
+    git build-essential cmake python3-pip python3-catkin-tools \
+    libopencv-dev libeigen3-dev libboost-all-dev libsuitesparse-dev \
+    libqt5opengl5-dev libqglviewer-dev-qt5 libglew-dev libepoxy-dev \
+ && rm -rf /var/lib/apt/lists/*
+
+# Create the ROS1 workspace
+RUN mkdir -p /root/_multi_orbslam_ws/src
+
+# Auto-source ROS1 and cd into workspace when a shell starts
+RUN echo "source /opt/ros/noetic/setup.bash" >> /root/.bashrc && \
+    echo "cd /root/_multi_orbslam_ws" >> /root/.bashrc
+
+WORKDIR /root/_multi_orbslam_ws

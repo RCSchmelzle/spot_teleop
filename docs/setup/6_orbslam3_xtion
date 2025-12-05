@@ -1,0 +1,1590 @@
+cd ~/Projects/teleoperation_spot
+
+# create a dedicated ROS1/catkin workspace
+mkdir -p _multi_orbslam_ws/src
+cd _multi_orbslam_ws
+
+# init catkin if you use catkin_tools
+sudo apt install python3-catkin-tools
+catkin init
+sudo apt install catkin-tools
+sudo apt update
+sudo apt install build-essential cmake git \
+    libopencv-dev \
+    libeigen3-dev \
+    libboost-all-dev \
+    libsuitesparse-dev \
+    libqt5opengl5-dev libqglviewer-dev-qt5 \
+    libglew-dev
+
+
+rysch01@rysch01-Legion-Pro-5-2404:~/Projects/teleoperation_spot/_multi_orbslam_ws$ cd ~/src   # or wherever you keep 3rd-party libs
+git clone https://github.com/stevenlovegrove/Pangolin.git
+cd Pangolin
+mkdir build && cd build
+bash: cd: /home/rysch01/src: No such file or directory
+Cloning into 'Pangolin'...
+remote: Enumerating objects: 27021, done.
+remote: Counting objects: 100% (686/686), done.
+remote: Compressing objects: 100% (293/293), done.
+remote: Total 27021 (delta 484), reused 396 (delta 393), pack-reused 26335 (from 3)
+Receiving objects: 100% (27021/27021), 49.99 MiB | 9.99 MiB/s, done.
+Resolving deltas: 100% (17696/17696), done.
+rysch01@rysch01-Legion-Pro-5-2404:~/Projects/teleoperation_spot/_multi_orbslam_ws/Pangolin/build$ cmake ..
+make -j$(nproc)
+sudo make install
+-- The C compiler identification is GNU 13.3.0
+-- The CXX compiler identification is GNU 13.3.0
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: /usr/bin/cc - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /usr/bin/c++ - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Setting build type to 'Release' as none was specified.
+-- libpng Found and Enabled
+-- libjpeg Found and Enabled
+-- libtiff Found and Enabled
+-- liblz4 Found and Enabled
+-- libzstd Found and Enabled
+-- Found Eigen: '/usr/include/eigen3'
+-- Found OpenGL: /usr/lib/x86_64-linux-gnu/libOpenGL.so  found components: OpenGL EGL 
+CMake Error at /usr/share/cmake-3.28/Modules/FindPackageHandleStandardArgs.cmake:230 (message):
+  Could NOT find epoxy (missing: epoxy_LIBRARIES epoxy_INCLUDE_DIRS)
+Call Stack (most recent call first):
+  /usr/share/cmake-3.28/Modules/FindPackageHandleStandardArgs.cmake:600 (_FPHSA_FAILURE_MESSAGE)
+  cmake/Findepoxy.cmake:63 (find_package_handle_standard_args)
+  components/pango_opengl/CMakeLists.txt:50 (find_package)
+  CMakeLists.txt:125 (include)
+
+
+-- Configuring incomplete, errors occurred!
+make: *** No targets specified and no makefile found.  Stop.
+make: *** No rule to make target 'install'.  Stop.
+rysch01@rysch01-Legion-Pro-5-2404:~/Projects/teleoperation_spot/_multi_orbslam_ws/Pangolin/build$ ^C
+
+
+
+sudo apt update
+sudo apt install libepoxy-dev
+cd ~/Projects/teleoperation_spot/_multi_orbslam_ws/Pangolin/build
+rm -rf ./*
+
+cmake ..
+make -j"$(nproc)"
+sudo make install
+cd ~/Projects/teleoperation_spot/_multi_orbslam_ws/src
+git clone https://github.com/yutongwangBIT/multi_orbslam3.git
+rysch01@rysch01-Legion-Pro-5-2404:~/Projects/teleoperation_spot/_multi_orbslam_ws/src$ cd ~/Projects/teleoperation_spot/_multi_orbslam_ws
+catkin build
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Profile:                     default
+Extending:             [env] /home/rysch01/Projects/teleoperation_spot/system_ws/install/asus_xtion_visualization:/home/rysch01/Projects/teleoperation_spot/system_ws/install/asus_xtion:/home/rysch01/Projects/teleoperation_spot/system_ws/install/asus_xtion_description:/opt/ros/jazzy/opt/gz_math_vendor:/opt/ros/jazzy/opt/gz_utils_vendor:/opt/ros/jazzy/opt/gz_cmake_vendor
+Workspace:                   /home/rysch01/Projects/teleoperation_spot/_multi_orbslam_ws
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Build Space:        [exists] /home/rysch01/Projects/teleoperation_spot/_multi_orbslam_ws/build
+Devel Space:        [exists] /home/rysch01/Projects/teleoperation_spot/_multi_orbslam_ws/devel
+Install Space:      [unused] /home/rysch01/Projects/teleoperation_spot/_multi_orbslam_ws/install
+Log Space:         [missing] /home/rysch01/Projects/teleoperation_spot/_multi_orbslam_ws/logs
+Source Space:       [exists] /home/rysch01/Projects/teleoperation_spot/_multi_orbslam_ws/src
+DESTDIR:            [unused] None
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Devel Space Layout:          linked
+Install Space Layout:        None
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Additional CMake Args:       None
+Additional Make Args:        None
+Additional catkin Make Args: None
+Internal Make Job Server:    True
+Cache Job Environments:      False
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Buildlisted Packages:        None
+Skiplisted Packages:         None
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Workspace configuration appears valid.
+
+NOTE: Forcing CMake to run for each package.
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+[build] Found 1 packages in 0.0 seconds.                                                                                                                                                                                                               
+[build] Updating package table.                                                                                                                                                                                                                        
+Starting  >>> catkin_tools_prebuild                                                                                                                                                                                                                    
+_______________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+Errors     << catkin_tools_prebuild:cmake /home/rysch01/Projects/teleoperation_spot/_multi_orbslam_ws/logs/catkin_tools_prebuild/build.cmake.000.log                                                                                                   
+CMake Deprecation Warning at CMakeLists.txt:1 (cmake_minimum_required):
+  Compatibility with CMake < 3.5 will be removed from a future version of
+  CMake.
+
+  Update the VERSION argument <min> value or use a ...<max> suffix to tell
+  CMake that the project does not need compatibility with older versions.
+
+
+CMake Error at CMakeLists.txt:12 (message):
+  The catkin CMake module was not found, but it is required to build a linked
+  workspace.  To resolve this, please do one of the following, and try
+  building again.
+
+
+
+   1. Source the setup.sh file from an existing catkin workspace:
+      source SETUP_FILE
+
+
+
+   2. Extend another catkin workspace's result (install or devel) space:
+      catkin config --extend RESULT_SPACE
+
+
+
+   3. Set `catkin_DIR` to the directory containing `catkin-config.cmake`:
+      catkin config --cmake-args -Dcatkin_DIR=CATKIN_CMAKE_CONFIG_PATH
+
+
+
+   4. Add the catkin source package to your workspace's source space:
+      cd SOURCE_SPACE && git clone https://github.com/ros/catkin.git
+
+
+cd /home/rysch01/Projects/teleoperation_spot/_multi_orbslam_ws/build/catkin_tools_prebuild; catkin build --get-env catkin_tools_prebuild | catkin env -si  /usr/bin/cmake /home/rysch01/Projects/teleoperation_spot/_multi_orbslam_ws/build/catkin_tools_prebuild --no-warn-unused-cli -DCATKIN_DEVEL_PREFIX=/home/rysch01/Projects/teleoperation_spot/_multi_orbslam_ws/devel/.private/catkin_tools_prebuild -DCMAKE_INSTALL_PREFIX=/home/rysch01/Projects/teleoperation_spot/_multi_orbslam_ws/install; cd -
+
+.......................................................................................................................................................................................................................................................
+Failed     << catkin_tools_prebuild:cmake          [ Exited with code 1 ]                                                                                                                                                                              
+Failed    <<< catkin_tools_prebuild                [ 0.5 seconds ]                                                                                                                                                                                     
+Abandoned <<< orb_slam3_ros                        [ Unrelated job failed ]                                                                                                                                                                            
+[build] Summary: 0 of 2 packages succeeded.                                                                                                                                                                                                            
+[build]   Ignored:   None.                                                                                                                                                                                                                             
+[build]   Warnings:  None.                                                                                                                                                                                                                             
+[build]   Abandoned: 1 packages were abandoned.                                                                                                                                                                                                        
+[build]   Failed:    1 packages failed.                                                                                                                                                                                                                
+[build] Runtime: 0.5 seconds total.                                                                                                                                                                                                                    
+rysch01@rysch01-Legion-Pro-5-2404:~/Projects/teleoperation_spot/_multi_orbslam_ws$ 
+rysch01@rysch01-Legion-Pro-5-2404:~/Projects/teleoperation_spot/_multi_orbslam_ws$ ^C
+rysch01@rysch01-Legion-Pro-5-2404:~/Projects/teleoperation_spot/_multi_orbslam_ws$ sudo apt install \
+  ros-noetic-cv-bridge \
+  ros-noetic-image-transport \
+  ros-noetic-tf \
+  ros-noetic-roscpp
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+E: Unable to locate package ros-noetic-cv-bridge
+E: Unable to locate package ros-noetic-image-transport
+E: Unable to locate package ros-noetic-tf
+E: Unable to locate package ros-noetic-roscpp
+rysch01@rysch01-Legion-Pro-5-2404:~/Projects/teleoperation_spot/_multi_orbslam_ws$ 
+
+
+
+
+cat <<'EOF' > Dockerfile.multi_orbslam
+FROM ros:noetic-desktop
+
+# Basic tools + ORB-SLAM dependencies
+RUN apt-get update && apt-get install -y \
+    git build-essential cmake python3-pip python3-catkin-tools \
+    libopencv-dev libeigen3-dev libboost-all-dev libsuitesparse-dev \
+    libqt5opengl5-dev libqglviewer-dev-qt5 libglew-dev libepoxy-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+# Create the ROS1 workspace
+RUN mkdir -p /root/_multi_orbslam_ws/src
+
+# Auto-source ROS1 on container start
+RUN echo "source /opt/ros/noetic/setup.bash" >> /root/.bashrc && \
+    echo "cd /root/_multi_orbslam_ws" >> /root/.bashrc
+
+WORKDIR /root/_multi_orbslam_ws
+EOF
+
+
+
+docker build -t multi_orbslam:noetic -f Dockerfile.multi_orbslam .
+cd ~/Projects/teleoperation_spot
+
+# Remove the corrupted file if it exists
+rm -f Dockerfile.multi_orbslam
+
+# Create a clean Dockerfile that uses osrf/ros:noetic-desktop
+cat <<'EOF' > Dockerfile.multi_orbslam
+FROM osrf/ros:noetic-desktop
+
+# Basic tools + ORB-SLAM dependencies
+RUN apt-get update && apt-get install -y \
+    git build-essential cmake python3-pip python3-catkin-tools \
+    libopencv-dev libeigen3-dev libboost-all-dev libsuitesparse-dev \
+    libqt5opengl5-dev libqglviewer-dev-qt5 libglew-dev libepoxy-dev \
+ && rm -rf /var/lib/apt/lists/*
+
+# Create the ROS1 workspace
+RUN mkdir -p /root/_multi_orbslam_ws/src
+
+# Auto-source ROS1 and cd into workspace when a shell starts
+RUN echo "source /opt/ros/noetic/setup.bash" >> /root/.bashrc && \
+    echo "cd /root/_multi_orbslam_ws" >> /root/.bashrc
+
+WORKDIR /root/_multi_orbslam_ws
+EOF
+
+
+
+docker build -t multi_orbslam:noetic -f Dockerfile.multi_orbslam .
+
+
+
+cd ~/Projects/teleoperation_spot/_multi_orbslam_ws
+
+cat <<'EOF' > ../run_multi_orbslam.sh
+#!/bin/bash
+docker run --rm -it \
+  --net=host \
+  -e DISPLAY=$DISPLAY \
+  -v /tmp/.X11-unix:/tmp/.X11-unix \
+  -v $HOME/Projects/teleoperation_spot:/root/teleoperation_spot \
+  multi_orbslam:noetic
+EOF
+
+chmod +x ../run_multi_orbslam.sh
+
+
+cd ~/Projects/teleoperation_spot
+./run_multi_orbslam.sh
+
+
+# Inside container
+source /opt/ros/noetic/setup.bash
+
+cd /root/_multi_orbslam_ws
+catkin init
+catkin config --extend /opt/ros/noetic
+
+
+
+exit
+cd ~/Projects/teleoperation_spot
+
+cat <<'EOF' > run_multi_orbslam.sh
+#!/bin/bash
+docker run --rm -it \
+  --net=host \
+  -e DISPLAY=$DISPLAY \
+  -v /tmp/.X11-unix:/tmp/.X11-unix \
+  -v $HOME/Projects/teleoperation_spot/_multi_orbslam_ws:/root/_multi_orbslam_ws \
+  multi_orbslam:noetic
+EOF
+
+chmod +x run_multi_orbslam.sh
+
+
+cd ~/Projects/teleoperation_spot
+./run_multi_orbslam.sh
+source /opt/ros/noetic/setup.bash
+
+
+cd /root
+git clone https://github.com/stevenlovegrove/Pangolin.git
+cd Pangolin
+mkdir build && cd build
+cmake ..
+cmake --build . -j"$(nproc)"
+cmake --build . --target install
+ldconfig
+cd ~/Pangolin
+# Drop the global -Werror (so warnings don’t kill the build)
+sed -i 's/add_compile_options(-Wall -Wextra -Werror)/add_compile_options(-Wall -Wextra)/' CMakeLists.txt
+
+# Remove the Clang-only warning flags that GCC doesn’t recognize
+sed -i '/-Wno-null-pointer-arithmetic/d' CMakeLists.txt
+sed -i '/-Wno-null-pointer-subtraction/d' CMakeLists.txt
+sed -i '/-Wno-deprecated-register/d' CMakeLists.txt
+cd ~/Pangolin/build
+rm -rf ./*
+
+cmake ..
+cmake --build . -j"$(nproc)"
+cmake --build . --target install
+ldconfig
+cd ~/Projects/teleoperation_spot
+./run_multi_orbslam.sh    # drops you in the container at /root/_multi_orbslam_ws
+
+# inside container:
+source /opt/ros/noetic/setup.bash
+cd /root/_multi_orbslam_ws
+apt-get update
+apt-get install -y \
+  ros-noetic-cv-bridge \
+  ros-noetic-image-transport \
+  ros-noetic-tf \
+  ros-noetic-message-filters \
+  ros-noetic-roscpp
+cd /root/_multi_orbslam_ws/src
+
+# ORB-SLAM3 core
+git clone https://github.com/UZ-SLAMLab/ORB_SLAM3.git
+
+# One common ROS wrapper (if you’re *not* already using another one)
+git clone https://github.com/thien94/orb_slam3_ros.git
+cd /root/_multi_orbslam_ws/src
+
+# ORB-SLAM3 core (with submodules)
+git clone --recursive https://github.com/UZ-SLAMLab/ORB_SLAM3.git
+
+# ROS wrapper (single-camera / basic multi-camera support)
+git clone https://github.com/thien94/orb_slam3_ros.git
+cd /root/_multi_orbslam_ws/src/ORB_SLAM3
+
+chmod +x build.sh
+
+# Help CMake see the Pangolin you just installed under /usr/local
+export CMAKE_PREFIX_PATH=/usr/local:$CMAKE_PREFIX_PATH
+
+./build.sh
+export Pangolin_DIR=/usr/local/lib/cmake/Pangolin
+./build.sh
+cd ~/Projects/teleoperation_spot
+./run_multi_orbslam.sh   # starts the container, drops you at /root/_multi_orbslam_ws
+cd /root/_multi_orbslam_ws/src/ORB_SLAM3
+sed -i 's/find_package(OpenCV 4.4/find_package(OpenCV 4.2/' CMakeLists.txt
+sed -i 's/VERSION_GREATER "4.4"/VERSION_GREATER_EQUAL "4.2"/' CMakeLists.txt
+sed -i 's/OpenCV > 4.4 not found./OpenCV >= 4.2 not found./' CMakeLists.txt
+rm -rf build
+mkdir build
+cd build
+
+# Make sure Pangolin can be found:
+export CMAKE_PREFIX_PATH=/usr/local:$CMAKE_PREFIX_PATH
+export Pangolin_DIR=/usr/local/lib/cmake/Pangolin
+
+cmake ..
+make -j"$(nproc)"
+
+
+cd /root
+
+# Clone Pangolin if it isn't already there
+if [ ! -d Pangolin ]; then
+  git clone https://github.com/stevenlovegrove/Pangolin.git
+fi
+
+cd Pangolin
+mkdir -p build && cd build
+
+cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr/local ..
+cmake --build . -j"$(nproc)"
+cmake --build . --target install
+ldconfig
+cd /root/Pangolin
+
+# 1. Drop -Werror so warnings don’t kill the build
+sed -i 's/add_compile_options(.*-Werror.*)/add_compile_options(-Wall -Wextra)/' CMakeLists.txt
+
+# 2. Remove the Clang-only warning flags that GCC hates
+sed -i '/-Wno-null-pointer-arithmetic/d' CMakeLists.txt
+sed -i '/-Wno-null-pointer-subtraction/d' CMakeLists.txt
+sed -i '/-Wno-deprecated-register/d' CMakeLists.txt
+cd /root/Pangolin
+rm -rf build
+mkdir build && cd build
+
+cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr/local ..
+cmake --build . -j"$(nproc)"
+cmake --build . --target install
+ldconfig
+ls /usr/local/lib/cmake/Pangolin
+cd /root/_multi_orbslam_ws/src/ORB_SLAM3
+
+# fresh build dir
+rm -rf build
+mkdir build && cd build
+
+# tell CMake where Pangolin lives
+export CMAKE_PREFIX_PATH=/usr/local:${CMAKE_PREFIX_PATH}
+export Pangolin_DIR=/usr/local/lib/cmake/Pangolin
+
+cmake .. \
+  -DPangolin_DIR=/usr/local/lib/cmake/Pangolin \
+  -DCMAKE_PREFIX_PATH=/usr/local
+cd /root/_multi_orbslam_ws/src/ORB_SLAM3/build
+make -j"$(nproc)"
+
+
+
+
+cd ~/Projects/teleoperation_spot
+./run_multi_orbslam.sh  
+cd /root/_multi_orbslam_ws/src/ORB_SLAM3/build
+make -j"$(nproc)"
+
+
+exit
+cd ~/Projects/teleoperation_spot
+./run_multi_orbslam.sh
+source /opt/ros/noetic/setup.bash
+
+
+
+cd /root
+
+# Clone Pangolin if not present in THIS container
+if [ ! -d Pangolin ]; then
+  git clone https://github.com/stevenlovegrove/Pangolin.git
+fi
+
+cd Pangolin
+rm -rf build
+mkdir build && cd build
+
+cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr/local ..
+cmake --build . -j"$(nproc)"
+cmake --build . --target install
+ldconfig
+cd /root/Pangolin
+
+# 1. Drop -Werror so warnings don’t kill the build
+sed -i 's/add_compile_options(.*-Werror.*)/add_compile_options(-Wall -Wextra)/' CMakeLists.txt
+
+# 2. Remove the Clang-only warning flags that GCC hates
+sed -i '/-Wno-null-pointer-arithmetic/d' CMakeLists.txt
+sed -i '/-Wno-null-pointer-subtraction/d' CMakeLists.txt
+sed -i '/-Wno-deprecated-register/d' CMakeLists.txt
+
+
+cd /root/Pangolin
+rm -rf build
+mkdir build && cd build
+
+cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr/local ..
+
+cmake --build . -j"$(nproc)"
+
+cmake --build . --target install
+
+ldconfig
+ls /usr/local/lib/cmake/Pangolin
+
+
+cd /root/_multi_orbslam_ws/src/ORB_SLAM3
+
+rm -rf build
+mkdir build && cd build
+export CMAKE_PREFIX_PATH=/usr/local:${CMAKE_PREFIX_PATH}
+
+
+
+
+cmake .. \
+  -DPangolin_DIR=/usr/local/lib/cmake/Pangolin \
+  -DCMAKE_PREFIX_PATH=/usr/local
+
+
+JOBS=$(nproc)
+make -j$((JOBS/2))
+cd /root/_multi_orbslam_ws/src/ORB_SLAM3
+
+
+apt-get update
+apt-get install -y nano
+cd /root/_multi_orbslam_ws/src/ORB_SLAM3
+nano CMakeLists.txt
+
+
+in there find the orbslam project and add this after
+set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+sed -i 's/COMPILER_SUPPORTS_CXX11/COMPILER_SUPPORTS_CXX14/g' CMakeLists.txt
+sed -i 's/C++11/C++14/g' CMakeLists.txt
+
+sed -i 's/11/14/g' CMakeLists.txt
+
+cd /root/_multi_orbslam_ws/src/ORB_SLAM3
+
+for f in \
+  Examples_old/Monocular/mono_tum_vi.cc \
+  Examples_old/Stereo-Inertial/stereo_inertial_euroc.cc \
+  Examples_old/Monocular-Inertial/mono_inertial_tum_vi.cc \
+  Examples_old/Stereo-Inertial/stereo_inertial_tum_vi.cc
+do
+  sed -i 's/monotonic_clock/steady_clock/g' "$f"
+done
+
+
+cd /root/_multi_orbslam_ws/src/ORB_SLAM3
+
+# Replace std::chrono::monotonic_clock with std::chrono::steady_clock
+for f in \
+  Examples_old/Monocular/mono_tum_vi.cc \
+  Examples_old/Stereo-Inertial/stereo_inertial_euroc.cc \
+  Examples_old/Monocular-Inertial/mono_inertial_tum_vi.cc \
+  Examples_old/Stereo-Inertial/stereo_inertial_tum_vi.cc
+do
+  sed -i 's/monotonic_clock/steady_clock/g' "$f"
+done
+
+
+
+cd /root/_multi_orbslam_ws/src/ORB_SLAM3
+
+# Insert warning suppressions (only once)
+sed -i '/set(CMAKE_CXX_FLAGS_RELEASE/ a \
+add_compile_options(-Wno-deprecated-declarations)\nadd_compile_options(-Wno-ignored-attributes)\nadd_compile_options(-Wno-deprecated-copy)\nadd_compile_options(-Wno-null-pointer-arithmetic)\nadd_compile_options(-Wno-null-pointer-subtraction)\nadd_compile_options(-Wno-deprecated-register)' CMakeLists.txt
+
+
+JOBS=$(nproc)
+make -j$((JOBS/2))
+cd /root/_multi_orbslam_ws/src/ORB_SLAM3
+
+
+cd /root/_multi_orbslam_ws/src/ORB_SLAM3/build
+rm -rf *
+cmake ..
+make -j4
+cd /root/_multi_orbslam_ws/src/ORB_SLAM3
+rm -rf *
+cd /root/_multi_orbslam_ws/src
+
+# Remove the now-empty/broken ORB_SLAM3 dir if it still exists
+rm -rf ORB_SLAM3
+
+# Re-clone the repo
+git clone https://github.com/UZ-SLAMLab/ORB_SLAM3.git ORB_SLAM3
+cd /root/_multi_orbslam_ws/src/ORB_SLAM3
+
+mkdir build
+cd build
+
+cmake ..
+make -j4
+
+
+
+
+
+# Go to the ORB_SLAM3 repo root
+cd /root/_multi_orbslam_ws/src/ORB_SLAM3
+
+########################################
+# 1) Relax OpenCV version requirement
+########################################
+
+# Change required version 4.4 -> 4.2
+sed -i 's/find_package(OpenCV 4.4/find_package(OpenCV 4.2/' CMakeLists.txt
+
+# Fix the error message string so it matches
+sed -i 's/OpenCV > 4.4 not found./OpenCV >= 4.2 not found./' CMakeLists.txt
+
+########################################
+# 2) Force C++14 (adds lines after project())
+########################################
+
+sed -i 's/project(ORB_SLAM3)/project(ORB_SLAM3)\nset(CMAKE_CXX_STANDARD 14)\nset(CMAKE_CXX_STANDARD_REQUIRED ON)\nset(CMAKE_CXX_EXTENSIONS OFF)/' CMakeLists.txt
+
+########################################
+# 3) Suppress spammy warnings (one add_compile_options line)
+########################################
+
+sed -i '/set(CMAKE_CXX_FLAGS_RELEASE/ a add_compile_options(-Wno-deprecated-declarations -Wno-ignored-attributes -Wno-deprecated-copy -Wno-null-pointer-arithmetic -Wno-null-pointer-subtraction -Wno-deprecated-register)' CMakeLists.txt
+
+########################################
+# 4) Fix std::chrono::monotonic_clock -> steady_clock
+#    (only in Examples_old files that were failing)
+########################################
+
+for f in \
+  Examples_old/Monocular/mono_tum_vi.cc \
+  Examples_old/Stereo-Inertial/stereo_inertial_euroc.cc \
+  Examples_old/Monocular-Inertial/mono_inertial_tum_vi.cc \
+  Examples_old/Stereo-Inertial/stereo_inertial_tum_vi.cc
+do
+  sed -i 's/monotonic_clock/steady_clock/g' "$f"
+done
+
+########################################
+# 5) Configure + build (only touch build dir)
+########################################
+
+# Make sure we're in repo root
+cd /root/_multi_orbslam_ws/src/ORB_SLAM3
+
+# (Re)create build dir
+rm -rf build
+mkdir build
+cd build
+
+# Configure
+cmake ..
+
+# Build using half your cores (safer on memory/thermals)
+JOBS=$(nproc)
+make -j$((JOBS/2))
+
+
+cd /root/_multi_orbslam_ws/src/ORB_SLAM3
+
+# Remove the long add_compile_options line we injected earlier
+sed -i '/add_compile_options(-Wno-deprecated-declarations -Wno-ignored-attributes -Wno-deprecated-copy -Wno-null-pointer-arithmetic -Wno-null-pointer-subtraction -Wno-deprecated-register)/d' CMakeLists.txt
+
+# Reinsert a simpler, GCC-safe version right after CMAKE_CXX_FLAGS_RELEASE
+sed -i '/set(CMAKE_CXX_FLAGS_RELEASE/ a add_compile_options(-Wno-deprecated-declarations -Wno-ignored-attributes -Wno-deprecated-copy)' CMakeLists.txt
+
+
+cd /root/_multi_orbslam_ws/src/ORB_SLAM3
+rm -rf build
+mkdir build
+cd build
+
+cmake ..
+
+# Capture full build output in a log
+make -j4 > build.log 2>&1
+
+# Show the first few actual errors
+grep -n "error:" build.log | head
+
+
+
+
+cd /root/_multi_orbslam_ws/src/ORB_SLAM3
+
+# 1) Build DBoW2
+cd Thirdparty/DBoW2
+mkdir -p build && cd build
+cmake .. 
+make -j4
+
+# 2) Build g2o
+cd /root/_multi_orbslam_ws/src/ORB_SLAM3/Thirdparty/g2o
+mkdir -p build && cd build
+cmake ..
+make -j4
+
+# 3) Build ORB_SLAM3 main library / demos
+cd /root/_multi_orbslam_ws/src/ORB_SLAM3/build
+make -j4
+
+
+
+
+cd /root/_multi_orbslam_ws/src/ORB_SLAM3
+
+# 1) Build DBoW2
+cd Thirdparty/DBoW2
+mkdir -p build && cd build
+cmake .. 
+make -j4
+
+# 2) Build g2o
+cd /root/_multi_orbslam_ws/src/ORB_SLAM3/Thirdparty/g2o
+mkdir -p build && cd build
+cmake ..
+make -j4
+
+# 3) Build ORB_SLAM3 main library / demos
+cd /root/_multi_orbslam_ws/src/ORB_SLAM3/build
+make -j4
+
+
+cd /root/_multi_orbslam_ws/src/ORB_SLAM3
+chmod +x build.sh
+./build.sh
+
+
+cd /root/_multi_orbslam_ws/src/ORB_SLAM3
+
+#cd /root/_multi_orbslam_ws/src/ORB_SLAM3
+
+./Examples/Monocular/mono_tum \
+    Vocabulary/ORBvoc.txt \
+    Examples/Monocular/TUM1.yaml \
+    /data/tum/rgbd_dataset_freiburg1_xyz
+
+
+
+apt-get update
+apt-get install -y wget
+apt update
+apt install -y wget
+which wget
+# should print something like: /usr/bin/wget
+
+cd ~/data/tum
+
+wget https://vision.in.tum.de/rgbd/dataset/freiburg1/rgbd_dataset_freiburg1_xyz.tgz
+ls
+# expect: rgbd_dataset_freiburg1_xyz.tgz
+tar xzf rgbd_dataset_freiburg1_xyz.tgz
+
+ls rgbd_dataset_freiburg1_xyz | head
+# expect: rgb.txt, depth.txt, groundtruth.txt, rgb/, depth/, ...
+cd /root/_multi_orbslam_ws/src/ORB_SLAM3
+
+./Examples/Monocular/mono_tum \
+    Vocabulary/ORBvoc.txt \
+    Examples/Monocular/TUM1.yaml \
+    /root/data/tum/rgbd_dataset_freiburg1_xyz
+
+
+# On the HOST (outside container)
+xhost +local:root
+
+# Then start your container something like:
+docker run -it --net=host \
+    -e DISPLAY=$DISPLAY \
+    -v /tmp/.X11-unix:/tmp/.X11-unix \
+    <your-image> \
+    bash
+
+
+
+
+
+
+
+
+# Allow root in local containers to use your X server
+xhost +local:root
+
+# Choose a persistent workspace + data dir on the host
+mkdir -p ~/multi_orbslam_ws/src
+mkdir -p ~/data/tum
+
+# Start (or create) an orbslam3_dev container
+# Replace <your-image> with your actual image name
+docker run -it --name orbslam3_dev \
+  --net=host \
+  -e DISPLAY=$DISPLAY \
+  -v /tmp/.X11-unix:/tmp/.X11-unix \
+  -v ~/multi_orbslam_ws:/root/_multi_orbslam_ws \
+  -v ~/data:/root/data \
+  <your-image> \
+  bash
+
+
+docker ps -a
+
+
+
+
+xhost +local:root
+
+mkdir -p ~/multi_orbslam_ws/src
+mkdir -p ~/data/tum
+
+docker run -it --name orbslam3_dev \
+  --net=host \
+  -e DISPLAY=$DISPLAY \
+  -v /tmp/.X11-unix:/tmp/.X11-unix \
+  -v ~/multi_orbslam_ws:/root/_multi_orbslam_ws \
+  -v ~/data:/root/data \
+  multi_orbslam:noetic \
+  bash
+
+
+
+rysch01@rysch01-Legion-Pro-5-2404:~/Projects/teleoperation_spot$ xhost +local:root
+
+mkdir -p ~/multi_orbslam_ws/src
+mkdir -p ~/data/tum
+
+docker run -it --name orbslam3_dev \
+  --net=host \
+  -e DISPLAY=$DISPLAY \
+  -v /tmp/.X11-unix:/tmp/.X11-unix \
+  -v ~/multi_orbslam_ws:/root/_multi_orbslam_ws \
+  -v ~/data:/root/data \
+  multi_orbslam:noetic \
+  bash
+non-network local connections being added to access control list
+docker: Error response from daemon: Conflict. The container name "/orbslam3_dev" is already in use by container "ce446bb2898d3aa9a1b6e251909f3172d2191ef3029156f2efb1303f4577fe66". You have to remove (or rename) that container to be able to reuse that name.
+
+Run 'docker run --help' for more information
+rysch01@rysch01-Legion-Pro-5-2404:~/Projects/teleoperation_spot$ docker start -ai orbslam3_dev
+root@rysch01-Legion-Pro-5-2404:~/_multi_orbslam_ws# docker ps -a
+bash: docker: command not found
+root@rysch01-Legion-Pro-5-2404:~/_multi_orbslam_ws# 
+
+
+
+set -e
+
+echo "=== 1) Ensure workspace layout ==="
+mkdir -p /root/_multi_orbslam_ws/src
+cd /root/_multi_orbslam_ws/src
+
+echo "=== 2) Clone ORB_SLAM3 into the shared workspace (if missing) ==="
+if [ ! -d ORB_SLAM3 ]; then
+  git clone https://github.com/UZ-SLAMLab/ORB_SLAM3.git ORB_SLAM3
+fi
+
+cd ORB_SLAM3
+
+echo "=== 3) Patch CMake for OpenCV 4.2 (Noetic) ==="
+# Relax requirement from 4.4 to 4.2
+sed -i 's/find_package(OpenCV 4.4/find_package(OpenCV 4.2/' CMakeLists.txt
+sed -i 's/OpenCV > 4.4 not found./OpenCV >= 4.2 not found./' CMakeLists.txt
+
+echo "=== 4) Fix std::chrono::monotonic_clock for GCC ==="
+for f in \
+  Examples_old/Monocular/mono_tum_vi.cc \
+  Examples_old/Stereo-Inertial/stereo_inertial_euroc.cc \
+  Examples_old/Monocular-Inertial/mono_inertial_tum_vi.cc \
+  Examples_old/Stereo-Inertial/stereo_inertial_tum_vi.cc
+do
+  if [ -f "$f" ]; then
+    sed -i 's/monotonic_clock/steady_clock/g' "$f"
+  fi
+done
+
+echo "=== 5) (Optional) Soften some noisy warnings ==="
+# Keep this modest (these flags worked for you before)
+if ! grep -q "add_compile_options(-Wno-deprecated-declarations" CMakeLists.txt; then
+  sed -i '/set(CMAKE_CXX_FLAGS_RELEASE/ a add_compile_options(-Wno-deprecated-declarations -Wno-ignored-attributes -Wno-deprecated-copy)' CMakeLists.txt
+fi
+
+echo "=== 6) Build Thirdparty/DBoW2 ==="
+cd /root/_multi_orbslam_ws/src/ORB_SLAM3/Thirdparty/DBoW2
+mkdir -p build && cd build
+cmake ..
+make -j4
+
+echo "=== 7) Build Thirdparty/g2o ==="
+cd /root/_multi_orbslam_ws/src/ORB_SLAM3/Thirdparty/g2o
+mkdir -p build && cd build
+cmake ..
+make -j4
+
+echo "=== 8) Configure & build ORB_SLAM3 main project ==="
+cd /root/_multi_orbslam_ws/src/ORB_SLAM3
+rm -rf build
+mkdir build && cd build
+cmake ..
+JOBS=$(nproc)
+make -j"$((JOBS/2))"
+
+echo "=== 9) Download TUM rgbd_dataset_freiburg1_xyz if missing ==="
+mkdir -p /root/data/tum
+cd /root/data/tum
+if [ ! -d rgbd_dataset_freiburg1_xyz ]; then
+  if [ ! -f rgbd_dataset_freiburg1_xyz.tgz ]; then
+    wget https://cvg.cit.tum.de/rgbd/dataset/freiburg1/rgbd_dataset_freiburg1_xyz.tgz
+  fi
+  tar xzf rgbd_dataset_freiburg1_xyz.tgz
+fi
+
+echo "=== 10) Run ORB-SLAM3 monocular TUM demo ==="
+cd /root/_multi_orbslam_ws/src/ORB_SLAM3
+
+./Examples/Monocular/mono_tum \
+  Vocabulary/ORBvoc.txt \
+  Examples/Monocular/TUM1.yaml \
+  /root/data/tum/rgbd_dataset_freiburg1_xyz
+
+
+xhost +local:root
+docker start -ai orbslam3_dev
+
+
+# === Pangolin + ORB_SLAM3 setup ===
+
+echo "=== A) Install Pangolin build deps (safe to rerun) ==="
+apt-get update
+apt-get install -y \
+  git cmake build-essential \
+  libglew-dev libeigen3-dev \
+  libavformat-dev libavcodec-dev libavutil-dev libswscale-dev \
+  libjpeg-dev libpng-dev libtiff-dev libopenexr-dev \
+  libgl1-mesa-dev libxkbcommon-dev
+
+echo "=== B) Build & install Pangolin to /usr/local ==="
+cd /root
+if [ ! -d Pangolin ]; then
+  git clone https://github.com/stevenlovegrove/Pangolin.git
+fi
+
+cd Pangolin
+
+# Soften flags so GCC warnings don't become fatal
+sed -i 's/-Werror//g' CMakeLists.txt
+sed -i '/-Wno-null-pointer-arithmetic/d' CMakeLists.txt || true
+sed -i '/-Wno-null-pointer-subtraction/d' CMakeLists.txt || true
+sed -i '/-Wno-deprecated-register/d' CMakeLists.txt || true
+
+rm -rf build
+mkdir build && cd build
+
+cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr/local ..
+cmake --build . -j"$(nproc)"
+cmake --build . --target install
+ldconfig
+
+echo "Pangolin CMake package dirs:"
+ls /usr/local/lib/cmake/Pangolin || true
+ls /usr/local/share/Pangolin/cmake || true
+
+echo "=== C) Configure & build ORB_SLAM3 (with Pangolin) ==="
+cd /root/_multi_orbslam_ws/src/ORB_SLAM3
+rm -rf build
+mkdir build && cd build
+
+cmake .. -DPangolin_DIR=/usr/local/lib/cmake/Pangolin
+JOBS=$(nproc)
+make -j"$((JOBS/2))"
+
+echo "=== D) Run TUM monocular example (viewer should pop up) ==="
+cd /root/_multi_orbslam_ws/src/ORB_SLAM3
+
+./Examples/Monocular/mono_tum \
+  Vocabulary/ORBvoc.txt \
+  Examples/Monocular/TUM1.yaml \
+  /root/data/tum/rgbd_dataset_freiburg1_xyz
+
+
+
+
+cd /root/_multi_orbslam_ws/src/ORB_SLAM3 || exit 1
+
+echo "=== 1) Clean and recreate build dir ==="
+rm -rf build
+mkdir build
+cd build
+
+echo "=== 2) Detect Pangolin CMake package dir ==="
+PANGOLIN_DIR=""
+if [ -d /usr/local/lib/cmake/Pangolin ]; then
+  PANGOLIN_DIR=/usr/local/lib/cmake/Pangolin
+elif [ -d /usr/local/share/Pangolin/cmake ]; then
+  PANGOLIN_DIR=/usr/local/share/Pangolin/cmake
+fi
+
+echo "Using Pangolin_DIR=${PANGOLIN_DIR}"
+
+echo "=== 3) Configure ORB_SLAM3 with Pangolin ==="
+cmake .. \
+  -DCMAKE_BUILD_TYPE=Release \
+  -DPangolin_DIR="${PANGOLIN_DIR}" 2>&1 | tee cmake_orbslam3.log
+
+echo "=== 4) Build ORB_SLAM3 (this creates mono_tum, rgbd_tum, etc.) ==="
+JOBS=$(nproc)
+make -j"$((JOBS/2))" 2>&1 | tee build_orbslam3.log
+
+echo "=== 5) Check that the mono_tum binary exists ==="
+cd /root/_multi_orbslam_ws/src/ORB_SLAM3
+ls -l Examples/Monocular | grep mono_tum || echo 'mono_tum NOT found'
+
+
+cd /root/_multi_orbslam_ws/src/ORB_SLAM3
+
+./Examples/Monocular/mono_tum \
+  Vocabulary/ORBvoc.txt \
+  Examples/Monocular/TUM1.yaml \
+  /root/data/tum/rgbd_dataset_freiburg1_xyz
+
+
+
+apt-get update
+apt-get install -y libpangolin-dev
+dpkg -l | grep pangolin
+# should show something like: libpangolin-dev ...
+cd /root/_multi_orbslam_ws/src/ORB_SLAM3
+
+# Clean the build dir
+rm -rf build
+mkdir build
+cd build
+
+# Configure (now Pangolin should be found automatically)
+cmake .. 2>&1 | tee cmake_orbslam3.log
+
+# Build
+JOBS=$(nproc)
+make -j"$((JOBS/2))" 2>&1 | tee build_orbslam3.log
+cd /root/_multi_orbslam_ws/src/ORB_SLAM3
+
+# Clean the build dir
+rm -rf build
+mkdir build
+cd build
+
+# Configure (now Pangolin should be found automatically)
+cmake .. 2>&1 | tee cmake_orbslam3.log
+
+# Build
+JOBS=$(nproc)
+make -j"$((JOBS/2))" 2>&1 | tee build_orbslam3.log
+
+
+
+
+cd /root
+
+# Clone Pangolin if it isn't already here
+if [ ! -d Pangolin ]; then
+  git clone https://github.com/stevenlovegrove/Pangolin.git
+fi
+
+cd Pangolin
+
+# Clean any old build
+rm -rf build
+
+########################################
+# Patch CMake to be GCC-friendly
+########################################
+#  - Drop -Werror so warnings don't break the build
+#  - Remove some Clang-only warning flags GCC complains about
+sed -i 's/-Werror//g' CMakeLists.txt
+sed -i 's/-Wno-null-pointer-arithmetic//g' CMakeLists.txt
+sed -i 's/-Wno-null-pointer-subtraction//g' CMakeLists.txt
+sed -i 's/-Wno-deprecated-register//g' CMakeLists.txt
+
+# Configure + build + install
+mkdir build && cd build
+
+cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr/local ..
+cmake --build . -j"$(nproc)"
+cmake --build . --target install
+
+# Refresh linker cache
+ldconfig
+
+# Sanity-check that the CMake config was installed
+ls /usr/local/lib/cmake/Pangolin
+
+
+
+
+cd /root
+rm -rf Pangolin
+
+git clone https://github.com/stevenlovegrove/Pangolin.git
+cd Pangolin
+
+# Remove the specific -Werror=... flags first (so we don't leave "=maybe-uninitialized")
+sed -i 's/-Werror=maybe-uninitialized//g' CMakeLists.txt
+sed -i 's/-Werror=vla//g' CMakeLists.txt
+
+# Then remove any plain -Werror
+sed -i 's/-Werror//g' CMakeLists.txt
+
+# Also drop the Clang-only suppression flags GCC dislikes
+sed -i 's/-Wno-null-pointer-arithmetic//g' CMakeLists.txt
+sed -i 's/-Wno-null-pointer-subtraction//g' CMakeLists.txt
+sed -i 's/-Wno-deprecated-register//g' CMakeLists.txt
+
+
+cd /root/Pangolin
+rm -rf build
+mkdir build && cd build
+
+cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr/local ..
+
+cmake --build . -j"$(nproc)"
+cmake --build . --target install
+
+ldconfig
+
+# Check that the CMake config exists now:
+ls /usr/local/lib/cmake/Pangolin
+
+
+
+cd /root/_multi_orbslam_ws/src/ORB_SLAM3
+rm -rf build
+mkdir build && cd build
+
+cmake .. 2>&1 | tee cmake_orbslam3.log
+
+JOBS=$(nproc)
+make -j"$((JOBS/2))" 2>&1 | tee build_orbslam3.log
+cd /root
+rm -rf Pangolin
+
+# Fresh clone
+git clone https://github.com/stevenlovegrove/Pangolin.git
+cd Pangolin
+
+# Checkout an older commit (before the sigslot API change)
+git checkout "$(git rev-list -n 1 --before='2020-06-01' master)"
+# Clean build dir
+rm -rf build
+mkdir build && cd build
+
+cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr/local ..
+cmake --build . -j"$(nproc)"
+cmake --build . --target install
+
+# Refresh linker cache
+ldconfig
+
+# Check Pangolin CMake config exists
+ls /usr/local/lib/cmake/Pangolin
+
+
+cd /root/_multi_orbslam_ws/src/ORB_SLAM3
+
+rm -rf build
+mkdir build
+cd build
+
+cmake .. 2>&1 | tee cmake_orbslam3.log
+
+JOBS=$(nproc)
+make -j"$((JOBS/2))" 2>&1 | tee build_orbslam3.log
+cd /root/_multi_orbslam_ws/src/ORB_SLAM3
+
+rm -rf build
+mkdir build
+cd build
+
+cmake .. 2>&1 | tee cmake_orbslam3.log
+
+JOBS=$(nproc)
+make -j"$((JOBS/2))" 2>&1 | tee build_orbslam3.log
+cd /root/_multi_orbslam_ws/src/ORB_SLAM3
+ls -l Examples/Monocular | grep mono_tum
+
+
+cd /root/_multi_orbslam_ws/src/ORB_SLAM3
+
+./Examples/Monocular/mono_tum \
+    Vocabulary/ORBvoc.txt \
+    Examples/Monocular/TUM1.yaml \
+    /root/data/tum/rgbd_dataset_freiburg1_xyz
+echo $DISPLAY
+xclock
+
+
+on host
+nano ~/multi_orbslam_ws/bootstrap_orbslam3.sh
+# paste it
+chmod +x ~/multi_orbslam_ws/bootstrap_orbslam3.sh
+
+
+exit
+xhost +local:root
+docker start -ai orbslam3_dev
+
+
+n-Pro-5-2404:~/_multi_orbslam_ws/src/ORB_SLAM3# echo $DISPLAY
+:1
+root@rysch01-Legion-Pro-5-2404:~/_multi_orbslam_ws/src/ORB_SLAM3# xclock
+bash: xclock: command not found
+root@rysch01-Legion-Pro-5-2404:~/_multi_orbslam_ws/src/ORB_SLAM3# exit
+exit
+rysch01@rysch01-Legion-Pro-5-2404:~/Projects/teleoperation_spot$ xhost +local:root
+non-network local connections being added to access control list
+rysch01@rysch01-Legion-Pro-5-2404:~/Projects/teleoperation_spot$ docker start -ai orbslam3_dev                                                         Y
+root@rysch01-Legion-Pro-5-2404:~/_multi_orbslam_ws# echo $DISPLAY 
+bash: cho: command not found
+root@rysch01-Legion-Pro-5-2404:~/_multi_orbslam_ws# echo $DISPLAY
+:1
+root@rysch01-Legion-Pro-5-2404:~/_multi_orbslam_ws# apt-get update
+Hit:1 http://security.ubuntu.com/ubuntu focal-security InRelease
+Hit:2 http://snapshots.ros.org/noetic/final/ubuntu focal InRelease         
+Hit:3 http://archive.ubuntu.com/ubuntu focal InRelease                     
+Hit:4 http://archive.ubuntu.com/ubuntu focal-updates InRelease
+Hit:5 http://archive.ubuntu.com/ubuntu focal-backports InRelease
+Reading package lists... Done
+root@rysch01-Legion-Pro-5-2404:~/_multi_orbslam_ws# apt-get install -y x11-apps   # only if xclock isn't installed
+Reading package lists... Done
+Building dependency tree       
+Reading state information... Done
+The following additional packages will be installed:
+  bsdmainutils groff-base libpipeline1 libuchardet0 libxft2 libxkbfile1
+  libxmuu1 man-db xbitmaps
+Suggested packages:
+  wamerican | wordlist whois vacation groff apparmor www-browser
+  mesa-utils
+The following NEW packages will be installed:
+  bsdmainutils groff-base libpipeline1 libuchardet0 libxft2 libxkbfile1
+  libxmuu1 man-db x11-apps xbitmaps
+0 upgraded, 10 newly installed, 0 to remove and 16 not upgraded.
+Need to get 3033 kB of archives.
+After this operation, 10.6 MB of additional disk space will be used.
+Get:1 http://archive.ubuntu.com/ubuntu focal/main amd64 bsdmainutils amd64 11.1.2ubuntu3 [181 kB]
+Get:2 http://archive.ubuntu.com/ubuntu focal/main amd64 libuchardet0 amd64 0.0.6-3build1 [65.2 kB]
+Get:3 http://archive.ubuntu.com/ubuntu focal/main amd64 groff-base amd64 1.22.4-4build1 [847 kB]
+Get:4 http://archive.ubuntu.com/ubuntu focal/main amd64 libpipeline1 amd64 1.5.2-2build1 [27.7 kB]
+Get:5 http://archive.ubuntu.com/ubuntu focal/main amd64 man-db amd64 2.9.1-1 [1112 kB]
+Get:6 http://archive.ubuntu.com/ubuntu focal/main amd64 libxmuu1 amd64 2:1.1.3-0ubuntu1 [9728 B]
+Get:7 http://archive.ubuntu.com/ubuntu focal/main amd64 libxft2 amd64 2.3.3-0ubuntu1 [39.2 kB]
+Get:8 http://archive.ubuntu.com/ubuntu focal/main amd64 libxkbfile1 amd64 1:1.1.0-1 [65.3 kB]
+Get:9 http://archive.ubuntu.com/ubuntu focal/main amd64 x11-apps amd64 7.7+8 [657 kB]
+Get:10 http://archive.ubuntu.com/ubuntu focal/main amd64 xbitmaps all 1.1.1-2 [28.1 kB]
+Fetched 3033 kB in 1s (3006 kB/s)    
+debconf: delaying package configuration, since apt-utils is not installed
+Selecting previously unselected package bsdmainutils.
+(Reading database ... 88559 files and directories currently installed.)
+Preparing to unpack .../0-bsdmainutils_11.1.2ubuntu3_amd64.deb ...
+Unpacking bsdmainutils (11.1.2ubuntu3) ...
+Selecting previously unselected package libuchardet0:amd64.
+Preparing to unpack .../1-libuchardet0_0.0.6-3build1_amd64.deb ...
+Unpacking libuchardet0:amd64 (0.0.6-3build1) ...
+Selecting previously unselected package groff-base.
+Preparing to unpack .../2-groff-base_1.22.4-4build1_amd64.deb ...
+Unpacking groff-base (1.22.4-4build1) ...
+Selecting previously unselected package libpipeline1:amd64.
+Preparing to unpack .../3-libpipeline1_1.5.2-2build1_amd64.deb ...
+Unpacking libpipeline1:amd64 (1.5.2-2build1) ...
+Selecting previously unselected package man-db.
+Preparing to unpack .../4-man-db_2.9.1-1_amd64.deb ...
+Unpacking man-db (2.9.1-1) ...
+Selecting previously unselected package libxmuu1:amd64.
+Preparing to unpack .../5-libxmuu1_2%3a1.1.3-0ubuntu1_amd64.deb ...
+Unpacking libxmuu1:amd64 (2:1.1.3-0ubuntu1) ...
+Selecting previously unselected package libxft2:amd64.
+Preparing to unpack .../6-libxft2_2.3.3-0ubuntu1_amd64.deb ...
+Unpacking libxft2:amd64 (2.3.3-0ubuntu1) ...
+Selecting previously unselected package libxkbfile1:amd64.
+Preparing to unpack .../7-libxkbfile1_1%3a1.1.0-1_amd64.deb ...
+Unpacking libxkbfile1:amd64 (1:1.1.0-1) ...
+Selecting previously unselected package x11-apps.
+Preparing to unpack .../8-x11-apps_7.7+8_amd64.deb ...
+Unpacking x11-apps (7.7+8) ...
+Selecting previously unselected package xbitmaps.
+Preparing to unpack .../9-xbitmaps_1.1.1-2_all.deb ...
+Unpacking xbitmaps (1.1.1-2) ...
+Setting up libpipeline1:amd64 (1.5.2-2build1) ...
+Setting up libxft2:amd64 (2.3.3-0ubuntu1) ...
+Setting up bsdmainutils (11.1.2ubuntu3) ...
+update-alternatives: using /usr/bin/bsd-write to provide /usr/bin/write (write) in auto mode
+update-alternatives: warning: skip creation of /usr/share/man/man1/write.1.gz because associated file /usr/share/man/man1/bsd-write.1.gz (of link group write) doesn't exist
+update-alternatives: using /usr/bin/bsd-from to provide /usr/bin/from (from) in auto mode
+update-alternatives: warning: skip creation of /usr/share/man/man1/from.1.gz because associated file /usr/share/man/man1/bsd-from.1.gz (of link group from) doesn't exist
+Setting up libuchardet0:amd64 (0.0.6-3build1) ...
+Setting up libxkbfile1:amd64 (1:1.1.0-1) ...
+Setting up libxmuu1:amd64 (2:1.1.3-0ubuntu1) ...
+Setting up xbitmaps (1.1.1-2) ...
+Setting up groff-base (1.22.4-4build1) ...
+Setting up man-db (2.9.1-1) ...
+debconf: unable to initialize frontend: Dialog
+debconf: (No usable dialog-like program is installed, so the dialog based frontend cannot be used. at /usr/share/perl5/Debconf/FrontEnd/Dialog.pm line 76.)
+debconf: falling back to frontend: Readline
+Building database of manual pages ...
+Created symlink /etc/systemd/system/timers.target.wants/man-db.timer → /lib/systemd/system/man-db.timer.
+Setting up x11-apps (7.7+8) ...
+Processing triggers for libc-bin (2.31-0ubuntu9.17) ...
+Processing triggers for mime-support (3.64ubuntu1) ...
+root@rysch01-Legion-Pro-5-2404:~/_multi_orbslam_ws# 
+
+
+xclock
+
+
+root@rysch01-Legion-Pro-5-2404:~/_multi_orbslam_ws# cd /root/_multi_orbslam_ws/src/ORB_SLAM3
+root@rysch01-Legion-Pro-5-2404:~/_multi_orbslam_ws/src/ORB_SLAM3# ./Examples/Monocular/mono_tum     Vocabulary/ORBvoc.txt     Examples/Monocular/TUM1.yaml     /root/data/tum/rgbd_dataset_freiburg1_xyz
+
+
+^[^C
+root@rysch01-Legion-Pro-5-2404:~/_multi_orbslam_ws/src/ORB_SLAM3# cd /root/_multi_orbslam_ws/src/ORB_SLAM3
+root@rysch01-Legion-Pro-5-2404:~/_multi_orbslam_ws/src/ORB_SLAM3# 
+root@rysch01-Legion-Pro-5-2404:~/_multi_orbslam_ws/src/ORB_SLAM3# # Confirm the binary really exists and is executable
+root@rysch01-Legion-Pro-5-2404:~/_multi_orbslam_ws/src/ORB_SLAM3# ls -l Examples/Monocular/mono_tum
+-rwxr-xr-x 1 root root 98872 Dec  2 21:59 Examples/Monocular/mono_tum
+root@rysch01-Legion-Pro-5-2404:~/_multi_orbslam_ws/src/ORB_SLAM3# 
+root@rysch01-Legion-Pro-5-2404:~/_multi_orbslam_ws/src/ORB_SLAM3# # Check for missing shared libraries
+root@rysch01-Legion-Pro-5-2404:~/_multi_orbslam_ws/src/ORB_SLAM3# ldd Examples/Monocular/mono_tum | grep "not found" || echo "All libs found"
+All libs found
+root@rysch01-Legion-Pro-5-2404:~/_multi_orbslam_ws/src/ORB_SLAM3# 
+
+
+./Examples/Monocular/mono_tum Vocabulary/ORBvoc.txt  Examples/Monocular/TUM1.yaml   /root/data/tum/rgbd_dataset_freiburg1_xyz 
+
+
+
+
+apt-get install -y htop
+htop
+
+
+glxinfo | grep OpenGL
+
+apt-get install -y mesa-utils
+glxinfo | grep OpenGL
+exit
+docker stop orbslam3_dev
+docker rm orbslam3_dev
+xhost +local:root
+
+
+docker stop orbslam3_dev
+docker rm orbslam3_dev
+xhost +local:root
+
+
+
+
+docker rm -f orbslam3_dev
+xhost +local:root   # safe to repeat
+docker run -it --name orbslam3_dev \
+  --net=host \
+  -e DISPLAY=$DISPLAY \
+  -v /tmp/.X11-unix:/tmp/.X11-unix \
+  -v ~/multi_orbslam_ws:/root/_multi_orbslam_ws \
+  -v ~/data:/root/data \
+  multi_orbslam:noetic \
+  bash
+
+
+apt-get update
+apt-get install -y x11-apps
+cat <<EOF >/etc/apt/sources.list
+deb http://archive.ubuntu.com/ubuntu focal main restricted universe multiverse
+deb http://archive.ubuntu.com/ubuntu focal-updates main restricted universe multiverse
+deb http://archive.ubuntu.com/ubuntu focal-security main restricted universe multiverse
+EOF
+apt-get update
+apt-get install -y x11-apps
+
+xclock &
+
+
+
+cd /root/_multi_orbslam_ws/src/ORB_SLAM3
+
+./Examples/Monocular/mono_tum \
+    Vocabulary/ORBvoc.txt \
+    Examples/Monocular/TUM1.yaml \
+    /root/data/tum/rgbd_dataset_freiburg1_xyz
+
+
+
+
+
+    z
+./Examples/Monocular/mono_tum: error while loading shared libraries: libpangolin.so: cannot open shared object file: No such file or directory
+root@rysch01-Legion-Pro-5-2404:~/_multi_orbslam_ws/src/ORB_SLAM3# ^C
+root@rysch01-Legion-Pro-5-2404:~/_multi_orbslam_ws/src/ORB_SLAM3# ls /usr/local/lib/libpangolin* 2>/dev/null || echo "no pangolin in /usr/local/lib"
+no pangolin in /usr/local/lib
+root@rysch01-Legion-Pro-5-2404:~/_multi_orbslam_ws/src/ORB_SLAM3# 
+
+apt-get update
+
+apt-get install -y \
+  git cmake build-essential \
+  libgl1-mesa-dev libglew-dev \
+  libeigen3-dev \
+  libjpeg-dev libpng-dev libtiff-dev libopenexr-dev \
+  libboost-dev libpython3-dev
+  
+
+
+
+  cd /root
+
+# Grab Pangolin if not already there
+if [ ! -d Pangolin ]; then
+  git clone https://github.com/stevenlovegrove/Pangolin.git
+fi
+
+cd Pangolin
+git fetch --tags
+git checkout v0.6  # known-good with ORB_SLAM3
+
+# Fresh build dir
+rm -rf build
+mkdir build && cd build
+
+cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr/local ..
+cmake --build . -j4
+cmake --build . --target install
+
+# Make sure the loader knows about /usr/local/lib
+ldconfig
+
+
+ldconfig -p | grep pangolin || echo "pangolin still not visible"
+
+ls /usr/local/lib/libpangolin*
+/usr/local/lib/libpangolin.so
+ldconfig -p | grep pangolin   # shows libpangolin.so
+
+
+cd /root/_multi_orbslam_ws/src/ORB_SLAM3
+
+# Clean old build
+rm -rf build
+mkdir build
+cd build
+
+# Reconfigure now that Pangolin is installed
+cmake ..    # should now find Pangolin automatically
+
+# Build
+JOBS=$(nproc)
+make -j"$((JOBS/2))"
+
+
+cd /root/_multi_orbslam_ws/src/ORB_SLAM3
+
+ls -l Examples/Monocular/mono_tum
+ldd Examples/Monocular/mono_tum | grep pangolin
+
+
+echo $DISPLAY
+xclock &
+mkdir -p ~/data/tum
+cd ~/data/tum
+wget http://vision.in.tum.de/rgbd/dataset/freiburg1/rgbd_dataset_freiburg1_xyz.tgz
+tar xzf rgbd_dataset_freiburg1_xyz.tgz
+ls ~/data/tum
+# expected:
+# rgbd_dataset_freiburg1_xyz  rgbd_dataset_freiburg1_xyz.tgz
+
+
+cd /root/_multi_orbslam_ws/src/ORB_SLAM3
+
+./Examples/Monocular/mono_tum \
+  Vocabulary/ORBvoc.txt \
+  Examples/Monocular/TUM1.yaml \
+  /root/data/tum/rgbd_dataset_freiburg1_xyz
+cd /root/_multi_orbslam_ws/src/ORB_SLAM3
+ls -lh Vocabulary
+cd /root/_multi_orbslam_ws/src/ORB_SLAM3/Vocabulary
+
+# (Optional) remove any bogus vocab to avoid confusion
+rm -f ORBvoc.txt
+
+
+
+found
+root@rysch01-Legion-Pro-5-2404:~/_multi_orbslam_ws/src/ORB_SLAM3/Vocabulary# wget https://github.com/raulmur/ORB_SLAM2/raw/master/Vocabulary/ORBvoc.txt.tar.gz
+bash: wget: command not found
+root@rysch01-Legion-Pro-5-2404:~/_multi_orbslam_ws/src/ORB_SLAM3/Vocabulary# 
+
+apt-get update
+apt-get install -y wget
+cd /root/_multi_orbslam_ws/src/ORB_SLAM3/Vocabulary
+
+# (optional but recommended, to avoid confusion)
+rm -f ORBvoc.txt ORBvoc.txt.tar.gz
+
+wget https://github.com/raulmur/ORB_SLAM2/raw/master/Vocabulary/ORBvoc.txt.tar.gz
+
+tar -xzvf ORBvoc.txt.tar.gz
+
+ls -lh ORBvoc.txt
+
+
+
+
+
+
+
+
+
+setup# ==== On HOST: full setup in one go ====
+
+# 0) Allow Docker's root user to talk to your X server (repeatable)
+xhost +local:root
+
+# 1) Ensure workspaces exist on host (mounted into container)
+mkdir -p ~/multi_orbslam_ws/src
+mkdir -p ~/data/tum
+
+# 2) Create and run the dev container
+#    If orbslam3_dev already exists and you want to recreate from scratch, first:
+#       docker rm -f orbslam3_dev
+docker run -it --name orbslam3_dev \
+  --net=host \
+  -e DISPLAY=$DISPLAY \
+  -v /tmp/.X11-unix:/tmp/.X11-unix \
+  -v ~/multi_orbslam_ws:/root/_multi_orbslam_ws \
+  -v ~/data:/root/data \
+  multi_orbslam:noetic \
+  bash -lc '
+set -e
+
+echo "=== APT update + core deps ==="
+apt-get update
+apt-get install -y \
+  git cmake build-essential \
+  libopencv-dev libeigen3-dev \
+  libboost-system-dev libboost-filesystem-dev libboost-serialization-dev \
+  libgtk2.0-dev pkg-config \
+  x11-apps mesa-utils wget
+
+echo "=== Build + install Pangolin ==="
+cd /root
+if [ ! -d Pangolin ]; then
+  git clone https://github.com/stevenlovegrove/Pangolin.git
+fi
+cd Pangolin
+mkdir -p build && cd build
+cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr/local ..
+cmake --build . -j4
+cmake --build . --target install
+ldconfig
+
+echo "=== Clone + build ORB_SLAM3 ==="
+cd /root/_multi_orbslam_ws/src
+if [ ! -d ORB_SLAM3 ]; then
+  git clone https://github.com/UZ-SLAMLab/ORB_SLAM3.git
+fi
+cd ORB_SLAM3
+chmod +x build.sh
+./build.sh
+
+echo "=== Download ORB vocabulary ==="
+cd /root/_multi_orbslam_ws/src/ORB_SLAM3/Vocabulary
+rm -f ORBvoc.txt ORBvoc.txt.tar.gz
+wget https://github.com/raulmur/ORB_SLAM2/raw/master/Vocabulary/ORBvoc.txt.tar.gz
+tar -xzvf ORBvoc.txt.tar.gz
+ls -lh ORBvoc.txt
+
+echo "=== Download TUM rgbd_dataset_freiburg1_xyz ==="
+mkdir -p /root/data/tum
+cd /root/data/tum
+if [ ! -d rgbd_dataset_freiburg1_xyz ]; then
+  wget https://vision.in.tum.de/rgbd/dataset/freiburg1/rgbd_dataset_freiburg1_xyz.tgz
+  tar -xzvf rgbd_dataset_freiburg1_xyz.tgz
+fi
+
+echo
+echo "=== Setup complete ✅ ==="
+echo "To run ORB-SLAM3 next time:"
+echo "  On host:  xhost +local:root"
+echo "            docker start -ai orbslam3_dev"
+echo "  In container:"
+echo "    cd /root/_multi_orbslam_ws/src/ORB_SLAM3"
+echo "    ./Examples/Monocular/mono_tum \\"
+echo "       Vocabulary/ORBvoc.txt \\"
+echo "       Examples/Monocular/TUM1.yaml \\"
+echo "       /root/data/tum/rgbd_dataset_freiburg1_xyz"
+echo
+
+# Drop you into an interactive shell at the end
+cd /root/_multi_orbslam_ws/src/ORB_SLAM3
+bash
+'
+
+
+
+Run# ==== On HOST (your Ubuntu desktop) ====
+cd ~/Projects/teleoperation_spot
+
+# Allow root-in-docker to connect to your X server (safe to repeat)
+xhost +local:root
+
+# Start the existing container and attach
+docker start -ai orbslam3_dev
+
+# ==== Now INSIDE the container shell (root@... prompt) ====
+
+# Sanity check that DISPLAY is set (usually ":1" or ":0")
+echo $DISPLAY
+
+# (Optional: test X)
+xclock &
+
+# Run ORB-SLAM3 on the TUM monocular sequence
+cd /root/_multi_orbslam_ws/src/ORB_SLAM3
+
+./Examples/Monocular/mono_tum \
+  Vocabulary/ORBvoc.txt \
+  Examples/Monocular/TUM1.yaml \
+  /root/data/tum/rgbd_dataset_freiburg1_xyz
+
+

@@ -1,0 +1,21 @@
+[0.701s] Invoking command in '/home/rysch01/Projects/teleoperation_spot/system_ws/src/xtion_bringup': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PYTHONPATH=/home/rysch01/Projects/teleoperation_spot/system_ws/build/xtion_bringup/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/rysch01/Projects/teleoperation_spot/system_ws/install/xtion_bringup/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../../build/xtion_bringup build --build-base /home/rysch01/Projects/teleoperation_spot/system_ws/build/xtion_bringup/build install --record /home/rysch01/Projects/teleoperation_spot/system_ws/build/xtion_bringup/install.log --single-version-externally-managed install_data
+[0.912s] running egg_info
+[0.920s] writing ../../build/xtion_bringup/xtion_bringup.egg-info/PKG-INFO
+[0.920s] writing dependency_links to ../../build/xtion_bringup/xtion_bringup.egg-info/dependency_links.txt
+[0.920s] writing entry points to ../../build/xtion_bringup/xtion_bringup.egg-info/entry_points.txt
+[0.920s] writing requirements to ../../build/xtion_bringup/xtion_bringup.egg-info/requires.txt
+[0.921s] writing top-level names to ../../build/xtion_bringup/xtion_bringup.egg-info/top_level.txt
+[0.938s] reading manifest file '../../build/xtion_bringup/xtion_bringup.egg-info/SOURCES.txt'
+[0.939s] writing manifest file '../../build/xtion_bringup/xtion_bringup.egg-info/SOURCES.txt'
+[0.939s] running build
+[0.939s] running build_py
+[0.939s] running install
+[0.942s] running install_lib
+[0.951s] running install_data
+[0.951s] running install_egg_info
+[0.960s] removing '/home/rysch01/Projects/teleoperation_spot/system_ws/install/xtion_bringup/lib/python3.12/site-packages/xtion_bringup-0.0.0-py3.12.egg-info' (and everything under it)
+[0.961s] Copying ../../build/xtion_bringup/xtion_bringup.egg-info to /home/rysch01/Projects/teleoperation_spot/system_ws/install/xtion_bringup/lib/python3.12/site-packages/xtion_bringup-0.0.0-py3.12.egg-info
+[0.961s] running install_scripts
+[1.024s] Installing gen_xtion_cameras script to /home/rysch01/Projects/teleoperation_spot/system_ws/install/xtion_bringup/bin
+[1.024s] writing list of installed files to '/home/rysch01/Projects/teleoperation_spot/system_ws/build/xtion_bringup/install.log'
+[1.040s] Invoked command in '/home/rysch01/Projects/teleoperation_spot/system_ws/src/xtion_bringup' returned '0': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PYTHONPATH=/home/rysch01/Projects/teleoperation_spot/system_ws/build/xtion_bringup/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/rysch01/Projects/teleoperation_spot/system_ws/install/xtion_bringup/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../../build/xtion_bringup build --build-base /home/rysch01/Projects/teleoperation_spot/system_ws/build/xtion_bringup/build install --record /home/rysch01/Projects/teleoperation_spot/system_ws/build/xtion_bringup/install.log --single-version-externally-managed install_data

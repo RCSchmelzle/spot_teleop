@@ -1,0 +1,9 @@
+/home/rysch01/Projects/teleoperation_spot/system_ws/build/asus_xtion_visualization/CMakeFiles/uninstall.dir
+/home/rysch01/Projects/teleoperation_spot/system_ws/build/asus_xtion_visualization/CMakeFiles/asus_xtion_visualization_uninstall.dir
+/home/rysch01/Projects/teleoperation_spot/system_ws/build/asus_xtion_visualization/CMakeFiles/test.dir
+/home/rysch01/Projects/teleoperation_spot/system_ws/build/asus_xtion_visualization/CMakeFiles/edit_cache.dir
+/home/rysch01/Projects/teleoperation_spot/system_ws/build/asus_xtion_visualization/CMakeFiles/rebuild_cache.dir
+/home/rysch01/Projects/teleoperation_spot/system_ws/build/asus_xtion_visualization/CMakeFiles/list_install_components.dir
+/home/rysch01/Projects/teleoperation_spot/system_ws/build/asus_xtion_visualization/CMakeFiles/install.dir
+/home/rysch01/Projects/teleoperation_spot/system_ws/build/asus_xtion_visualization/CMakeFiles/install/local.dir
+/home/rysch01/Projects/teleoperation_spot/system_ws/build/asus_xtion_visualization/CMakeFiles/install/strip.dir

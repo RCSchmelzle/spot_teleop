@@ -1,0 +1,16 @@
+package.xml
+setup.py
+../../build/xtion_bringup/xtion_bringup.egg-info/PKG-INFO
+../../build/xtion_bringup/xtion_bringup.egg-info/SOURCES.txt
+../../build/xtion_bringup/xtion_bringup.egg-info/dependency_links.txt
+../../build/xtion_bringup/xtion_bringup.egg-info/entry_points.txt
+../../build/xtion_bringup/xtion_bringup.egg-info/requires.txt
+../../build/xtion_bringup/xtion_bringup.egg-info/top_level.txt
+../../build/xtion_bringup/xtion_bringup.egg-info/zip-safe
+config/xtion_cameras.yaml
+launch/multi_xtion.launch.py
+resource/xtion_bringup
+xtion_bringup/__init__.py
+xtion_bringup/gen_xtion_cameras.py
+xtion_bringup/setup.py
+xtion_bringup/xtion_mapper_gui.py

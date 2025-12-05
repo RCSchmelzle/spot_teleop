@@ -1,0 +1,20 @@
+# ROS2 build / install / logs
+system_ws/build/
+system_ws/install/
+system_ws/log/
+
+# CMake build dirs elsewhere
+cpp/**/build/
+cpp/**/CMakeFiles/
+cpp/**/CMakeCache.txt
+
+# Bag files
+*.db3
+*.bag
+xtion_20*.bag/
+
+# Editor/OS
+.vscode/
+.idea/
+*~
+.DS_Store

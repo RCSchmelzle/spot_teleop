@@ -1,0 +1,6 @@
+[0.000000] (-) TimerEvent: {}
+[0.000191] (-) JobUnselected: {'identifier': 'asus_xtion'}
+[0.000220] (-) JobUnselected: {'identifier': 'asus_xtion_description'}
+[0.000239] (-) JobUnselected: {'identifier': 'asus_xtion_gazebo'}
+[0.000252] (-) JobUnselected: {'identifier': 'asus_xtion_visualization'}
+[0.000520] (-) EventReactorShutdown: {}

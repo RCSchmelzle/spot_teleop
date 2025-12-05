@@ -1,0 +1,3 @@
+[console_scripts]
+gen_xtion_cameras = xtion_bringup.gen_xtion_cameras:main
+xtion_mapper_gui = xtion_bringup.xtion_mapper_gui:main

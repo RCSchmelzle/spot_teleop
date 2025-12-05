@@ -1,0 +1,9 @@
+/home/rysch01/Projects/teleoperation_spot/system_ws/build/asus_xtion_description/CMakeFiles/uninstall.dir
+/home/rysch01/Projects/teleoperation_spot/system_ws/build/asus_xtion_description/CMakeFiles/asus_xtion_description_uninstall.dir
+/home/rysch01/Projects/teleoperation_spot/system_ws/build/asus_xtion_description/CMakeFiles/test.dir
+/home/rysch01/Projects/teleoperation_spot/system_ws/build/asus_xtion_description/CMakeFiles/edit_cache.dir
+/home/rysch01/Projects/teleoperation_spot/system_ws/build/asus_xtion_description/CMakeFiles/rebuild_cache.dir
+/home/rysch01/Projects/teleoperation_spot/system_ws/build/asus_xtion_description/CMakeFiles/list_install_components.dir
+/home/rysch01/Projects/teleoperation_spot/system_ws/build/asus_xtion_description/CMakeFiles/install.dir
+/home/rysch01/Projects/teleoperation_spot/system_ws/build/asus_xtion_description/CMakeFiles/install/local.dir
+/home/rysch01/Projects/teleoperation_spot/system_ws/build/asus_xtion_description/CMakeFiles/install/strip.dir

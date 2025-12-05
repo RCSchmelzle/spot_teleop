@@ -1,0 +1,34 @@
+[0.007s] Invoking command in '/home/rysch01/Projects/teleoperation_spot/system_ws/build/asus_xtion_gazebo': AMENT_PREFIX_PATH=/home/rysch01/Projects/teleoperation_spot/system_ws/install/asus_xtion_description:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/rysch01/Projects/teleoperation_spot/system_ws/install/asus_xtion_description:/opt/ros/jazzy/opt/gz_math_vendor:/opt/ros/jazzy/opt/gz_utils_vendor:/opt/ros/jazzy/opt/gz_cmake_vendor:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake /home/rysch01/Projects/teleoperation_spot/system_ws/src/ros2_asus_xtion/asus_xtion_gazebo -DCMAKE_INSTALL_PREFIX=/home/rysch01/Projects/teleoperation_spot/system_ws/install/asus_xtion_gazebo
+[0.077s] -- The C compiler identification is GNU 13.3.0
+[0.150s] -- The CXX compiler identification is GNU 13.3.0
+[0.174s] -- Detecting C compiler ABI info
+[0.300s] -- Detecting C compiler ABI info - done
+[0.315s] -- Check for working C compiler: /usr/bin/cc - skipped
+[0.315s] -- Detecting C compile features
+[0.316s] -- Detecting C compile features - done
+[0.330s] -- Detecting CXX compiler ABI info
+[0.467s] -- Detecting CXX compiler ABI info - done
+[0.481s] -- Check for working CXX compiler: /usr/bin/c++ - skipped
+[0.481s] -- Detecting CXX compile features
+[0.482s] -- Detecting CXX compile features - done
+[0.485s] -- Found ament_cmake: 2.5.4 (/opt/ros/jazzy/share/ament_cmake/cmake)
+[0.680s] -- Found Python3: /usr/bin/python3 (found version "3.12.3") found components: Interpreter 
+[0.800s] [31mCMake Error at CMakeLists.txt:6 (find_package):
+[0.800s]   By not providing "Findgazebo_ros.cmake" in CMAKE_MODULE_PATH this project
+[0.800s]   has asked CMake to find a package configuration file provided by
+[0.800s]   "gazebo_ros", but CMake did not find one.
+[0.800s] 
+[0.800s]   Could not find a package configuration file provided by "gazebo_ros" with
+[0.800s]   any of the following names:
+[0.800s] 
+[0.800s]     gazebo_rosConfig.cmake
+[0.801s]     gazebo_ros-config.cmake
+[0.801s] 
+[0.801s]   Add the installation prefix of "gazebo_ros" to CMAKE_PREFIX_PATH or set
+[0.801s]   "gazebo_ros_DIR" to a directory containing one of the above files.  If
+[0.801s]   "gazebo_ros" provides a separate development package or SDK, be sure it has
+[0.801s]   been installed.
+[0.801s] 
+[0.801s] [0m
+[0.801s] -- Configuring incomplete, errors occurred!
+[0.806s] Invoked command in '/home/rysch01/Projects/teleoperation_spot/system_ws/build/asus_xtion_gazebo' returned '1': AMENT_PREFIX_PATH=/home/rysch01/Projects/teleoperation_spot/system_ws/install/asus_xtion_description:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/rysch01/Projects/teleoperation_spot/system_ws/install/asus_xtion_description:/opt/ros/jazzy/opt/gz_math_vendor:/opt/ros/jazzy/opt/gz_utils_vendor:/opt/ros/jazzy/opt/gz_cmake_vendor:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake /home/rysch01/Projects/teleoperation_spot/system_ws/src/ros2_asus_xtion/asus_xtion_gazebo -DCMAKE_INSTALL_PREFIX=/home/rysch01/Projects/teleoperation_spot/system_ws/install/asus_xtion_gazebo

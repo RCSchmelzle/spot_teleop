@@ -1,0 +1,24 @@
+[0.006s] Invoking command in '/home/rysch01/Projects/teleoperation_spot/system_ws/build/asus_xtion_visualization': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --build /home/rysch01/Projects/teleoperation_spot/system_ws/build/asus_xtion_visualization -- -j24 -l24
+[0.058s] Invoked command in '/home/rysch01/Projects/teleoperation_spot/system_ws/build/asus_xtion_visualization' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --build /home/rysch01/Projects/teleoperation_spot/system_ws/build/asus_xtion_visualization -- -j24 -l24
+[0.059s] Invoking command in '/home/rysch01/Projects/teleoperation_spot/system_ws/build/asus_xtion_visualization': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --install /home/rysch01/Projects/teleoperation_spot/system_ws/build/asus_xtion_visualization
+[0.069s] -- Install configuration: ""
+[0.069s] -- Up-to-date: /home/rysch01/Projects/teleoperation_spot/system_ws/install/asus_xtion_visualization/share/asus_xtion_visualization/launch
+[0.069s] -- Up-to-date: /home/rysch01/Projects/teleoperation_spot/system_ws/install/asus_xtion_visualization/share/asus_xtion_visualization/launch/rviz2.launch.py
+[0.069s] -- Up-to-date: /home/rysch01/Projects/teleoperation_spot/system_ws/install/asus_xtion_visualization/share/asus_xtion_visualization/rviz
+[0.069s] -- Up-to-date: /home/rysch01/Projects/teleoperation_spot/system_ws/install/asus_xtion_visualization/share/asus_xtion_visualization/rviz/default.rviz
+[0.069s] -- Up-to-date: /home/rysch01/Projects/teleoperation_spot/system_ws/install/asus_xtion_visualization/share/ament_index/resource_index/package_run_dependencies/asus_xtion_visualization
+[0.070s] -- Up-to-date: /home/rysch01/Projects/teleoperation_spot/system_ws/install/asus_xtion_visualization/share/ament_index/resource_index/parent_prefix_path/asus_xtion_visualization
+[0.070s] -- Up-to-date: /home/rysch01/Projects/teleoperation_spot/system_ws/install/asus_xtion_visualization/share/asus_xtion_visualization/environment/ament_prefix_path.sh
+[0.070s] -- Up-to-date: /home/rysch01/Projects/teleoperation_spot/system_ws/install/asus_xtion_visualization/share/asus_xtion_visualization/environment/ament_prefix_path.dsv
+[0.070s] -- Up-to-date: /home/rysch01/Projects/teleoperation_spot/system_ws/install/asus_xtion_visualization/share/asus_xtion_visualization/environment/path.sh
+[0.070s] -- Up-to-date: /home/rysch01/Projects/teleoperation_spot/system_ws/install/asus_xtion_visualization/share/asus_xtion_visualization/environment/path.dsv
+[0.070s] -- Up-to-date: /home/rysch01/Projects/teleoperation_spot/system_ws/install/asus_xtion_visualization/share/asus_xtion_visualization/local_setup.bash
+[0.070s] -- Up-to-date: /home/rysch01/Projects/teleoperation_spot/system_ws/install/asus_xtion_visualization/share/asus_xtion_visualization/local_setup.sh
+[0.070s] -- Up-to-date: /home/rysch01/Projects/teleoperation_spot/system_ws/install/asus_xtion_visualization/share/asus_xtion_visualization/local_setup.zsh
+[0.071s] -- Up-to-date: /home/rysch01/Projects/teleoperation_spot/system_ws/install/asus_xtion_visualization/share/asus_xtion_visualization/local_setup.dsv
+[0.071s] -- Up-to-date: /home/rysch01/Projects/teleoperation_spot/system_ws/install/asus_xtion_visualization/share/asus_xtion_visualization/package.dsv
+[0.071s] -- Up-to-date: /home/rysch01/Projects/teleoperation_spot/system_ws/install/asus_xtion_visualization/share/ament_index/resource_index/packages/asus_xtion_visualization
+[0.071s] -- Up-to-date: /home/rysch01/Projects/teleoperation_spot/system_ws/install/asus_xtion_visualization/share/asus_xtion_visualization/cmake/asus_xtion_visualizationConfig.cmake
+[0.071s] -- Up-to-date: /home/rysch01/Projects/teleoperation_spot/system_ws/install/asus_xtion_visualization/share/asus_xtion_visualization/cmake/asus_xtion_visualizationConfig-version.cmake
+[0.071s] -- Up-to-date: /home/rysch01/Projects/teleoperation_spot/system_ws/install/asus_xtion_visualization/share/asus_xtion_visualization/package.xml
+[0.093s] Invoked command in '/home/rysch01/Projects/teleoperation_spot/system_ws/build/asus_xtion_visualization' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --install /home/rysch01/Projects/teleoperation_spot/system_ws/build/asus_xtion_visualization

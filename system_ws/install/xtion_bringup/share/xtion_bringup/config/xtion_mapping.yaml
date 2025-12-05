@@ -1,0 +1,5 @@
+mappings:
+- role: camA
+  uri: 1d27/0601@1/15
+- role: camB
+  uri: 1d27/0601@1/14

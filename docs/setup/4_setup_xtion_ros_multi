@@ -1,0 +1,584 @@
+# check two cameras setup
+lsusb | grep -i prime
+
+cd ~/Projects/teleoperation_spot/system_ws/src/ros2_asus_xtion/launch
+mv asus_xtion.launch.py single_asus_xtion.launch.py
+
+
+cd ~/Projects/teleoperation_spot/system_ws
+source /opt/ros/jazzy/setup.bash
+
+
+colcon build --packages-select asus_xtion
+source install/setup.bash
+ros2 launch asus_xtion single_asus_xtion.launch.py
+
+mkdir -p ~/Projects/teleoperation_spot/cpp/xtion_multi
+cd ~/Projects/teleoperation_spot/cpp/xtion_multi
+cat << 'EOF' > ~/Projects/teleoperation_spot/cpp/xtion_multi/xtion_enumerate.cpp
+#include <OpenNI.h>
+#include <iostream>
+
+int main() {
+    // 1. Initialize OpenNI
+    openni::Status rc = openni::OpenNI::initialize();
+    if (rc != openni::STATUS_OK) {
+        std::cerr << "Initialize failed:\n"
+                  << openni::OpenNI::getExtendedError() << std::endl;
+        return 1;
+    }
+
+    // 2. Enumerate all connected devices (returns void in this OpenNI2 version)
+    openni::Array<openni::DeviceInfo> deviceList;
+    openni::OpenNI::enumerateDevices(&deviceList);
+
+    std::cout << "Found " << deviceList.getSize() << " device(s):" << std::endl;
+
+    // 3. Print info for each device
+    for (int i = 0; i < deviceList.getSize(); ++i) {
+        const openni::DeviceInfo& info = deviceList[i];
+
+        std::cout << "Device " << i << ":\n";
+        std::cout << "  URI:           " << info.getUri() << "\n";
+        std::cout << "  Vendor:        " << info.getVendor() << "\n";
+        std::cout << "  Name:          " << info.getName() << "\n";
+        std::cout << "  USB Vendor ID: " << info.getUsbVendorId() << "\n";
+        std::cout << "  USB Product ID:" << info.getUsbProductId() << "\n";
+    }
+
+    openni::OpenNI::shutdown();
+    return 0;
+}
+EOF
+
+
+
+cd ~/Projects/teleoperation_spot/cpp/xtion_multi
+
+
+g++ xtion_enumerate.cpp \
+  -o xtion_enumerate \
+  -I/home/rysch01/Projects/teleoperation_spot/cpp/OpenNI2/Include \
+  -L/home/rysch01/Projects/teleoperation_spot/cpp/OpenNI2/Bin/x64-Release \
+  -lOpenNI2
+
+  ls -l ~/Projects/teleoperation_spot/cpp/xtion_multi/xtion_enumerate
+
+
+# test enumerator
+LD_LIBRARY_PATH=/home/rysch01/Projects/teleoperation_spot/cpp/OpenNI2/Bin/x64-Release \
+  ~/Projects/teleoperation_spot/cpp/xtion_multi/xtion_enumerate
+
+
+mkdir -p ~/Projects/teleoperation_spot/system_ws/src/xtion_bringup/xtion_bringup
+
+cat << 'EOF' > ~/Projects/teleoperation_spot/system_ws/src/xtion_bringup/xtion_bringup/gen_xtion_cameras.py
+#!/usr/bin/env python3
+import os
+import subprocess
+import sys
+from pathlib import Path
+
+import yaml
+from ament_index_python.packages import get_package_share_directory
+
+
+def run_enumerator() -> list[str]:
+    """
+    Run the C++ xtion_enumerate tool and return the list of device URIs.
+    Uses the OpenNI2 build living under cpp/OpenNI2.
+    """
+    enumerator_path = Path.home() / "Projects" / "teleoperation_spot" / "cpp" / "xtion_multi" / "xtion_enumerate"
+    lib_dir = Path.home() / "Projects" / "teleoperation_spot" / "cpp" / "OpenNI2" / "Bin" / "x64-Release"
+
+    if not enumerator_path.exists():
+        print(f"[gen_xtion_cameras] ERROR: {enumerator_path} not found. Did you build xtion_enumerate?", file=sys.stderr)
+        sys.exit(1)
+
+    env = os.environ.copy()
+    env["LD_LIBRARY_PATH"] = str(lib_dir) + ":" + env.get("LD_LIBRARY_PATH", "")
+
+    try:
+        result = subprocess.run(
+            [str(enumerator_path)],
+            env=env,
+            text=True,
+            capture_output=True,
+            check=True,
+        )
+    except subprocess.CalledProcessError as e:
+        print(f"[gen_xtion_cameras] ERROR running xtion_enumerate:", file=sys.stderr)
+        print(e.stderr, file=sys.stderr)
+        sys.exit(1)
+
+    uris: list[str] = []
+    for line in result.stdout.splitlines():
+        line = line.strip()
+        if not line:
+            continue
+        # We look for lines like: "URI:           1d27/0601@1/9"
+        if line.startswith("URI:"):
+            # Split on "URI:" and take the right side
+            uri = line.split("URI:", 1)[1].strip()
+            if uri:
+                uris.append(uri)
+
+    return uris
+
+
+def write_yaml(uris: list[str]) -> Path:
+    """
+    Write xtion_cameras.yaml into xtion_bringup's share/config directory.
+    """
+    if not uris:
+        print("[gen_xtion_cameras] WARNING: No Xtion devices found. Writing empty cameras list.", file=sys.stderr)
+
+    share_dir = Path(get_package_share_directory("xtion_bringup"))
+    config_dir = share_dir / "config"
+    config_dir.mkdir(parents=True, exist_ok=True)
+
+    yaml_path = config_dir / "xtion_cameras.yaml"
+
+    cameras = []
+    for idx, uri in enumerate(uris):
+        cameras.append(
+            {
+                "name": f"cam{idx}",
+                "namespace": f"cam{idx}",
+                "device_id": uri,
+            }
+        )
+
+    data = {"cameras": cameras}
+
+    with yaml_path.open("w") as f:
+        yaml.safe_dump(data, f, default_flow_style=False)
+
+    print(f"[gen_xtion_cameras] Wrote {yaml_path}")
+    for cam in cameras:
+        print(f"  - {cam['name']}: {cam['device_id']}")
+
+    return yaml_path
+
+
+def main():
+    uris = run_enumerator()
+    write_yaml(uris)
+
+
+if __name__ == "__main__":
+    main()
+EOF
+
+
+chmod +x ~/Projects/teleoperation_spot/system_ws/src/xtion_bringup/xtion_bringup/gen_xtion_cameras.py
+
+cat << 'EOF' > ~/Projects/teleoperation_spot/system_ws/src/xtion_bringup/setup.py
+from setuptools import setup
+
+package_name = 'xtion_bringup'
+
+setup(
+    name=package_name,
+    version='0.0.0',
+    packages=[package_name],
+    data_files=[
+        ('share/ament_index/resource_index/packages', ['resource/' + package_name]),
+        ('share/' + package_name, ['package.xml']),
+        ('share/' + package_name + '/launch', [
+            # multi_xtion.launch.py will go here later
+        ]),
+        ('share/' + package_name + '/config', [
+            'config/xtion_cameras.yaml',
+        ]),
+    ],
+    install_requires=['setuptools', 'PyYAML'],
+    zip_safe=True,
+    maintainer='teleop',
+    maintainer_email='you@example.com',
+    description='Bringup utilities for ASUS Xtion cameras',
+    license='MIT',
+    tests_require=['pytest'],
+    entry_points={
+        'console_scripts': [
+            'gen_xtion_cameras = xtion_bringup.gen_xtion_cameras:main',
+        ],
+    },
+)
+EOF
+
+
+
+mkdir -p ~/Projects/teleoperation_spot/system_ws/src/xtion_bringup/config
+mkdir -p ~/Projects/teleoperation_spot/system_ws/src/xtion_bringup/resource
+
+# marker file so ament knows the package name
+echo "xtion_bringup" > ~/Projects/teleoperation_spot/system_ws/src/xtion_bringup/resource/xtion_bringup
+
+# placeholder config file (will be overwritten by generator)
+cat << 'EOF' > ~/Projects/teleoperation_spot/system_ws/src/xtion_bringup/config/xtion_cameras.yaml
+cameras: []
+EOF
+
+# __init__.py
+touch ~/Projects/teleoperation_spot/system_ws/src/xtion_bringup/xtion_bringup/__init__.py
+
+
+
+cat << 'EOF' > ~/Projects/teleoperation_spot/system_ws/src/xtion_bringup/package.xml
+<?xml version="1.0"?>
+<package format="3">
+  <name>xtion_bringup</name>
+  <version>0.0.0</version>
+  <description>Bringup utilities for ASUS Xtion cameras</description>
+  <maintainer email="you@example.com">teleop</maintainer>
+  <license>MIT</license>
+
+  <!-- For ament_python packages -->
+  <buildtool_depend>ament_setuptools</buildtool_depend>
+
+  <exec_depend>rclpy</exec_depend>
+  <exec_depend>ament_index_python</exec_depend>
+  <exec_depend>python3-yaml</exec_depend>
+
+  <export>
+    <build_type>ament_python</build_type>
+  </export>
+</package>
+EOF
+rm -f ~/Projects/teleoperation_spot/system_ws/src/xtion_bringup/CMakeLists.txt
+cd ~/Projects/teleoperation_spot/system_ws
+source /opt/ros/jazzy/setup.bash
+
+colcon build --packages-select xtion_bringup
+source install/setup.bash
+
+
+cd ~/Projects/teleoperation_spot/system_ws
+source /opt/ros/jazzy/setup.bash
+source install/setup.bash
+python3 -m xtion_bringup.gen_xtion_cameras
+cat install/xtion_bringup/share/xtion_bringup/config/xtion_cameras.yaml
+cat << 'EOF' > ~/Projects/teleoperation_spot/system_ws/src/ros2_asus_xtion/asus_xtion/launch/single_asus_xtion.launch.py
+from launch import LaunchDescription
+from launch.actions import DeclareLaunchArgument
+from launch.substitutions import LaunchConfiguration
+
+from launch_ros.actions import Node
+
+
+def generate_launch_description():
+    camera_name = LaunchConfiguration('camera_name')
+    camera_namespace = LaunchConfiguration('camera_namespace')
+    device_id = LaunchConfiguration('device_id')
+
+    return LaunchDescription([
+        DeclareLaunchArgument(
+            'camera_name',
+            default_value='camera',
+            description='Name of the camera node'
+        ),
+        DeclareLaunchArgument(
+            'camera_namespace',
+            default_value='',
+            description='Namespace for this camera (e.g. cam0, cam1)'
+        ),
+        DeclareLaunchArgument(
+            'device_id',
+            default_value='',
+            description='OpenNI2 device ID / URI (e.g. 1d27/0601@1/9)'
+        ),
+
+        Node(
+            package='openni2_camera',
+            executable='openni2_node',
+            namespace=camera_namespace,
+            name=camera_name,
+            parameters=[{
+                'device_id': device_id,
+            }],
+            output='screen',
+        ),
+    ])
+EOF
+cd ~/Projects/teleoperation_spot/system_ws
+source /opt/ros/jazzy/setup.bash
+colcon build --packages-select asus_xtion
+source install/setup.bash
+
+cat << 'EOF' > ~/Projects/teleoperation_spot/system_ws/src/ros2_asus_xtion/asus_xtion/launch/single_asus_xtion.launch.py
+from launch import LaunchDescription
+from launch.actions import DeclareLaunchArgument
+from launch.substitutions import LaunchConfiguration
+
+from launch_ros.actions import Node
+
+
+def generate_launch_description():
+    camera_name = LaunchConfiguration('camera_name')
+    camera_namespace = LaunchConfiguration('camera_namespace')
+    device_id = LaunchConfiguration('device_id')
+
+    return LaunchDescription([
+        DeclareLaunchArgument(
+            'camera_name',
+            default_value='camera',
+            description='Name of the camera node'
+        ),
+        DeclareLaunchArgument(
+            'camera_namespace',
+            default_value='',
+            description='Namespace for this camera (e.g. cam0, cam1)'
+        ),
+        DeclareLaunchArgument(
+            'device_id',
+            default_value='',
+            description='OpenNI2 device ID / URI (e.g. 1d27/0601@1/9)'
+        ),
+
+        Node(
+            package='openni2_camera',
+            executable='openni2_camera_driver', 
+            namespace=camera_namespace,
+            name=camera_name,
+            parameters=[{
+                'device_id': device_id,
+            }],
+            output='screen',
+        ),
+    ])
+EOF
+cd ~/Projects/teleoperation_spot/system_ws
+source /opt/ros/jazzy/setup.bash
+
+colcon build --packages-select asus_xtion
+source install/setup.bash
+
+
+
+
+ros2 launch asus_xtion single_asus_xtion.launch.py \
+  device_id:=1d27/0601@1/9 \
+  camera_namespace:=cam0 \
+  camera_name:=cam0
+
+
+
+cd ~/Projects/teleoperation_spot/system_ws
+source /opt/ros/jazzy/setup.bash
+source install/setup.bash
+
+ros2 topic list | grep cam0
+
+
+ros2 launch asus_xtion single_asus_xtion.launch.py \
+  device_id:=1d27/0601@1/109 \
+  camera_namespace:=cam1 \
+  camera_name:=cam1
+
+
+mkdir -p ~/Projects/teleoperation_spot/system_ws/src/xtion_bringup/launch
+
+cat << 'EOF' > ~/Projects/teleoperation_spot/system_ws/src/xtion_bringup/launch/multi_xtion.launch.py
+from pathlib import Path
+import yaml
+
+from ament_index_python.packages import get_package_share_directory
+
+from launch import LaunchDescription
+from launch.actions import IncludeLaunchDescription
+from launch.launch_description_sources import PythonLaunchDescriptionSource
+from launch.substitutions import PathJoinSubstitution
+from launch_ros.substitutions import FindPackageShare
+
+
+def load_cameras_config():
+    share_dir = Path(get_package_share_directory('xtion_bringup'))
+    yaml_path = share_dir / 'config' / 'xtion_cameras.yaml'
+
+    if not yaml_path.exists():
+        raise RuntimeError(
+            f"[multi_xtion] Config file not found: {yaml_path}\n"
+            f"Run: python3 -m xtion_bringup.gen_xtion_cameras"
+        )
+
+    with yaml_path.open('r') as f:
+        data = yaml.safe_load(f) or {}
+
+    cameras = data.get('cameras', [])
+    if not cameras:
+        print("[multi_xtion] WARNING: No cameras in config file.")
+    return cameras
+
+
+def generate_launch_description():
+    cameras = load_cameras_config()
+    actions = []
+
+    for cam in cameras:
+        name = cam.get('name', 'camera')
+        namespace = cam.get('namespace', '')
+        device_id = cam.get('device_id', '')
+
+        if not device_id:
+            raise RuntimeError(f"[multi_xtion] Camera entry missing device_id: {cam}")
+
+        actions.append(
+            IncludeLaunchDescription(
+                PythonLaunchDescriptionSource(
+                    PathJoinSubstitution([
+                        FindPackageShare('asus_xtion'),
+                        'launch',
+                        'single_asus_xtion.launch.py',
+                    ])
+                ),
+                launch_arguments={
+                    'camera_name': name,
+                    'camera_namespace': namespace,
+                    'device_id': device_id,
+                }.items(),
+            )
+        )
+
+    return LaunchDescription(actions)
+EOF
+
+
+cat << 'EOF' > ~/Projects/teleoperation_spot/system_ws/src/xtion_bringup/setup.py
+from setuptools import setup
+
+package_name = 'xtion_bringup'
+
+setup(
+    name=package_name,
+    version='0.0.0',
+    packages=[package_name],
+    data_files=[
+        ('share/ament_index/resource_index/packages', ['resource/' + package_name]),
+        ('share/' + package_name, ['package.xml']),
+        ('share/' + package_name + '/launch', [
+            'launch/multi_xtion.launch.py',
+        ]),
+        ('share/' + package_name + '/config', [
+            'config/xtion_cameras.yaml',
+        ]),
+    ],
+    install_requires=['setuptools', 'PyYAML'],
+    zip_safe=True,
+    maintainer='teleop',
+    maintainer_email='you@example.com',
+    description='Bringup utilities for ASUS Xtion cameras',
+    license='MIT',
+    tests_require=['pytest'],
+    entry_points={
+        'console_scripts': [
+            'gen_xtion_cameras = xtion_bringup.gen_xtion_cameras:main',
+        ],
+    },
+)
+EOF
+
+
+cd ~/Projects/teleoperation_spot/system_ws
+source /opt/ros/jazzy/setup.bash
+
+colcon build --packages-select xtion_bringup
+source install/setup.bash
+
+
+
+cd ~/Projects/teleoperation_spot/system_ws
+source /opt/ros/jazzy/setup.bash
+source install/setup.bash
+
+python3 -m xtion_bringup.gen_xtion_cameras
+
+
+cat install/xtion_bringup/share/xtion_bringup/config/xtion_cameras.yaml
+
+
+
+
+new terminal
+cd ~/Projects/teleoperation_spot/system_ws
+source /opt/ros/jazzy/setup.bash
+source install/setup.bash
+
+ros2 topic list | egrep 'cam0|cam1'
+
+
+
+cd ~/Projects/teleoperation_spot/system_ws
+source /opt/ros/jazzy/setup.bash
+source install/setup.bash
+
+rviz2
+
+
+# add the streams in toopics
+
+
+
+# test with a third camera
+cd ~/Projects/teleoperation_spot/system_ws
+source /opt/ros/jazzy/setup.bash
+source install/setup.bash
+
+python3 -m xtion_bringup.gen_xtion_cameras
+ros2 launch xtion_bringup multi_xtion.launch.py
+
+
+# then in rviz
+# new terminal
+cd ~/Projects/teleoperation_spot/system_ws
+source /opt/ros/jazzy/setup.bash
+source install/setup.bash
+
+rviz2
+
+
+
+  Resolution Mode Parameters
+
+  Add these parameters to the parameters=[{...}] section in single_asus_xtion.launch.py:
+
+  parameters=[{
+      'device_id': device_id,
+
+      # Color/RGB resolution modes:
+      'color_mode': '5',   # Options:
+                           # '1' = 320x240 @ 30fps
+                           # '5' = 640x480 @ 30fps (DEFAULT)
+                           # '9' = 1280x1024 @ 30fps (SXGA - max for Xtion)
+
+      # Depth resolution modes:
+      'depth_mode': '5',   # Options:
+                           # '1' = 320x240 @ 30fps (QVGA)
+                           # '5' = 640x480 @ 30fps (VGA - DEFAULT, max for depth)
+                           # Note: Depth is limited to 640x480 by hardware
+
+      # IR resolution modes (if using IR instead of RGB):
+      'ir_mode': '5',      # Same options as depth_mode
+  }],
+
+  Key Points
+
+  - Default: Mode 5 (640x480 @ 30fps) for all streams
+  - Max RGB: Mode 9 (1280x1024 @ 30fps)
+  - Max Depth: Mode 5 (640x480 @ 30fps) - hardware limitation
+  - Lower res options: Mode 1 (320x240) for faster processing/bandwidth
+
+  Example Configurations
+
+  High quality RGB with standard depth:
+  'color_mode': '9',   # 1280x1024
+  'depth_mode': '5',   # 640x480
+
+  Balanced (current default):
+  'color_mode': '5',   # 640x480
+  'depth_mode': '5',   # 640x480
+
+  Low bandwidth/fast processing:
+  'color_mode': '1',   # 320x240
+  'depth_mode': '1',   # 320x240
+

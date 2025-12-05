@@ -1,0 +1,76 @@
+mkdir cpp
+
+
+sudo apt update
+sudo apt install -y \
+    git build-essential cmake \
+    libusb-1.0-0-dev libudev-dev \
+    freeglut3-dev doxygen graphviz \
+    libgl1-mesa-dev libglu1-mesa-dev
+    
+
+git clone https://github.com/structureio/OpenNI2.git
+cd OpenNI2
+
+
+make -j"$(nproc)"
+
+cd ~/Projects/teleoperation_spot/cpp/OpenNI2
+sudo cp Packaging/Linux/* /etc/udev/rules.d/
+sudo udevadm control --reload-rules
+sudo udevadm trigger
+
+cd ~/Projects/teleoperation_spot/cpp/OpenNI2/Bin/x64-Release
+./NiViewer2 --devices
+
+
+lsusb | grep -i prime
+lsusb | grep -i xtion
+lsusb
+
+
+
+  Resolution Mode Parameters
+
+  Add these parameters to the parameters=[{...}] section in single_asus_xtion.launch.py:
+
+  parameters=[{
+      'device_id': device_id,
+
+      # Color/RGB resolution modes:
+      'color_mode': '5',   # Options:
+                           # '1' = 320x240 @ 30fps
+                           # '5' = 640x480 @ 30fps (DEFAULT)
+                           # '9' = 1280x1024 @ 30fps (SXGA - max for Xtion)
+
+      # Depth resolution modes:
+      'depth_mode': '5',   # Options:
+                           # '1' = 320x240 @ 30fps (QVGA)
+                           # '5' = 640x480 @ 30fps (VGA - DEFAULT, max for depth)
+                           # Note: Depth is limited to 640x480 by hardware
+
+      # IR resolution modes (if using IR instead of RGB):
+      'ir_mode': '5',      # Same options as depth_mode
+  }],
+
+  Key Points
+
+  - Default: Mode 5 (640x480 @ 30fps) for all streams
+  - Max RGB: Mode 9 (1280x1024 @ 30fps)
+  - Max Depth: Mode 5 (640x480 @ 30fps) - hardware limitation
+  - Lower res options: Mode 1 (320x240) for faster processing/bandwidth
+
+  Example Configurations
+
+  High quality RGB with standard depth:
+  'color_mode': '9',   # 1280x1024
+  'depth_mode': '5',   # 640x480
+
+  Balanced (current default):
+  'color_mode': '5',   # 640x480
+  'depth_mode': '5',   # 640x480
+
+  Low bandwidth/fast processing:
+  'color_mode': '1',   # 320x240
+  'depth_mode': '1',   # 320x240
+

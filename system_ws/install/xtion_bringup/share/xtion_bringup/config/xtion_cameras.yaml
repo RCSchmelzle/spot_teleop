@@ -1,0 +1,7 @@
+cameras:
+- device_id: 1d27/0601@1/15
+  name: camA
+  namespace: camA
+- device_id: 1d27/0601@1/14
+  name: camB
+  namespace: camB

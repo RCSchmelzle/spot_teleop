@@ -1,0 +1,43 @@
+[0.734s] Invoking command in '/home/rysch01/Projects/teleoperation_spot/system_ws/src/xtion_bringup': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PYTHONPATH=/home/rysch01/Projects/teleoperation_spot/system_ws/build/xtion_bringup/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/rysch01/Projects/teleoperation_spot/system_ws/install/xtion_bringup/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../../build/xtion_bringup build --build-base /home/rysch01/Projects/teleoperation_spot/system_ws/build/xtion_bringup/build install --record /home/rysch01/Projects/teleoperation_spot/system_ws/build/xtion_bringup/install.log --single-version-externally-managed install_data
+[0.938s] running egg_info
+[0.938s] creating ../../build/xtion_bringup/xtion_bringup.egg-info
+[0.947s] writing ../../build/xtion_bringup/xtion_bringup.egg-info/PKG-INFO
+[0.947s] writing dependency_links to ../../build/xtion_bringup/xtion_bringup.egg-info/dependency_links.txt
+[0.947s] writing entry points to ../../build/xtion_bringup/xtion_bringup.egg-info/entry_points.txt
+[0.947s] writing requirements to ../../build/xtion_bringup/xtion_bringup.egg-info/requires.txt
+[0.947s] writing top-level names to ../../build/xtion_bringup/xtion_bringup.egg-info/top_level.txt
+[0.947s] writing manifest file '../../build/xtion_bringup/xtion_bringup.egg-info/SOURCES.txt'
+[0.964s] reading manifest file '../../build/xtion_bringup/xtion_bringup.egg-info/SOURCES.txt'
+[0.964s] writing manifest file '../../build/xtion_bringup/xtion_bringup.egg-info/SOURCES.txt'
+[0.964s] running build
+[0.964s] running build_py
+[0.964s] creating /home/rysch01/Projects/teleoperation_spot/system_ws/build/xtion_bringup/build
+[0.964s] creating /home/rysch01/Projects/teleoperation_spot/system_ws/build/xtion_bringup/build/lib
+[0.964s] creating /home/rysch01/Projects/teleoperation_spot/system_ws/build/xtion_bringup/build/lib/xtion_bringup
+[0.964s] copying xtion_bringup/setup.py -> /home/rysch01/Projects/teleoperation_spot/system_ws/build/xtion_bringup/build/lib/xtion_bringup
+[0.964s] copying xtion_bringup/gen_xtion_cameras.py -> /home/rysch01/Projects/teleoperation_spot/system_ws/build/xtion_bringup/build/lib/xtion_bringup
+[0.965s] copying xtion_bringup/__init__.py -> /home/rysch01/Projects/teleoperation_spot/system_ws/build/xtion_bringup/build/lib/xtion_bringup
+[0.965s] running install
+[0.968s] running install_lib
+[0.976s] creating /home/rysch01/Projects/teleoperation_spot/system_ws/install/xtion_bringup/lib/python3.12/site-packages/xtion_bringup
+[0.976s] copying /home/rysch01/Projects/teleoperation_spot/system_ws/build/xtion_bringup/build/lib/xtion_bringup/setup.py -> /home/rysch01/Projects/teleoperation_spot/system_ws/install/xtion_bringup/lib/python3.12/site-packages/xtion_bringup
+[0.976s] copying /home/rysch01/Projects/teleoperation_spot/system_ws/build/xtion_bringup/build/lib/xtion_bringup/gen_xtion_cameras.py -> /home/rysch01/Projects/teleoperation_spot/system_ws/install/xtion_bringup/lib/python3.12/site-packages/xtion_bringup
+[0.976s] copying /home/rysch01/Projects/teleoperation_spot/system_ws/build/xtion_bringup/build/lib/xtion_bringup/__init__.py -> /home/rysch01/Projects/teleoperation_spot/system_ws/install/xtion_bringup/lib/python3.12/site-packages/xtion_bringup
+[0.976s] byte-compiling /home/rysch01/Projects/teleoperation_spot/system_ws/install/xtion_bringup/lib/python3.12/site-packages/xtion_bringup/setup.py to setup.cpython-312.pyc
+[0.977s] byte-compiling /home/rysch01/Projects/teleoperation_spot/system_ws/install/xtion_bringup/lib/python3.12/site-packages/xtion_bringup/gen_xtion_cameras.py to gen_xtion_cameras.cpython-312.pyc
+[0.977s] byte-compiling /home/rysch01/Projects/teleoperation_spot/system_ws/install/xtion_bringup/lib/python3.12/site-packages/xtion_bringup/__init__.py to __init__.cpython-312.pyc
+[0.977s] running install_data
+[0.977s] creating /home/rysch01/Projects/teleoperation_spot/system_ws/install/xtion_bringup/share/ament_index
+[0.977s] creating /home/rysch01/Projects/teleoperation_spot/system_ws/install/xtion_bringup/share/ament_index/resource_index
+[0.977s] creating /home/rysch01/Projects/teleoperation_spot/system_ws/install/xtion_bringup/share/ament_index/resource_index/packages
+[0.977s] copying resource/xtion_bringup -> /home/rysch01/Projects/teleoperation_spot/system_ws/install/xtion_bringup/share/ament_index/resource_index/packages
+[0.977s] copying package.xml -> /home/rysch01/Projects/teleoperation_spot/system_ws/install/xtion_bringup/share/xtion_bringup
+[0.977s] creating /home/rysch01/Projects/teleoperation_spot/system_ws/install/xtion_bringup/share/xtion_bringup/launch
+[0.977s] creating /home/rysch01/Projects/teleoperation_spot/system_ws/install/xtion_bringup/share/xtion_bringup/config
+[0.978s] copying config/xtion_cameras.yaml -> /home/rysch01/Projects/teleoperation_spot/system_ws/install/xtion_bringup/share/xtion_bringup/config
+[0.978s] running install_egg_info
+[0.987s] Copying ../../build/xtion_bringup/xtion_bringup.egg-info to /home/rysch01/Projects/teleoperation_spot/system_ws/install/xtion_bringup/lib/python3.12/site-packages/xtion_bringup-0.0.0-py3.12.egg-info
+[0.987s] running install_scripts
+[1.048s] Installing gen_xtion_cameras script to /home/rysch01/Projects/teleoperation_spot/system_ws/install/xtion_bringup/bin
+[1.048s] writing list of installed files to '/home/rysch01/Projects/teleoperation_spot/system_ws/build/xtion_bringup/install.log'
+[1.062s] Invoked command in '/home/rysch01/Projects/teleoperation_spot/system_ws/src/xtion_bringup' returned '0': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PYTHONPATH=/home/rysch01/Projects/teleoperation_spot/system_ws/build/xtion_bringup/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/rysch01/Projects/teleoperation_spot/system_ws/install/xtion_bringup/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../../build/xtion_bringup build --build-base /home/rysch01/Projects/teleoperation_spot/system_ws/build/xtion_bringup/build install --record /home/rysch01/Projects/teleoperation_spot/system_ws/build/xtion_bringup/install.log --single-version-externally-managed install_data

@@ -1,0 +1,16 @@
+/home/rysch01/Projects/teleoperation_spot/system_ws/install/asus_xtion/share/asus_xtion/launch/single_asus_xtion.launch.py
+/home/rysch01/Projects/teleoperation_spot/system_ws/install/asus_xtion/share/ament_index/resource_index/package_run_dependencies/asus_xtion
+/home/rysch01/Projects/teleoperation_spot/system_ws/install/asus_xtion/share/ament_index/resource_index/parent_prefix_path/asus_xtion
+/home/rysch01/Projects/teleoperation_spot/system_ws/install/asus_xtion/share/asus_xtion/environment/ament_prefix_path.sh
+/home/rysch01/Projects/teleoperation_spot/system_ws/install/asus_xtion/share/asus_xtion/environment/ament_prefix_path.dsv
+/home/rysch01/Projects/teleoperation_spot/system_ws/install/asus_xtion/share/asus_xtion/environment/path.sh
+/home/rysch01/Projects/teleoperation_spot/system_ws/install/asus_xtion/share/asus_xtion/environment/path.dsv
+/home/rysch01/Projects/teleoperation_spot/system_ws/install/asus_xtion/share/asus_xtion/local_setup.bash
+/home/rysch01/Projects/teleoperation_spot/system_ws/install/asus_xtion/share/asus_xtion/local_setup.sh
+/home/rysch01/Projects/teleoperation_spot/system_ws/install/asus_xtion/share/asus_xtion/local_setup.zsh
+/home/rysch01/Projects/teleoperation_spot/system_ws/install/asus_xtion/share/asus_xtion/local_setup.dsv
+/home/rysch01/Projects/teleoperation_spot/system_ws/install/asus_xtion/share/asus_xtion/package.dsv
+/home/rysch01/Projects/teleoperation_spot/system_ws/install/asus_xtion/share/ament_index/resource_index/packages/asus_xtion
+/home/rysch01/Projects/teleoperation_spot/system_ws/install/asus_xtion/share/asus_xtion/cmake/asus_xtionConfig.cmake
+/home/rysch01/Projects/teleoperation_spot/system_ws/install/asus_xtion/share/asus_xtion/cmake/asus_xtionConfig-version.cmake
+/home/rysch01/Projects/teleoperation_spot/system_ws/install/asus_xtion/share/asus_xtion/package.xml

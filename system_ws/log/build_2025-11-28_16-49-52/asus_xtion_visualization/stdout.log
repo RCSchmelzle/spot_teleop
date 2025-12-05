@@ -1,0 +1,38 @@
+-- The C compiler identification is GNU 13.3.0
+-- The CXX compiler identification is GNU 13.3.0
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: /usr/bin/cc - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /usr/bin/c++ - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Found ament_cmake: 2.5.4 (/opt/ros/jazzy/share/ament_cmake/cmake)
+-- Found Python3: /usr/bin/python3 (found version "3.12.3") found components: Interpreter 
+-- Found rviz2: 14.1.17 (/opt/ros/jazzy/share/rviz2/cmake)
+-- Configuring done (0.9s)
+-- Generating done (0.0s)
+-- Build files have been written to: /home/rysch01/Projects/teleoperation_spot/system_ws/build/asus_xtion_visualization
+-- Install configuration: ""
+-- Installing: /home/rysch01/Projects/teleoperation_spot/system_ws/install/asus_xtion_visualization/share/asus_xtion_visualization/launch
+-- Installing: /home/rysch01/Projects/teleoperation_spot/system_ws/install/asus_xtion_visualization/share/asus_xtion_visualization/launch/rviz2.launch.py
+-- Installing: /home/rysch01/Projects/teleoperation_spot/system_ws/install/asus_xtion_visualization/share/asus_xtion_visualization/rviz
+-- Installing: /home/rysch01/Projects/teleoperation_spot/system_ws/install/asus_xtion_visualization/share/asus_xtion_visualization/rviz/default.rviz
+-- Installing: /home/rysch01/Projects/teleoperation_spot/system_ws/install/asus_xtion_visualization/share/ament_index/resource_index/package_run_dependencies/asus_xtion_visualization
+-- Installing: /home/rysch01/Projects/teleoperation_spot/system_ws/install/asus_xtion_visualization/share/ament_index/resource_index/parent_prefix_path/asus_xtion_visualization
+-- Installing: /home/rysch01/Projects/teleoperation_spot/system_ws/install/asus_xtion_visualization/share/asus_xtion_visualization/environment/ament_prefix_path.sh
+-- Installing: /home/rysch01/Projects/teleoperation_spot/system_ws/install/asus_xtion_visualization/share/asus_xtion_visualization/environment/ament_prefix_path.dsv
+-- Installing: /home/rysch01/Projects/teleoperation_spot/system_ws/install/asus_xtion_visualization/share/asus_xtion_visualization/environment/path.sh
+-- Installing: /home/rysch01/Projects/teleoperation_spot/system_ws/install/asus_xtion_visualization/share/asus_xtion_visualization/environment/path.dsv
+-- Installing: /home/rysch01/Projects/teleoperation_spot/system_ws/install/asus_xtion_visualization/share/asus_xtion_visualization/local_setup.bash
+-- Installing: /home/rysch01/Projects/teleoperation_spot/system_ws/install/asus_xtion_visualization/share/asus_xtion_visualization/local_setup.sh
+-- Installing: /home/rysch01/Projects/teleoperation_spot/system_ws/install/asus_xtion_visualization/share/asus_xtion_visualization/local_setup.zsh
+-- Installing: /home/rysch01/Projects/teleoperation_spot/system_ws/install/asus_xtion_visualization/share/asus_xtion_visualization/local_setup.dsv
+-- Installing: /home/rysch01/Projects/teleoperation_spot/system_ws/install/asus_xtion_visualization/share/asus_xtion_visualization/package.dsv
+-- Installing: /home/rysch01/Projects/teleoperation_spot/system_ws/install/asus_xtion_visualization/share/ament_index/resource_index/packages/asus_xtion_visualization
+-- Installing: /home/rysch01/Projects/teleoperation_spot/system_ws/install/asus_xtion_visualization/share/asus_xtion_visualization/cmake/asus_xtion_visualizationConfig.cmake
+-- Installing: /home/rysch01/Projects/teleoperation_spot/system_ws/install/asus_xtion_visualization/share/asus_xtion_visualization/cmake/asus_xtion_visualizationConfig-version.cmake
+-- Installing: /home/rysch01/Projects/teleoperation_spot/system_ws/install/asus_xtion_visualization/share/asus_xtion_visualization/package.xml

@@ -1,0 +1,4 @@
+source;share/asus_xtion/local_setup.bash
+source;share/asus_xtion/local_setup.dsv
+source;share/asus_xtion/local_setup.sh
+source;share/asus_xtion/local_setup.zsh

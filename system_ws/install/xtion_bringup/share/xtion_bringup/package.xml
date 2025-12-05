@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<package format="3">
+  <name>xtion_bringup</name>
+  <version>0.0.0</version>
+  <description>Bringup utilities for ASUS Xtion cameras</description>
+  <maintainer email="you@example.com">teleop</maintainer>
+  <license>MIT</license>
+
+  <!-- For ament_python packages -->
+  <buildtool_depend>ament_setuptools</buildtool_depend>
+
+  <exec_depend>rclpy</exec_depend>
+  <exec_depend>ament_index_python</exec_depend>
+  <exec_depend>python3-yaml</exec_depend>
+
+  <export>
+    <build_type>ament_python</build_type>
+  </export>
+</package>

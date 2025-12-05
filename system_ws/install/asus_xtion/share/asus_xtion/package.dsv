@@ -1,0 +1,8 @@
+source;share/asus_xtion/hook/cmake_prefix_path.ps1
+source;share/asus_xtion/hook/cmake_prefix_path.dsv
+source;share/asus_xtion/hook/cmake_prefix_path.sh
+source;share/asus_xtion/local_setup.bash
+source;share/asus_xtion/local_setup.dsv
+source;share/asus_xtion/local_setup.ps1
+source;share/asus_xtion/local_setup.sh
+source;share/asus_xtion/local_setup.zsh

@@ -1,0 +1,49 @@
+[0.007s] Invoking command in '/home/rysch01/Projects/teleoperation_spot/system_ws/build/asus_xtion_description': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake /home/rysch01/Projects/teleoperation_spot/system_ws/src/ros2_asus_xtion/asus_xtion_description -DCMAKE_INSTALL_PREFIX=/home/rysch01/Projects/teleoperation_spot/system_ws/install/asus_xtion_description
+[0.122s] -- The C compiler identification is GNU 13.3.0
+[0.200s] -- The CXX compiler identification is GNU 13.3.0
+[0.224s] -- Detecting C compiler ABI info
+[0.343s] -- Detecting C compiler ABI info - done
+[0.356s] -- Check for working C compiler: /usr/bin/cc - skipped
+[0.356s] -- Detecting C compile features
+[0.357s] -- Detecting C compile features - done
+[0.371s] -- Detecting CXX compiler ABI info
+[0.502s] -- Detecting CXX compiler ABI info - done
+[0.516s] -- Check for working CXX compiler: /usr/bin/c++ - skipped
+[0.516s] -- Detecting CXX compile features
+[0.517s] -- Detecting CXX compile features - done
+[0.520s] -- Found ament_cmake: 2.5.4 (/opt/ros/jazzy/share/ament_cmake/cmake)
+[0.713s] -- Found Python3: /usr/bin/python3 (found version "3.12.3") found components: Interpreter 
+[0.849s] -- Found xacro: 2.1.1 (/opt/ros/jazzy/share/xacro/cmake)
+[0.962s] -- Configuring done (0.9s)
+[0.964s] -- Generating done (0.0s)
+[0.965s] -- Build files have been written to: /home/rysch01/Projects/teleoperation_spot/system_ws/build/asus_xtion_description
+[0.971s] Invoked command in '/home/rysch01/Projects/teleoperation_spot/system_ws/build/asus_xtion_description' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake /home/rysch01/Projects/teleoperation_spot/system_ws/src/ros2_asus_xtion/asus_xtion_description -DCMAKE_INSTALL_PREFIX=/home/rysch01/Projects/teleoperation_spot/system_ws/install/asus_xtion_description
+[0.972s] Invoking command in '/home/rysch01/Projects/teleoperation_spot/system_ws/build/asus_xtion_description': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --build /home/rysch01/Projects/teleoperation_spot/system_ws/build/asus_xtion_description -- -j24 -l24
+[1.032s] Invoked command in '/home/rysch01/Projects/teleoperation_spot/system_ws/build/asus_xtion_description' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --build /home/rysch01/Projects/teleoperation_spot/system_ws/build/asus_xtion_description -- -j24 -l24
+[1.033s] Invoking command in '/home/rysch01/Projects/teleoperation_spot/system_ws/build/asus_xtion_description': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --install /home/rysch01/Projects/teleoperation_spot/system_ws/build/asus_xtion_description
+[1.041s] -- Install configuration: ""
+[1.041s] -- Installing: /home/rysch01/Projects/teleoperation_spot/system_ws/install/asus_xtion_description/share/asus_xtion_description/launch
+[1.041s] -- Installing: /home/rysch01/Projects/teleoperation_spot/system_ws/install/asus_xtion_description/share/asus_xtion_description/launch/robot_state_publisher.launch.py
+[1.042s] -- Installing: /home/rysch01/Projects/teleoperation_spot/system_ws/install/asus_xtion_description/share/asus_xtion_description/meshes
+[1.042s] -- Installing: /home/rysch01/Projects/teleoperation_spot/system_ws/install/asus_xtion_description/share/asus_xtion_description/meshes/asus_xtion_pro_live.dae
+[1.043s] -- Installing: /home/rysch01/Projects/teleoperation_spot/system_ws/install/asus_xtion_description/share/asus_xtion_description/meshes/asus_xtion_pro_live.png
+[1.043s] -- Installing: /home/rysch01/Projects/teleoperation_spot/system_ws/install/asus_xtion_description/share/asus_xtion_description/urdf
+[1.043s] -- Installing: /home/rysch01/Projects/teleoperation_spot/system_ws/install/asus_xtion_description/share/asus_xtion_description/urdf/asus_xtion.urdf.xacro
+[1.043s] -- Installing: /home/rysch01/Projects/teleoperation_spot/system_ws/install/asus_xtion_description/share/asus_xtion_description/robots
+[1.043s] -- Installing: /home/rysch01/Projects/teleoperation_spot/system_ws/install/asus_xtion_description/share/asus_xtion_description/robots/asus_xtion.urdf.xacro
+[1.043s] -- Installing: /home/rysch01/Projects/teleoperation_spot/system_ws/install/asus_xtion_description/share/ament_index/resource_index/package_run_dependencies/asus_xtion_description
+[1.043s] -- Installing: /home/rysch01/Projects/teleoperation_spot/system_ws/install/asus_xtion_description/share/ament_index/resource_index/parent_prefix_path/asus_xtion_description
+[1.043s] -- Installing: /home/rysch01/Projects/teleoperation_spot/system_ws/install/asus_xtion_description/share/asus_xtion_description/environment/ament_prefix_path.sh
+[1.043s] -- Installing: /home/rysch01/Projects/teleoperation_spot/system_ws/install/asus_xtion_description/share/asus_xtion_description/environment/ament_prefix_path.dsv
+[1.043s] -- Installing: /home/rysch01/Projects/teleoperation_spot/system_ws/install/asus_xtion_description/share/asus_xtion_description/environment/path.sh
+[1.043s] -- Installing: /home/rysch01/Projects/teleoperation_spot/system_ws/install/asus_xtion_description/share/asus_xtion_description/environment/path.dsv
+[1.044s] -- Installing: /home/rysch01/Projects/teleoperation_spot/system_ws/install/asus_xtion_description/share/asus_xtion_description/local_setup.bash
+[1.044s] -- Installing: /home/rysch01/Projects/teleoperation_spot/system_ws/install/asus_xtion_description/share/asus_xtion_description/local_setup.sh
+[1.044s] -- Installing: /home/rysch01/Projects/teleoperation_spot/system_ws/install/asus_xtion_description/share/asus_xtion_description/local_setup.zsh
+[1.044s] -- Installing: /home/rysch01/Projects/teleoperation_spot/system_ws/install/asus_xtion_description/share/asus_xtion_description/local_setup.dsv
+[1.044s] -- Installing: /home/rysch01/Projects/teleoperation_spot/system_ws/install/asus_xtion_description/share/asus_xtion_description/package.dsv
+[1.044s] -- Installing: /home/rysch01/Projects/teleoperation_spot/system_ws/install/asus_xtion_description/share/ament_index/resource_index/packages/asus_xtion_description
+[1.044s] -- Installing: /home/rysch01/Projects/teleoperation_spot/system_ws/install/asus_xtion_description/share/asus_xtion_description/cmake/asus_xtion_descriptionConfig.cmake
+[1.044s] -- Installing: /home/rysch01/Projects/teleoperation_spot/system_ws/install/asus_xtion_description/share/asus_xtion_description/cmake/asus_xtion_descriptionConfig-version.cmake
+[1.044s] -- Installing: /home/rysch01/Projects/teleoperation_spot/system_ws/install/asus_xtion_description/share/asus_xtion_description/package.xml
+[1.064s] Invoked command in '/home/rysch01/Projects/teleoperation_spot/system_ws/build/asus_xtion_description' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --install /home/rysch01/Projects/teleoperation_spot/system_ws/build/asus_xtion_description
