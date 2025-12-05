@@ -1,0 +1,33 @@
+================================================================================
+ORB-SLAM3 RGB-D Double Free / Corruption Debug Log
+================================================================================
+Date: 2025-12-04
+Goal: Fix crash happening right after "Camera 0 is pinhole" in RGB-D mode
+Config: xtionA_rgbd.yaml, ROS 2 Jazzy, local (non-Docker)
+
+--------------------------------------------------------------------------------
+INITIAL STATE
+--------------------------------------------------------------------------------
+
+Git repo initialized:
+  cd ~/Projects/teleoperation_spot
+  git init
+  git config user.email "debug@teleoperation.local"
+  git config user.name "Debug Session"
+  git add -A
+  git commit -m "Initial full snapshot including ORB_SLAM3 core, ROS2 wrappers, Xtion bringup"
+
+Commit: 934ff7c
+
+Current symptom:
+  - ORB-SLAM3 loads vocabulary, settings
+  - Prints "There are 1 cameras in the atlas"
+  - Prints "Camera 0 is pinhole"
+  - Immediately crashes with "double free or corruption (out)"
+  - Pangolin window sometimes flashes then closes
+  - KeyFrameTrajectory.txt is empty or not written
+
+--------------------------------------------------------------------------------
+DEBUGGING STEPS
+--------------------------------------------------------------------------------
+
