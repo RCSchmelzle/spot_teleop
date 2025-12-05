@@ -44,3 +44,73 @@ $ ldd install/orbslam3/lib/orbslam3/rgbd | grep -E "libstdc\+\+|libgcc"
 
 Result: Both using same libstdc++, no ABI mismatch here.
 
+
+Step 2: Git Repository Setup
+-----------------------------
+Successfully converted all nested git repos to regular directories in main repo.
+Removed gitlink entries for:
+  - cpp/ORB_SLAM3
+  - cpp/Sophus
+  - cpp/OpenNI2
+  - _multi_orbslam_ws/Pangolin
+  - _multi_orbslam_ws/src/ORB_SLAM3
+  - _multi_orbslam_ws/src/orb_slam3_ros
+
+Committed 3829 files (32M+ lines) as regular files.
+Repository is now fully self-contained and cloneable.
+
+Step 3: Analyzing crash location
+---------------------------------
+Found crash occurs right after this code in Tracking.cc (~line 100-120):
+
+    vector<GeometricCamera*> vpCams = mpAtlas->GetAllCameras();
+    std::cout << "There are " << vpCams.size() << " cameras in the atlas" << std::endl;
+    for(GeometricCamera* pCam : vpCams)
+    {
+        std::cout << "Camera " << pCam->GetId();
+        if(pCam->GetType() == GeometricCamera::CAM_PINHOLE)
+        {
+            std::cout << " is pinhole" << std::endl;  // <-- Last message before crash
+        }
+        ...
+    }
+
+This is in Tracking constructor. The crash happens immediately after this loop completes,
+likely during:
+  1. Viewer thread startup (System.cc line 232-236)
+  2. Or first frame processing
+  3. Or some destructor/memory ownership issue
+
+
+Step 4: Git Repository Cleanup
+-------------------------------
+Created scripts and documentation:
+  - LARGE_FILES.md - Download links for vocabulary and dataset files
+  - GITHUB_SETUP.md - Instructions for GitHub authentication and push
+  - clean_history.sh - Script to remove large files from git history
+  - check_cleanup_status.sh - Check cleanup progress and final size
+
+Running cleanup to remove from history:
+  - *.mcap bag files (5.1GB)
+  - Vocabulary files ORBvoc.txt (139MB each)
+  - TUM IMU dataset files (29MB each)
+  - EuRoC ground truth files (22MB each)
+
+Expected final .git size: ~100-200MB (down from 2.4GB)
+
+Step 5: Next - Debug ORB-SLAM3 with GDB
+----------------------------------------
+Once repo is cleaned and pushed, will continue debugging the crash by:
+
+1. Run rgbd node under GDB to get full backtrace
+2. Identify exact line where double-free occurs
+3. Check for:
+   - Viewer thread initialization issues
+   - Pangolin window creation problems
+   - Memory ownership in System/Tracking constructors
+   - Thread synchronization during startup
+
+Commands prepared:
+  - run_rgbd_gdb.sh in system_ws/
+  - Will play bag in one terminal, run GDB in another
+
