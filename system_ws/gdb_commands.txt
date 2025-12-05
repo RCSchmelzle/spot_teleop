@@ -1,0 +1,25 @@
+# GDB commands for debugging ORB-SLAM3 crash
+# Run with: gdb -x gdb_commands.txt --args <executable> <args>
+
+# Set breakpoint at main
+break main
+
+# Run the program
+run
+
+# Continue to the crash
+continue
+
+# When it crashes, print backtrace
+backtrace full
+
+# Print info about the crash
+info registers
+info threads
+
+# Try to get more context
+frame 0
+list
+
+# Exit
+quit

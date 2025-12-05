@@ -114,3 +114,729 @@ Commands prepared:
   - run_rgbd_gdb.sh in system_ws/
   - Will play bag in one terminal, run GDB in another
 
+
+Step 4 COMPLETE: Git Repository Cleanup
+----------------------------------------
+Successfully cleaned and pushed repository:
+  - Reduced .git from 2.4GB → 18MB
+  - Removed large vocabulary and dataset files from history
+  - Pushed to: https://github.com/RCSchmelzle/spot_teleop
+  - All source code preserved
+
+Step 5: Debug ORB-SLAM3 RGB-D Crash with GDB
+---------------------------------------------
+Starting debugging session now...
+
+
+Step 5: Files Restored & Ready to Debug
+----------------------------------------
+All vocabulary and dataset files restored from backup copy.
+Cleanup scripts fixed to never delete from disk again.
+
+Starting ORB-SLAM3 debugging session...
+
+
+
+
+n-Pro-5-2404:~/Projects/teleoperation_spot$ rm clean_history.sh 
+rysch01@rysch01-Legion-Pro-5-2404:~/Projects/teleoperation_spot$ ls
+check_cleanup_status.sh  Dockerfile.multi_orbslam  LARGE_FILES.md     run_multi_orbslam.sh
+cpp                      docs                      _multi_orbslam_ws  _spot_sdk_ws
+datasets                 GITHUB_SETUP.md           neural_rendering   system_ws
+rysch01@rysch01-Legion-Pro-5-2404:~/Projects/teleoperation_spot$ rm check_cleanup_status.sh 
+rysch01@rysch01-Legion-Pro-5-2404:~/Projects/teleoperation_spot$ ls
+cpp       Dockerfile.multi_orbslam  GITHUB_SETUP.md  _multi_orbslam_ws  run_multi_orbslam.sh  system_ws
+datasets  docs                      LARGE_FILES.md   neural_rendering   _spot_sdk_ws
+rysch01@rysch01-Legion-Pro-5-2404:~/Projects/teleoperation_spot$ ls system_ws/
+build             install                 log           run_rgbd_gdb.sh  xtion_20251203_154059.bag  xtion_test_bag
+gdb_commands.txt  KeyFrameTrajectory.txt  run_debug.sh  src              xtion_20251203_154457.bag
+rysch01@rysch01-Legion-Pro-5-2404:~/Projects/teleoperation_spot$ cd system_ws/
+rysch01@rysch01-Legion-Pro-5-2404:~/Projects/teleoperation_spot/system_ws$ ./run_debug.sh 
+Starting ORB-SLAM3 RGBD node under GDB...
+The node will run and crash. GDB will capture the backtrace.
+
+Make sure a bag is playing in another terminal:
+  ros2 bag play xtion_20251203_154457.bag/ --loop
+
+Press Enter when bag is playing...
+
+This GDB supports auto-downloading debuginfo from the following URLs:
+  <https://debuginfod.ubuntu.com>
+Enable debuginfod for this session? (y or [n]) [answered N; input not from terminal]
+Debuginfod has been disabled.
+To make this setting permanent, add 'set debuginfod enabled off' to .gdbinit.
+Breakpoint 1 at 0x2643a1
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library "/lib/x86_64-linux-gnu/libthread_db.so.1".
+warning: could not find '.gnu_debugaltlink' file for /lib/x86_64-linux-gnu/libboost_serialization.so.1.83.0
+warning: could not find '.gnu_debugaltlink' file for /lib/x86_64-linux-gnu/liblttng-ust.so.1
+warning: could not find '.gnu_debugaltlink' file for /lib/x86_64-linux-gnu/libgdcmMSFF.so.3.0
+warning: could not find '.gnu_debugaltlink' file for /lib/x86_64-linux-gnu/libOpenEXR-3_1.so.30
+warning: could not find '.gnu_debugaltlink' file for /lib/x86_64-linux-gnu/libgdcmDSED.so.3.0
+warning: could not find '.gnu_debugaltlink' file for /lib/x86_64-linux-gnu/libQt5Gui.so.5
+warning: could not find '.gnu_debugaltlink' file for /lib/x86_64-linux-gnu/liblttng-ust-tracepoint.so.1
+warning: could not find '.gnu_debugaltlink' file for /lib/x86_64-linux-gnu/libgdcmDICT.so.3.0
+warning: could not find '.gnu_debugaltlink' file for /lib/x86_64-linux-gnu/libgdcmjpeg8.so.3.0
+warning: could not find '.gnu_debugaltlink' file for /lib/x86_64-linux-gnu/libgdcmjpeg12.so.3.0
+warning: could not find '.gnu_debugaltlink' file for /lib/x86_64-linux-gnu/libgdcmjpeg16.so.3.0
+warning: could not find '.gnu_debugaltlink' file for /lib/x86_64-linux-gnu/libgdcmIOD.so.3.0
+warning: could not find '.gnu_debugaltlink' file for /lib/x86_64-linux-gnu/libgdcmCommon.so.3.0
+warning: could not find '.gnu_debugaltlink' file for /lib/x86_64-linux-gnu/libIlmThread-3_1.so.30
+warning: could not find '.gnu_debugaltlink' file for /lib/x86_64-linux-gnu/libIex-3_1.so.30
+warning: could not find '.gnu_debugaltlink' file for /lib/x86_64-linux-gnu/libfyba.so.0
+warning: could not find '.gnu_debugaltlink' file for /lib/x86_64-linux-gnu/libogdi.so.4.1
+warning: could not find '.gnu_debugaltlink' file for /lib/x86_64-linux-gnu/libmfhdfalt.so.0
+warning: could not find '.gnu_debugaltlink' file for /lib/x86_64-linux-gnu/libglib-2.0.so.0
+warning: could not find '.gnu_debugaltlink' file for /lib/x86_64-linux-gnu/liblber.so.2
+warning: could not find '.gnu_debugaltlink' file for /lib/x86_64-linux-gnu/libbrotlidec.so.1
+warning: could not find '.gnu_debugaltlink' file for /lib/x86_64-linux-gnu/libnss3.so
+warning: could not find '.gnu_debugaltlink' file for /lib/x86_64-linux-gnu/libsmime3.so
+warning: could not find '.gnu_debugaltlink' file for /lib/x86_64-linux-gnu/libplc4.so
+warning: could not find '.gnu_debugaltlink' file for /lib/x86_64-linux-gnu/libfyut.so.0
+warning: could not find '.gnu_debugaltlink' file for /lib/x86_64-linux-gnu/libfygm.so.0
+warning: could not find '.gnu_debugaltlink' file for /lib/x86_64-linux-gnu/libbrotlicommon.so.1
+warning: could not find '.gnu_debugaltlink' file for /lib/x86_64-linux-gnu/libnssutil3.so
+warning: could not find '.gnu_debugaltlink' file for /lib/x86_64-linux-gnu/libplds4.so
+[New Thread 0x7fffeacda6c0 (LWP 168674)]
+[New Thread 0x7fffea4d96c0 (LWP 168675)]
+
+Thread 1 "rgbd" hit Breakpoint 1, 0x00005555557b83a1 in main ()
+[New Thread 0x7fffe919c6c0 (LWP 168676)]
+[New Thread 0x7fffe899b6c0 (LWP 168677)]
+
+ORB-SLAM3 Copyright (C) 2017-2020 Carlos Campos, Richard Elvira, Juan J. Gómez, José M.M. Montiel and Juan D. Tardós, University of Zaragoza.
+ORB-SLAM2 Copyright (C) 2014-2016 Raúl Mur-Artal, José M.M. Montiel and Juan D. Tardós, University of Zaragoza.
+This program comes with ABSOLUTELY NO WARRANTY;
+This is free software, and you are welcome to redistribute it
+under certain conditions. See LICENSE.txt.
+
+Input sensor was set to: RGB-D
+Loading settings from /home/rysch01/Projects/teleoperation_spot/system_ws/src/orbslam3_ros2/config/xtionA_rgbd.yaml
+	-Loaded camera 1
+Camera.newHeight optional parameter does not exist...
+Camera.newWidth optional parameter does not exist...
+	-Loaded image info
+	-Loaded RGB-D calibration
+	-Loaded ORB settings
+Viewer.imageViewScale optional parameter does not exist...
+	-Loaded viewer settings
+System.LoadAtlasFromFile optional parameter does not exist...
+System.SaveAtlasToFile optional parameter does not exist...
+	-Loaded Atlas settings
+System.thFarPoints optional parameter does not exist...
+	-Loaded misc parameters
+----------------------------------
+SLAM settings: 
+	-Camera 1 parameters (Pinhole): [ 570.342 570.342 319.5 239.5 ]
+	-Camera 1 distortion parameters: [  0 0 0 0 0 ]
+	-Original image size: [ 640 , 480 ]
+	-Current image size: [ 640 , 480 ]
+	-Sequence FPS: 30
+	-RGB-D depth map factor: 1000
+	-Features per image: 1000
+	-ORB scale factor: 1.2
+	-ORB number of scales: 8
+	-Initial FAST threshold: 20
+	-Min FAST threshold: 7
+
+
+Loading ORB Vocabulary. This could take a while...
+Vocabulary loaded!
+
+Initialization of Atlas from scratch 
+Creation of new map with id: 0
+Creation of new map with last KF id: 0
+Seq. Name: 
+There are 1 cameras in the atlas
+Camera 0 is pinhole
+[New Thread 0x7fffd3b816c0 (LWP 168688)]
+[New Thread 0x7fffd33806c0 (LWP 168689)]
+[New Thread 0x7fffd2b7f6c0 (LWP 168690)]
+[New Thread 0x7fffd237e6c0 (LWP 168691)]
+[New Thread 0x7fffd1af66c0 (LWP 168692)]
+[New Thread 0x7fffd12f56c0 (LWP 168693)]
+[New Thread 0x7fffcbfff6c0 (LWP 168694)]
+[New Thread 0x7fffcb7fe6c0 (LWP 168695)]
+[New Thread 0x7fffcaffd6c0 (LWP 168696)]
+[New Thread 0x7fffca7fc6c0 (LWP 168697)]
+[New Thread 0x7fffc9ffb6c0 (LWP 168698)]
+[New Thread 0x7fffc97fa6c0 (LWP 168699)]
+[New Thread 0x7fffc8ff96c0 (LWP 168700)]
+warning: could not find '.gnu_debugaltlink' file for /lib/x86_64-linux-gnu/libgbm.so.1
+warning: could not find '.gnu_debugaltlink' file for /lib/x86_64-linux-gnu/libtinfo.so.6
+warning: could not find '.gnu_debugaltlink' file for /lib/x86_64-linux-gnu/libcap.so.2
+
+Saving keyframe trajectory to KeyFrameTrajectory.txt ...
+double free or corruption (out)
+
+Thread 1 "rgbd" received signal SIGABRT, Aborted.
+__pthread_kill_implementation (no_tid=0, signo=6, threadid=<optimized out>) at ./nptl/pthread_kill.c:44
+warning: 44	./nptl/pthread_kill.c: No such file or directory
+#0  __pthread_kill_implementation (no_tid=0, signo=6, threadid=<optimized out>) at ./nptl/pthread_kill.c:44
+        tid = <optimized out>
+        ret = 0
+        pd = <optimized out>
+        old_mask = {__val = {0}}
+        ret = <optimized out>
+        pd = <optimized out>
+        old_mask = <optimized out>
+        ret = <optimized out>
+        tid = <optimized out>
+        ret = <optimized out>
+        resultvar = <optimized out>
+        resultvar = <optimized out>
+        __arg3 = <optimized out>
+        __arg2 = <optimized out>
+        __arg1 = <optimized out>
+        _a3 = <optimized out>
+        _a2 = <optimized out>
+        _a1 = <optimized out>
+        __futex = <optimized out>
+        resultvar = <optimized out>
+        __arg3 = <optimized out>
+        __arg2 = <optimized out>
+        __arg1 = <optimized out>
+        _a3 = <optimized out>
+        _a2 = <optimized out>
+        _a1 = <optimized out>
+        __futex = <optimized out>
+        __private = <optimized out>
+        __oldval = <optimized out>
+#1  __pthread_kill_internal (signo=6, threadid=<optimized out>) at ./nptl/pthread_kill.c:78
+No locals.
+#2  __GI___pthread_kill (threadid=<optimized out>, signo=signo@entry=6) at ./nptl/pthread_kill.c:89
+No locals.
+#3  0x00007ffff6e4527e in __GI_raise (sig=sig@entry=6) at ../sysdeps/posix/raise.c:26
+        ret = <optimized out>
+#4  0x00007ffff6e288ff in __GI_abort () at ./stdlib/abort.c:79
+        save_stage = 1
+        act = {__sigaction_handler = {sa_handler = 0x20, sa_sigaction = 0x20}, sa_mask = {__val = {6, 4, 4, 0, 0, 0, 0, 0, 0, 2, 9223372036854775814, 0, 0, 0, 0, 0}}, sa_flags = -1919151104, sa_restorer = 0x2}
+#5  0x00007ffff6e297b6 in __libc_message_impl (fmt=fmt@entry=0x7ffff6fce8d7 "%s\n") at ../sysdeps/posix/libc_fatal.c:134
+        ap = {{gp_offset = 16, fp_offset = 21845, overflow_arg_area = 0x7fffffffc190, reg_save_area = 0x7fffffffc120}}
+        fd = 2
+        iov = {{iov_base = 0x7ffff6fd1ac0, iov_len = 31}, {iov_base = 0x7ffff6fce8d9, iov_len = 1}, {iov_base = 0x7fffffffc100, iov_len = 140737335975342}, {iov_base = 0x7fffffffc110, iov_len = 18446744073709549200}, {iov_base = 0x21, iov_len = 93825253430592}, {iov_base = 0x7fffffffc130, iov_len = 18446744073709549200}, {iov_base = 0x21, iov_len = 93825252139600}}
+        iovcnt = <optimized out>
+        total = <optimized out>
+        cp = <optimized out>
+#6  0x00007ffff6ea8ff5 in malloc_printerr (str=str@entry=0x7ffff6fd1ac0 "double free or corruption (out)") at ./malloc/malloc.c:5772
+No locals.
+#7  0x00007ffff6eab120 in _int_free_merge_chunk (av=0x7ffff7003ac0 <main_arena>, p=0x555555f56cc0, size=4294967296) at ./malloc/malloc.c:4676
+        nextchunk = 0x555655f56cc0
+        nextsize = <optimized out>
+#8  0x00007ffff6eab43a in _int_free (av=0x7ffff7003ac0 <main_arena>, p=<optimized out>, have_lock=<optimized out>) at ./malloc/malloc.c:4646
+        size = <optimized out>
+        fb = <optimized out>
+#9  0x00007ffff6eaddae in __GI___libc_free (mem=0x555555f56cd0) at ./malloc/malloc.c:3398
+        ar_ptr = <optimized out>
+        p = 0x555555f56cc0
+        err = 33
+#10 0x00005555557deb57 in RgbdSlamNode::~RgbdSlamNode() ()
+No symbol table info available.
+#11 0x0000555555867f1a in std::_Sp_counted_ptr<RgbdSlamNode*, (__gnu_cxx::_Lock_policy)2>::_M_dispose() ()
+No symbol table info available.
+#12 0x00005555557bb299 in std::_Sp_counted_base<(__gnu_cxx::_Lock_policy)2>::_M_release_last_use() ()
+No symbol table info available.
+#13 0x00005555557ba11a in std::_Sp_counted_base<(__gnu_cxx::_Lock_policy)2>::_M_release_last_use_cold() ()
+No symbol table info available.
+#14 0x00005555557b9091 in std::_Sp_counted_base<(__gnu_cxx::_Lock_policy)2>::_M_release() ()
+No symbol table info available.
+#15 0x00005555557ba5c9 in std::__shared_count<(__gnu_cxx::_Lock_policy)2>::~__shared_count() ()
+No symbol table info available.
+#16 0x00005555557b9f78 in std::__shared_ptr<rclcpp::Node, (__gnu_cxx::_Lock_policy)2>::~__shared_ptr() ()
+No symbol table info available.
+#17 0x00005555557b9f98 in std::shared_ptr<rclcpp::Node>::~shared_ptr() ()
+No symbol table info available.
+#18 0x00005555557fd03d in void std::_Construct<message_filters::Subscriber<sensor_msgs::msg::Image_<std::allocator<void> >, rclcpp::Node>, std::shared_ptr<rclcpp::Node>, char const (&) [11]>(message_filters::Subscriber<sensor_msgs::msg::Image_<std::allocator<void> >, rclcpp::Node>*, std::shared_ptr<rclcpp::Node>&&, char const (&) [11]) ()
+No symbol table info available.
+#19 0x00005555557f76df in std::_Sp_counted_ptr_inplace<message_filters::Subscriber<sensor_msgs::msg::Image_<std::allocator<void> >, rclcpp::Node>, std::allocator<void>, (__gnu_cxx::_Lock_policy)2>::_Sp_counted_ptr_inplace<std::shared_ptr<rclcpp::Node>, char const (&) [11]>(std::allocator<void>, std::shared_ptr<rclcpp::Node>&&, char const (&) [11]) ()
+No symbol table info available.
+#20 0x00005555557f4058 in std::__shared_count<(__gnu_cxx::_Lock_policy)2>::__shared_count<message_filters::Subscriber<sensor_msgs::msg::Image_<std::allocator<void> >, rclcpp::Node>, std::allocator<void>, std::shared_ptr<rclcpp::Node>, char const (&) [11]>(message_filters::Subscriber<sensor_msgs::msg::Image_<std::allocator<void> >, rclcpp::Node>*&, std::_Sp_alloc_shared_tag<std::allocator<void> >, std::shared_ptr<rclcpp::Node>&&, char const (&) [11]) ()
+No symbol table info available.
+#21 0x00005555557f07ee in std::__shared_ptr<message_filters::Subscriber<sensor_msgs::msg::Image_<std::allocator<void> >, rclcpp::Node>, (__gnu_cxx::_Lock_policy)2>::__shared_ptr<std::allocator<void>, std::shared_ptr<rclcpp::Node>, char const (&) [11]>(std::_Sp_alloc_shared_tag<std::allocator<void> >, std::shared_ptr<rclcpp::Node>&&, char const (&) [11]) ()
+No symbol table info available.
+#22 0x00005555557edd05 in std::shared_ptr<message_filters::Subscriber<sensor_msgs::msg::Image_<std::allocator<void> >, rclcpp::Node> >::shared_ptr<std::allocator<void>, std::shared_ptr<rclcpp::Node>, char const (&) [11]>(std::_Sp_alloc_shared_tag<std::allocator<void> >, std::shared_ptr<rclcpp::Node>&&, char const (&) [11]) ()
+No symbol table info available.
+#23 0x00005555557e9c2e in std::shared_ptr<std::enable_if<!std::is_array<message_filters::Subscriber<sensor_msgs::msg::Image_<std::allocator<void> >, rclcpp::Node> >::value, message_filters::Subscriber<sensor_msgs::msg::Image_<std::allocator<void> >, rclcpp::Node> >::type> std::make_shared<message_filters::Subscriber<sensor_msgs::msg::Image_<std::allocator<void> >, rclcpp::Node>, std::shared_ptr<rclcpp::Node>, char const (&) [11]>(std::shared_ptr<rclcpp::Node>&&, char const (&) [11]) ()
+No symbol table info available.
+#24 0x00005555557de70a in RgbdSlamNode::RgbdSlamNode(ORB_SLAM3::System*) ()
+No symbol table info available.
+#25 0x00005555557c3159 in void std::_Construct<RgbdSlamNode, ORB_SLAM3::System*>(RgbdSlamNode*, ORB_SLAM3::System*&&) ()
+No symbol table info available.
+#26 0x00005555557bf9a8 in std::_Sp_counted_ptr_inplace<RgbdSlamNode, std::allocator<void>, (__gnu_cxx::_Lock_policy)2>::_Sp_counted_ptr_inplace<ORB_SLAM3::System*>(std::allocator<void>, ORB_SLAM3::System*&&) ()
+No symbol table info available.
+#27 0x00005555557bdfd6 in std::__shared_count<(__gnu_cxx::_Lock_policy)2>::__shared_count<RgbdSlamNode, std::allocator<void>, ORB_SLAM3::System*>(RgbdSlamNode*&, std::_Sp_alloc_shared_tag<std::allocator<void> >, ORB_SLAM3::System*&&) ()
+No symbol table info available.
+#28 0x00005555557bcda8 in std::__shared_ptr<RgbdSlamNode, (__gnu_cxx::_Lock_policy)2>::__shared_ptr<std::allocator<void>, ORB_SLAM3::System*>(std::_Sp_alloc_shared_tag<std::allocator<void> >, ORB_SLAM3::System*&&) ()
+No symbol table info available.
+#29 0x00005555557bbf73 in std::shared_ptr<RgbdSlamNode>::shared_ptr<std::allocator<void>, ORB_SLAM3::System*>(std::_Sp_alloc_shared_tag<std::allocator<void> >, ORB_SLAM3::System*&&) ()
+No symbol table info available.
+#30 0x00005555557bb022 in std::shared_ptr<std::enable_if<!std::is_array<RgbdSlamNode>::value, RgbdSlamNode>::type> std::make_shared<RgbdSlamNode, ORB_SLAM3::System*>(ORB_SLAM3::System*&&) ()
+No symbol table info available.
+#31 0x00005555557b85cf in main ()
+No symbol table info available.
+rax            0x0                 0
+rbx            0x292df             168671
+rcx            0x7ffff6e9eb2c      140737335913260
+rdx            0x6                 6
+rsi            0x292df             168671
+rdi            0x292df             168671
+rbp            0x7fffffffbf80      0x7fffffffbf80
+rsp            0x7fffffffbf40      0x7fffffffbf40
+r8             0xffffffff          4294967295
+r9             0x0                 0
+r10            0x8                 8
+r11            0x246               582
+r12            0x6                 6
+r13            0x7fffffffc0c0      140737488339136
+r14            0x16                22
+r15            0x7fffffffc0c0      140737488339136
+rip            0x7ffff6e9eb2c      0x7ffff6e9eb2c <__GI___pthread_kill+284>
+eflags         0x246               [ PF ZF IF ]
+cs             0x33                51
+ss             0x2b                43
+ds             0x0                 0
+es             0x0                 0
+fs             0x0                 0
+gs             0x0                 0
+fs_base        0x7fffead23840      140737133033536
+gs_base        0x0                 0
+  Id   Target Id                                         Frame 
+* 1    Thread 0x7fffead23840 (LWP 168671) "rgbd"         __pthread_kill_implementation (no_tid=0, signo=6, threadid=<optimized out>) at ./nptl/pthread_kill.c:44
+  2    Thread 0x7fffeacda6c0 (LWP 168674) "rgbd-ust"     0x00007ffff6f2be6b in __recvmsg_syscall (flags=0, msg=0x7fffeacd7550, fd=3) at ../sysdeps/unix/sysv/linux/recvmsg.c:27
+  3    Thread 0x7fffea4d96c0 (LWP 168675) "rgbd-ust"     syscall () at ../sysdeps/unix/sysv/linux/x86_64/syscall.S:38
+  4    Thread 0x7fffe919c6c0 (LWP 168676) "rgbd"         0x00007ffff6e98d71 in __futex_abstimed_wait_common64 (private=0, cancel=true, abstime=0x7fffe9199d50, op=137, expected=0, futex_word=0x555555f54a80) at ./nptl/futex-internal.c:57
+  5    Thread 0x7fffe899b6c0 (LWP 168677) "rgbd"         0x00007ffff6e98d71 in __futex_abstimed_wait_common64 (private=<optimized out>, cancel=true, abstime=0x0, op=393, expected=0, futex_word=0x555555f54ff8) at ./nptl/futex-internal.c:57
+  6    Thread 0x7fffd3b816c0 (LWP 168688) "rgbd"         0x00007ffff6eecadf in __GI___clock_nanosleep (clock_id=clock_id@entry=0, flags=flags@entry=0, req=req@entry=0x7fffd3b7ecf0, rem=rem@entry=0x0) at ../sysdeps/unix/sysv/linux/clock_nanosleep.c:78
+  7    Thread 0x7fffd33806c0 (LWP 168689) "rgbd"         0x00007ffff6eecadf in __GI___clock_nanosleep (clock_id=clock_id@entry=0, flags=flags@entry=0, req=req@entry=0x7fffd337db10, rem=rem@entry=0x0) at ../sysdeps/unix/sysv/linux/clock_nanosleep.c:78
+  8    Thread 0x7fffd2b7f6c0 (LWP 168690) "rgbd"         0x00007ffff7e72208 in pangolin::GlFont::InitialiseFont(unsigned char const*, float, int, int) () from /usr/local/lib/libpango_opengl.so.0
+  9    Thread 0x7fffd237e6c0 (LWP 168691) "dds.shm.wdog" 0x00007ffff6e98d71 in __futex_abstimed_wait_common64 (private=2, cancel=true, abstime=0x7fffd237bd60, op=137, expected=0, futex_word=0x555555f6aac0) at ./nptl/futex-internal.c:57
+  10   Thread 0x7fffd1af66c0 (LWP 168692) "dds.ev.0"     0x00007ffff6e98d71 in __futex_abstimed_wait_common64 (private=1692829024, cancel=true, abstime=0x7fffd1af3cd0, op=137, expected=0, futex_word=0x555564b96c68) at ./nptl/futex-internal.c:57
+  11   Thread 0x7fffd12f56c0 (LWP 168693) "dds.udp.7410" 0x00007ffff6f2bd04 in __libc_recvfrom (fd=33, buf=0x555564b9f8f0, len=65500, flags=0, addr=..., addrlen=0x7fffd12f2908) at ../sysdeps/unix/sysv/linux/recvfrom.c:27
+  12   Thread 0x7fffcbfff6c0 (LWP 168694) "dds.udp.7400" 0x00007ffff6f2bd04 in __libc_recvfrom (fd=45, buf=0x555564bafed0, len=65500, flags=0, addr=..., addrlen=0x7fffcbffc908) at ../sysdeps/unix/sysv/linux/recvfrom.c:27
+  13   Thread 0x7fffcb7fe6c0 (LWP 168695) "dds.shm.7411" 0x00007ffff6e98d71 in __futex_abstimed_wait_common64 (private=<optimized out>, cancel=true, abstime=0x7fffcb7fb700, op=265, expected=0, futex_word=0x7fffe8043110) at ./nptl/futex-internal.c:57
+  14   Thread 0x7fffcaffd6c0 (LWP 168696) "dds.udp.7411" 0x00007ffff6f2bd04 in __libc_recvfrom (fd=47, buf=0x555564bc7a60, len=65500, flags=0, addr=..., addrlen=0x7fffcaffa908) at ../sysdeps/unix/sysv/linux/recvfrom.c:27
+  15   Thread 0x7fffca7fc6c0 (LWP 168697) "dds.asyn.0.0" 0x00007ffff6e98d71 in __futex_abstimed_wait_common64 (private=32767, cancel=true, abstime=0x0, op=393, expected=0, futex_word=0x555564bd9acc) at ./nptl/futex-internal.c:57
+  16   Thread 0x7fffc9ffb6c0 (LWP 168698) "dds.shm.7000" 0x00007ffff6e98d71 in __futex_abstimed_wait_common64 (private=<optimized out>, cancel=true, abstime=0x7fffc9ff8700, op=265, expected=0, futex_word=0x7fffd0a25110) at ./nptl/futex-internal.c:57
+  17   Thread 0x7fffc97fa6c0 (LWP 168699) "dds.udp.7000" 0x00007ffff6f2bd04 in __libc_recvfrom (fd=51, buf=0x555564cfe590, len=65500, flags=0, addr=..., addrlen=0x7fffc97f7908) at ../sysdeps/unix/sysv/linux/recvfrom.c:27
+  18   Thread 0x7fffc8ff96c0 (LWP 168700) "rgbd"         0x00007ffff6e98d71 in __futex_abstimed_wait_common64 (private=32767, cancel=true, abstime=0x0, op=393, expected=0, futex_word=0x7fffac000c00) at ./nptl/futex-internal.c:57
+#0  __pthread_kill_implementation (no_tid=0, signo=6, threadid=<optimized out>) at ./nptl/pthread_kill.c:44
+44	in ./nptl/pthread_kill.c
+39	in ./nptl/pthread_kill.c
+A debugging session is active.
+
+	Inferior 1 [process 168671] will be killed.
+
+Quit anyway? (y or n) [answered Y; input not from terminal]
+rysch01@rysch01-Legion-Pro-5-2404:~/Projects/teleoperation_spot/system_ws$ 
+
+
+
+
+Step 6: GDB Backtrace Analysis
+-------------------------------
+Successfully captured crash backtrace. Key findings:
+
+CRASH LOCATION:
+Frame #10: RgbdSlamNode::~RgbdSlamNode()
+  - Double free happening in destructor
+  - Trying to free memory at 0x555555f56cd0
+
+ROOT CAUSE:
+The crash occurs in RgbdSlamNode constructor at line creating message_filters::Subscriber:
+  
+  Frame #24: RgbdSlamNode::RgbdSlamNode(ORB_SLAM3::System*)
+  Frame #11: rgb_sub = std::make_shared<message_filters::Subscriber<...>>(shared_ptr<rclcpp::Node>(this), "camera/rgb");
+
+PROBLEM: 
+In rgbd-slam-node.cpp line 11-12:
+  rgb_sub = std::make_shared<message_filters::Subscriber<ImageMsg>>(shared_ptr<rclcpp::Node>(this), "camera/rgb");
+  depth_sub = std::make_shared<message_filters::Subscriber<ImageMsg>>(shared_ptr<rclcpp::Node>(this), "camera/depth");
+
+This creates a NEW shared_ptr from raw 'this' pointer!
+- Creates incorrect shared ownership
+- When RgbdSlamNode destructs, causes double-free
+- 'this' is already managed by shared_ptr in main()
+
+SOLUTION:
+Use shared_from_this() instead of shared_ptr<rclcpp::Node>(this)
+
+
+==================================================================
+FIX APPLIED - 2025-12-04
+==================================================================
+
+ROOT CAUSE IDENTIFIED:
+The crash was caused by incorrect shared_ptr ownership in the RgbdSlamNode constructor.
+
+In rgbd-slam-node.cpp lines 11-12:
+    rgb_sub = std::make_shared<message_filters::Subscriber<ImageMsg> >(shared_ptr<rclcpp::Node>(this), "camera/rgb");
+    depth_sub = std::make_shared<message_filters::Subscriber<ImageMsg> >(shared_ptr<rclcpp::Node>(this), "camera/depth");
+
+Problem: Creating a new shared_ptr from the raw 'this' pointer when 'this' is already managed 
+by a shared_ptr in main() causes double ownership. When the destructor runs, both shared_ptrs 
+try to delete the same memory, resulting in "double free or corruption (out)".
+
+SOLUTION APPLIED:
+Changed to use the inherited shared_from_this() from rclcpp::Node:
+
+    auto shared_this = rclcpp::Node::shared_from_this();
+    rgb_sub = std::make_shared<message_filters::Subscriber<ImageMsg> >(shared_this, "camera/rgb");
+    depth_sub = std::make_shared<message_filters::Subscriber<ImageMsg> >(shared_this, "camera/depth");
+
+This correctly uses the existing shared_ptr ownership instead of creating conflicting ownership.
+
+Files modified:
+- ~/Projects/teleoperation_spot/system_ws/src/orbslam3_ros2/src/rgbd/rgbd-slam-node.cpp
+
+Rebuilt successfully with:
+    cd ~/Projects/teleoperation_spot/system_ws
+    source /opt/ros/jazzy/setup.bash
+    colcon build --packages-select orbslam3 --cmake-args -DCMAKE_BUILD_TYPE=Release
+
+Build succeeded. Ready for testing with bag playback.
+
+==================================================================
+FIX UPDATED - bad_weak_ptr exception
+==================================================================
+
+The initial fix caused a new error: "bad_weak_ptr" exception.
+
+ROOT CAUSE:
+shared_from_this() cannot be called in the constructor body because the shared_ptr 
+is not fully constructed yet. The weak_ptr inside enable_shared_from_this isn't 
+set until after the constructor completes.
+
+UPDATED SOLUTION:
+Moved subscription initialization to a separate init() method that is called 
+after construction:
+
+1. Added init() method to RgbdSlamNode class
+2. Moved subscriber setup from constructor to init()
+3. Updated main() to call node->init() after std::make_shared<RgbdSlamNode>()
+
+Files modified:
+- ~/Projects/teleoperation_spot/system_ws/src/orbslam3_ros2/src/rgbd/rgbd-slam-node.hpp
+  Added: void init();
+  
+- ~/Projects/teleoperation_spot/system_ws/src/orbslam3_ros2/src/rgbd/rgbd-slam-node.cpp
+  Moved subscription setup from constructor to init()
+  
+- ~/Projects/teleoperation_spot/system_ws/src/orbslam3_ros2/src/rgbd/rgbd.cpp
+  Added: node->init(); call after construction
+
+Rebuilt successfully. Ready for testing.
+
+==================================================================
+FINAL FIX - Depth Scale and Topic Remapping
+==================================================================
+
+After the crash was fixed, two more issues were found:
+
+1. INCORRECT TOPIC REMAPPING
+   Problem: The node subscribes to /camera/rgb and /camera/depth but remapping
+   was using wrong topic names (/camera/color/image_raw, etc.)
+   
+   Solution: Corrected topic remapping in test_fixed_rgbd.sh:
+   -r /camera/rgb:=/camA/rgb/image_raw
+   -r /camera/depth:=/camA/depth/image
+
+2. INCORRECT DEPTH SCALE
+   Problem: Depth images are encoded as 32FC1 (32-bit float in METERS), but
+   RGBD.DepthMapFactor was set to 1000.0 (for millimeters). This made ORB-SLAM3
+   divide depth by 1000, resulting in 1000x too small scale - no visible translation.
+   
+   Solution: Changed RGBD.DepthMapFactor from 1000.0 to 1.0 in xtionA_rgbd.yaml
+   
+   Depth encoding guide:
+   - 32FC1 (float meters): use DepthMapFactor: 1.0
+   - 16UC1 (uint16 mm):    use DepthMapFactor: 1000.0
+
+==================================================================
+COMPLETE SUMMARY OF ALL FIXES
+==================================================================
+
+1. DOUBLE-FREE CRASH FIX:
+   - Added init() method to RgbdSlamNode
+   - Moved subscription setup from constructor to init()
+   - Call node->init() after construction in main()
+   - Uses shared_from_this() correctly after shared_ptr is constructed
+   
+   Files modified:
+   - system_ws/src/orbslam3_ros2/src/rgbd/rgbd-slam-node.hpp (added init())
+   - system_ws/src/orbslam3_ros2/src/rgbd/rgbd-slam-node.cpp (moved setup to init())
+   - system_ws/src/orbslam3_ros2/src/rgbd/rgbd.cpp (call node->init())
+
+2. TOPIC REMAPPING FIX:
+   - Corrected remapping to match actual node subscriptions
+   - Node subscribes to: /camera/rgb and /camera/depth
+   - Bag publishes: /camA/rgb/image_raw and /camA/depth/image
+   
+   Files modified:
+   - system_ws/test_fixed_rgbd.sh
+
+3. DEPTH SCALE FIX:
+   - Changed RGBD.DepthMapFactor: 1000.0 -> 1.0
+   - Matches 32FC1 encoding (meters not millimeters)
+   
+   Files modified:
+   - system_ws/src/orbslam3_ros2/config/xtionA_rgbd.yaml
+
+==================================================================
+TESTING
+==================================================================
+
+To test ORB-SLAM3 RGBD with Xtion camera bag:
+
+Terminal 1:
+  cd ~/Projects/teleoperation_spot/system_ws
+  ros2 bag play xtion_20251203_154457.bag/ --loop
+
+Terminal 2:
+  cd ~/Projects/teleoperation_spot/system_ws
+  ./test_fixed_rgbd.sh
+
+Expected behavior:
+- No crashes
+- Pangolin viewer shows RGB image
+- Camera tracking with proper translation and rotation
+- Map points visible in 3D view
+- KeyFrameTrajectory.txt saved on exit
+
+STATUS: ✅ WORKING
+All fixes applied and tested successfully.
+
+
+
+# ORB-SLAM3 RGBD Fix Handoff
+
+## Problem Summary
+ORB-SLAM3 RGBD node was crashing with "double free or corruption (out)" error immediately after initialization when running with ASUS Xtion RGB-D camera data.
+
+## Root Cause
+The crash occurred in the `RgbdSlamNode` destructor due to incorrect shared_ptr ownership. The constructor was creating a new `shared_ptr` from the raw `this` pointer while `this` was already managed by a `shared_ptr` in `main()`, causing double ownership and double-free on destruction.
+
+## All Code Changes Made
+
+### 1. Fixed Double-Free Crash
+
+**File: `system_ws/src/orbslam3_ros2/src/rgbd/rgbd-slam-node.hpp`**
+
+Added `init()` method declaration:
+```cpp
+class RgbdSlamNode : public rclcpp::Node
+{
+public:
+    RgbdSlamNode(ORB_SLAM3::System* pSLAM);
+    ~RgbdSlamNode();
+
+    void init();  // <-- ADDED THIS LINE
+
+private:
+    // ... rest of class
+};
+```
+
+**File: `system_ws/src/orbslam3_ros2/src/rgbd/rgbd-slam-node.cpp`**
+
+Before (BROKEN):
+```cpp
+RgbdSlamNode::RgbdSlamNode(ORB_SLAM3::System* pSLAM)
+:   Node("ORB_SLAM3_ROS2"),
+    m_SLAM(pSLAM)
+{
+    rgb_sub = std::make_shared<message_filters::Subscriber<ImageMsg> >(
+        shared_ptr<rclcpp::Node>(this), "camera/rgb");  // WRONG: creates new shared_ptr from this
+    depth_sub = std::make_shared<message_filters::Subscriber<ImageMsg> >(
+        shared_ptr<rclcpp::Node>(this), "camera/depth"); // WRONG: creates new shared_ptr from this
+
+    syncApproximate = std::make_shared<message_filters::Synchronizer<approximate_sync_policy> >(
+        approximate_sync_policy(10), *rgb_sub, *depth_sub);
+    syncApproximate->registerCallback(&RgbdSlamNode::GrabRGBD, this);
+}
+```
+
+After (FIXED):
+```cpp
+RgbdSlamNode::RgbdSlamNode(ORB_SLAM3::System* pSLAM)
+:   Node("ORB_SLAM3_ROS2"),
+    m_SLAM(pSLAM)
+{
+    // Constructor now empty - initialization moved to init()
+}
+
+void RgbdSlamNode::init()
+{
+    auto shared_this = rclcpp::Node::shared_from_this();  // CORRECT: uses existing shared_ptr
+    rgb_sub = std::make_shared<message_filters::Subscriber<ImageMsg> >(
+        shared_this, "camera/rgb");
+    depth_sub = std::make_shared<message_filters::Subscriber<ImageMsg> >(
+        shared_this, "camera/depth");
+
+    syncApproximate = std::make_shared<message_filters::Synchronizer<approximate_sync_policy> >(
+        approximate_sync_policy(10), *rgb_sub, *depth_sub);
+    syncApproximate->registerCallback(&RgbdSlamNode::GrabRGBD, this);
+}
+```
+
+**File: `system_ws/src/orbslam3_ros2/src/rgbd/rgbd.cpp`**
+
+Before:
+```cpp
+auto node = std::make_shared<RgbdSlamNode>(&SLAM);
+std::cout << "============================ " << std::endl;
+rclcpp::spin(node);
+```
+
+After:
+```cpp
+auto node = std::make_shared<RgbdSlamNode>(&SLAM);
+node->init();  // <-- ADDED THIS LINE: call init() after construction
+std::cout << "============================ " << std::endl;
+rclcpp::spin(node);
+```
+
+**Why this pattern?**
+- `shared_from_this()` cannot be called in constructor because the weak_ptr inside `enable_shared_from_this` isn't set until after construction completes
+- Moving to `init()` method called after construction allows safe use of `shared_from_this()`
+
+### 2. Fixed Topic Remapping
+
+**File: `system_ws/test_fixed_rgbd.sh`** (NEW FILE - Created)
+
+Before (in run_debug.sh - WRONG):
+```bash
+--ros-args \
+  -r /camera/color/image_raw:=/camA/rgb/image_raw \
+  -r /camera/aligned_depth_to_color/image_raw:=/camA/depth/image \
+  -r /camera/color/camera_info:=/camA/rgb/camera_info
+```
+
+After (CORRECT):
+```bash
+--ros-args \
+  -r /camera/rgb:=/camA/rgb/image_raw \
+  -r /camera/depth:=/camA/depth/image
+```
+
+**Why?**
+- The node subscribes to `/camera/rgb` and `/camera/depth` (hardcoded in rgbd-slam-node.cpp lines 16-17)
+- These need to be remapped to the actual bag topics: `/camA/rgb/image_raw` and `/camA/depth/image`
+
+### 3. Fixed Depth Scale
+
+**File: `system_ws/src/orbslam3_ros2/config/xtionA_rgbd.yaml`**
+
+Before:
+```yaml
+# Depth map values factor
+RGBD.DepthMapFactor: 1000.0
+```
+
+After:
+```yaml
+# Depth map values factor (1.0 for depth in meters as 32FC1, 1000.0 for depth in mm as 16UC1)
+RGBD.DepthMapFactor: 1.0
+```
+
+**Why?**
+- Xtion depth images use `32FC1` encoding (32-bit float in METERS)
+- With factor 1000.0, ORB-SLAM3 was dividing by 1000, making 1m → 0.001m (1000x too small)
+- No visible translation in Pangolin viewer due to incorrect scale
+- Changed to 1.0 for correct meter-to-meter scale
+
+**Depth encoding reference:**
+- `32FC1` (32-bit float): Depth in meters → use `DepthMapFactor: 1.0`
+- `16UC1` (16-bit uint): Depth in millimeters → use `DepthMapFactor: 1000.0`
+
+### 4. Added Library Path to Debug Scripts
+
+**File: `system_ws/run_debug.sh`**
+
+Added before running GDB:
+```bash
+# Add ORB_SLAM3 library to path
+export LD_LIBRARY_PATH=~/Projects/teleoperation_spot/cpp/ORB_SLAM3/lib:$LD_LIBRARY_PATH
+```
+
+**Why?**
+- Runtime linker couldn't find `libORB_SLAM3.so` without this
+- Error: "error while loading shared libraries: libORB_SLAM3.so: cannot open shared object file"
+
+## Complete File List
+
+### Modified Files:
+1. `system_ws/src/orbslam3_ros2/src/rgbd/rgbd-slam-node.hpp` - Added init() method
+2. `system_ws/src/orbslam3_ros2/src/rgbd/rgbd-slam-node.cpp` - Moved subscription setup to init()
+3. `system_ws/src/orbslam3_ros2/src/rgbd/rgbd.cpp` - Call node->init() after construction
+4. `system_ws/src/orbslam3_ros2/config/xtionA_rgbd.yaml` - Changed DepthMapFactor 1000.0 → 1.0
+5. `system_ws/run_debug.sh` - Added LD_LIBRARY_PATH export
+6. `docs/setup/9_orbslam3_w_xtion_rosbags_repair` - Complete debugging log
+
+### Created Files:
+1. `system_ws/test_fixed_rgbd.sh` - Test script with correct topic remapping
+2. `system_ws/gdb_commands.txt` - GDB automation commands
+3. `docs/setup/HANDOFF_orbslam3_fix.md` - This file
+
+## Testing
+
+### To test the fix:
+
+Terminal 1 - Play bag:
+```bash
+cd ~/Projects/teleoperation_spot/system_ws
+ros2 bag play xtion_20251203_154457.bag/ --loop
+```
+
+Terminal 2 - Run ORB-SLAM3:
+```bash
+cd ~/Projects/teleoperation_spot/system_ws
+./test_fixed_rgbd.sh
+```
+
+### Expected behavior:
+✅ No crashes or exceptions
+✅ Pangolin viewer opens showing RGB image
+✅ Camera tracking with proper translation and rotation
+✅ Map points visible in 3D view
+✅ KeyFrameTrajectory.txt saved on exit
+
+## Build Instructions
+
+After making changes:
+```bash
+cd ~/Projects/teleoperation_spot/system_ws
+source /opt/ros/jazzy/setup.bash
+colcon build --packages-select orbslam3 --cmake-args -DCMAKE_BUILD_TYPE=Release
+source install/setup.bash
+```
+
+## Key Technical Details
+
+### Shared Pointer Ownership Pattern
+- **Problem**: Creating `shared_ptr<T>(this)` when `this` is already in a `shared_ptr` creates multiple independent control blocks
+- **Solution**: Use `shared_from_this()` from `std::enable_shared_from_this<T>`
+- **Caveat**: Can't call in constructor; must call after `shared_ptr` construction completes
+
+### ROS 2 Topic Remapping
+- Format: `-r <internal_topic>:=<external_topic>`
+- Internal topic = what node subscribes to
+- External topic = actual topic being published
+- Check with `ros2 topic list` to see actual topics
+
+### ORB-SLAM3 Depth Handling
+- Divides depth values by `DepthMapFactor` to get meters
+- Formula: `depth_in_meters = raw_value / DepthMapFactor`
+- Choose factor based on raw depth encoding
+
+## Status
+
+✅ **COMPLETE AND WORKING**
+
+All fixes applied, tested, and documented. The ORB-SLAM3 RGBD node now runs successfully with ASUS Xtion camera bag data without crashes and with correct scale.
+
+## Next Steps (Future Work)
+
+- Configure camera B (camB) for dual-camera SLAM
+- Calibrate extrinsics between camA and camB
+- Test multi-camera tracking
+- Tune ORB feature detection parameters for environment

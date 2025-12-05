@@ -139,3 +139,5 @@ ros2 bag info xtion_
   'color_mode': '1',   # 320x240
   'depth_mode': '1',   # 320x240
 
+
+

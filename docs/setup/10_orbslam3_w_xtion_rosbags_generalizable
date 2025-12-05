@@ -1,0 +1,168 @@
+# ORB-SLAM3 with Multiple Xtion Cameras - Generalizable Workflow
+
+## Overview
+Interactive workflow for processing bag files with ORB-SLAM3. Each recording session gets its own configuration and trajectories.
+
+## Workflow
+
+### Interactive Terminal Script: `orbslam_bag_processor.sh`
+
+1. **Select Bag**: Lists available .bag directories, user selects one
+2. **Check/Create Session Folder**:
+   - Bag location: `system_ws/bags/YYYY-MM-DD_HH-MM-SS/recording.bag/`
+   - Session config: `system_ws/bags/YYYY-MM-DD_HH-MM-SS/orbslam_config/`
+3. **Configuration**:
+   - If config exists: Ask "Use existing config or reconfigure?"
+   - If no config or user wants to reconfigure:
+     - Open GUI showing frame from middle of bag
+     - User names each camera (defaults: camA, camB, camC...)
+     - Generate configs in session folder
+4. **Select Camera**: User picks which camera to run ORB-SLAM3 on
+5. **Run ORB-SLAM3**:
+   - Plays bag automatically in background
+   - Runs ORB-SLAM3 with selected camera config
+   - Saves trajectory to session folder: `trajectories/{camera_name}_KeyFrameTrajectory.txt`
+6. **Repeat**: Ask to process another camera or exit
+
+## Directory Structure
+
+```
+teleoperation_spot/
+├── datasets/
+│   └── xtion_calibration_test/
+│       └── bags/
+│           └── 2025-12-05_14-30-22/            # Session folder
+│               ├── recording.bag/              # Original bag (auto-moved here if needed)
+│               ├── orbslam_config/             # Generated configs
+│               │   ├── camera_mapping.yaml     # camA -> /camA/rgb/... etc
+│               │   ├── camA_rgbd.yaml          # ORB-SLAM3 config
+│               │   ├── camB_rgbd.yaml
+│               │   └── extrinsics/
+│               │       └── camA_to_camB.yaml   # Placeholder
+│               └── trajectories/               # Output trajectories
+│                   ├── camA_KeyFrameTrajectory.txt
+│                   ├── camB_KeyFrameTrajectory.txt
+│                   └── timestamps.txt
+└── system_ws/
+    ├── orbslam_bag_processor.sh
+    └── scripts/
+        ├── bag_camera_mapper_gui.py
+        └── generate_orbslam_configs.py
+```
+
+## Files to Create
+
+1. `system_ws/orbslam_bag_processor.sh` - Main interactive script
+2. `system_ws/scripts/bag_frame_extractor.py` - Extract middle frame for GUI
+3. `system_ws/scripts/bag_camera_mapper_gui.py` - GUI for naming cameras from bag
+4. `system_ws/scripts/generate_orbslam_configs.py` - Generate YAML configs from mapping
+
+## Camera Mapping YAML Format
+
+```yaml
+# Generated in: bags/<session>/orbslam_config/camera_mapping.yaml
+cameras:
+  - name: camA
+    topics:
+      rgb: /camA/rgb/image_raw
+      depth: /camA/depth/image
+  - name: camB
+    topics:
+      rgb: /camB/rgb/image_raw
+      depth: /camB/depth/image
+```
+
+## ORB-SLAM3 Config Template
+
+Each camera gets identical config (from xtionA_rgbd.yaml) with only camera name different.
+
+## Extrinsics Placeholder
+
+```yaml
+# extrinsics/camA_to_camB.yaml
+# TODO: Calibrate with kalibr or manual measurement
+transform:
+  translation: [0.0, 0.0, 0.0]  # meters [x, y, z]
+  rotation: [1.0, 0.0, 0.0,     # rotation matrix row-major
+             0.0, 1.0, 0.0,
+             0.0, 0.0, 1.0]
+quaternion: [0.0, 0.0, 0.0, 1.0]  # [x, y, z, w]
+calibrated: false
+```
+
+## Implementation Below
+## Usage
+
+### Quick Start
+
+```bash
+cd ~/Projects/teleoperation_spot/system_ws
+./orbslam_bag_processor.sh
+```
+
+### Workflow Example
+
+1. **First time with a bag:**
+   - Script lists available bags
+   - Select your bag
+   - If not in session folder, automatically organizes it
+   - Opens GUI showing camera frames from middle of bag
+   - Assign names (camA, camB, etc.)
+   - Generates all configs automatically
+
+2. **Running ORB-SLAM3:**
+   - Select which camera to process
+   - Bag plays automatically in background
+   - ORB-SLAM3 runs with correct config and topic remapping
+   - Trajectory saved to `bags/<session>/trajectories/<camera>_KeyFrameTrajectory.txt`
+
+3. **Processing more cameras:**
+   - Repeat for each camera in the session
+   - All trajectories saved in same trajectories folder
+
+### Files Created
+
+```
+datasets/xtion_calibration_test/bags/
+└── <session_timestamp>/
+    ├── <bagname>.bag/
+    ├── orbslam_config/
+    │   ├── camera_mapping.yaml
+    │   ├── camA_rgbd.yaml
+    │   ├── camB_rgbd.yaml
+    │   └── extrinsics/
+    │       └── camA_to_camB.yaml
+    └── trajectories/
+        ├── camA_KeyFrameTrajectory.txt
+        └── camB_KeyFrameTrajectory.txt
+
+system_ws/
+├── orbslam_bag_processor.sh
+└── scripts/
+    ├── bag_camera_mapper_gui.py
+    └── generate_orbslam_configs.py
+```
+
+## Dependencies
+
+```bash
+pip install PyQt5 pyyaml opencv-python
+```
+
+## Notes
+
+- Existing xtion_mapping.yaml and gen_xtion_cameras are for **live cameras only**
+- This workflow is for **bag-based testing and trajectory generation**
+- Each recording session is self-contained with its own configs
+- Extrinsics placeholders are created but need manual calibration
+- Use kalibr or manual measurement to calibrate multi-camera extrinsics
+
+## Status
+
+✅ Implemented and ready to use
+- Interactive bag processor
+- GUI-based camera mapping from bags
+- Automatic config generation
+- Per-session organization
+- Trajectory saving per camera
+
