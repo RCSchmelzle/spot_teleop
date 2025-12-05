@@ -214,13 +214,24 @@ with open('$mapping_file', 'r') as f:
     echo
     echo -e "${YELLOW}Starting bag playback in background...${NC}"
 
-    # Play bag in background
-    ros2 bag play "$selected_bag" --loop &
+    # Play bag in background (no loop - play once)
+    ros2 bag play "$selected_bag" &
     BAG_PID=$!
     sleep 2  # Wait for bag to start
 
-    echo -e "${GREEN}Running ORB-SLAM3... (Ctrl+C to stop)${NC}"
+    echo -e "${GREEN}Running ORB-SLAM3... (Ctrl+C to stop early)${NC}"
     echo
+
+    # Setup cleanup trap
+    cleanup_orbslam() {
+        echo
+        echo -e "${YELLOW}Stopping ORB-SLAM3...${NC}"
+        kill $ORBSLAM_PID 2>/dev/null || true
+        kill $BAG_PID 2>/dev/null || true
+        wait $ORBSLAM_PID 2>/dev/null || true
+        sleep 1
+    }
+    trap cleanup_orbslam INT
 
     # Run ORB-SLAM3
     cd "$traj_dir"
@@ -229,16 +240,29 @@ with open('$mapping_file', 'r') as f:
         "$config_file" \
         --ros-args \
         -r /camera/rgb:="$rgb_topic" \
-        -r /camera/depth:="$depth_topic"
+        -r /camera/depth:="$depth_topic" &
+    ORBSLAM_PID=$!
 
-    # Kill bag playback
-    kill $BAG_PID 2>/dev/null || true
+    # Monitor bag playback - when it finishes, stop ORB-SLAM3
+    wait $BAG_PID 2>/dev/null || true
+    echo
+    echo -e "${YELLOW}Bag playback finished, stopping ORB-SLAM3...${NC}"
+    sleep 2  # Give ORB-SLAM3 a moment to finish processing
+    kill $ORBSLAM_PID 2>/dev/null || true
+    wait $ORBSLAM_PID 2>/dev/null || true
+
+    # Cleanup
+    trap - INT
+    sleep 1
 
     # Rename trajectory with camera name
     if [ -f "KeyFrameTrajectory.txt" ]; then
         mv "KeyFrameTrajectory.txt" "${camera_name}_KeyFrameTrajectory.txt"
         echo
         echo -e "${GREEN}Trajectory saved:${NC} $traj_dir/${camera_name}_KeyFrameTrajectory.txt"
+    else
+        echo
+        echo -e "${YELLOW}No trajectory file found (expected at KeyFrameTrajectory.txt)${NC}"
     fi
 
     cd "$SCRIPT_DIR"
@@ -258,20 +282,30 @@ main() {
             configure_cameras
         fi
 
-        # Step 4-6: Loop camera selection and processing
-        while true; do
-            if ! select_camera; then
-                break
-            fi
+        # Step 4-6: Process all cameras automatically
+        local mapping_file="$session_dir/orbslam_config/camera_mapping.yaml"
+        cameras=($(python3 -c "
+import yaml
+with open('$mapping_file', 'r') as f:
+    data = yaml.safe_load(f)
+    for cam in data['cameras']:
+        print(cam['name'])
+"))
 
-            run_orbslam "$selected_camera"
-
-            echo
-            read -p "Process another camera? [y/n]: " another
-            if [[ "$another" != "y" ]]; then
-                break
-            fi
+        echo
+        echo -e "${GREEN}Found ${#cameras[@]} cameras to process${NC}"
+        for cam in "${cameras[@]}"; do
+            echo -e "  - $cam"
         done
+        echo
+
+        # Process each camera
+        for camera_name in "${cameras[@]}"; do
+            run_orbslam "$camera_name"
+        done
+
+        echo
+        echo -e "${GREEN}All cameras processed!${NC}"
 
         echo
         read -p "Process another bag? [y/n]: " another_bag

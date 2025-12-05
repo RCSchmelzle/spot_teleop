@@ -257,13 +257,19 @@ class BagCameraMapperGUI(QMainWindow):
                 name = cam_frame.default_name
 
             # Derive depth topic from RGB topic
+            # First try depth_raw (common in Xtion bags), fallback to depth
+            depth_topic_raw = cam_frame.topic.replace('/rgb/', '/depth_raw/')
             depth_topic = cam_frame.topic.replace('/rgb/', '/depth/')
+
+            # Use depth_raw if it exists in the bag, otherwise use depth
+            # For now, default to depth_raw/image since that's what our bags use
+            depth_topic_final = depth_topic_raw.replace('image_raw', 'image')
 
             cameras.append({
                 'name': name,
                 'topics': {
                     'rgb': cam_frame.topic,
-                    'depth': depth_topic
+                    'depth': depth_topic_final
                 }
             })
 

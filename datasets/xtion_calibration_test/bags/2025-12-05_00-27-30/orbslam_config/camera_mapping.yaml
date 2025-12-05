@@ -1,0 +1,9 @@
+cameras:
+- name: camAy
+  topics:
+    depth: /camA/depth_raw/image
+    rgb: /camA/rgb/image_raw
+- name: camBe
+  topics:
+    depth: /camB/depth_raw/image
+    rgb: /camB/rgb/image_raw

@@ -166,3 +166,49 @@ pip install PyQt5 pyyaml opencv-python
 - Per-session organization
 - Trajectory saving per camera
 
+## Implementation Notes
+
+### Bag Format Support
+- Supports both MCAP and sqlite3 bag formats
+- Auto-detects storage format
+- Topic discovery parses `ros2 bag info` output
+
+### Topic Mapping
+- Automatically discovers RGB topics: `/camX/rgb/image_raw`
+- Derives depth topics: `/camX/depth_raw/image`
+- Handles both `depth` and `depth_raw` naming conventions
+
+### Frame Extraction
+- Extracts middle frame from each camera topic
+- Uses rosbag2_py SequentialReader API
+- Supports rgb8 and bgr8 encodings
+- Displays 320px wide preview in GUI
+
+### Camera Naming
+- Default names extracted from topic paths (camA, camB, etc.)
+- User can customize names in GUI
+- Names used for config files and trajectory outputs
+
+### Config Generation
+- Uses `xtionA_rgbd.yaml` as template
+- Creates per-camera configs: `{name}_rgbd.yaml`
+- Generates extrinsics placeholders for calibration
+- All configs saved in session folder
+
+## Troubleshooting
+
+### "Found 0 RGB camera topics"
+- Check bag format with `ros2 bag info <bag_path>`
+- Ensure bag contains topics matching pattern `/*/rgb/*`
+- Verify topics are `sensor_msgs/msg/Image` type
+
+### GUI doesn't show camera frames
+- Check for PyQt5 installation: `pip install PyQt5`
+- Verify rosbag2_py is available: `pip install rosbag2-py`
+- Check terminal for frame extraction errors
+
+### ORB-SLAM3 tracking fails
+- Verify camera calibration in YAML files
+- Check DepthMapFactor matches depth encoding (1.0 for meters)
+- Ensure sufficient visual features in environment
+
