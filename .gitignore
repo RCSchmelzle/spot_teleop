@@ -22,3 +22,10 @@ xtion_20*.bag/
 # Rosbag recordings
 *.bag/
 *.mcap
+
+# Large vocabulary and dataset files (download separately - see LARGE_FILES.md)
+**/Vocabulary/ORBvoc.txt
+**/Vocabulary/ORBvoc.txt.tar.gz*
+**/Vocabulary/ORBvoc.txt.bin
+**/TUM_IMU/dataset-*.txt
+**/Ground_truth/EuRoC_imu/*.txt
