@@ -170,14 +170,7 @@ def run_slam_for_camera(bag_path: str, camera_name: str, config_file: str,
     source {system_ws}/install/setup.bash && \
     export LD_LIBRARY_PATH="$HOME/Projects/teleoperation_spot/cpp/ORB_SLAM3/lib:$LD_LIBRARY_PATH" && \
     bash -c '
-        # Start bag playback at normal speed
-        ros2 bag play {bag_path} > /dev/null 2>&1 &
-        BAG_PID=$!
-
-        # Wait for bag to start
-        sleep 2
-
-        # Start ORB-SLAM3 with Atlas mode
+        # Start ORB-SLAM3 FIRST (so viewer comes up before frames arrive)
         {system_ws}/install/orbslam3/lib/orbslam3/rgbd \
             {vocab_path} \
             {config_file} \
@@ -188,6 +181,13 @@ def run_slam_for_camera(bag_path: str, camera_name: str, config_file: str,
             -r /camera/depth:={depth_topic} \
             > slam.log 2>&1 &
         SLAM_PID=$!
+
+        # Wait for SLAM to initialize (load vocabulary, start viewer)
+        sleep 8
+
+        # Now start bag playback
+        ros2 bag play {bag_path} > /dev/null 2>&1 &
+        BAG_PID=$!
 
         # Wait for bag to finish
         wait $BAG_PID 2>/dev/null || true
