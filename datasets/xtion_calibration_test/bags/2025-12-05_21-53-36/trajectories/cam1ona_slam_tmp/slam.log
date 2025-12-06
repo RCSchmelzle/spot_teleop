@@ -6,7 +6,7 @@ This is free software, and you are welcome to redistribute it
 under certain conditions. See LICENSE.txt.
 
 Input sensor was set to: RGB-D
-Loading settings from /home/rysch01/Projects/teleoperation_spot/datasets/xtion_calibration_test/bags/2025-12-05_21-53-36/trajectories/cam0lio_slam_tmp/config_with_atlas.yaml
+Loading settings from /home/rysch01/Projects/teleoperation_spot/datasets/xtion_calibration_test/bags/2025-12-05_21-53-36/trajectories/cam1ona_slam_tmp/config_with_atlas.yaml
 	-Loaded camera 1
 Camera.newHeight optional parameter does not exist...
 Camera.newWidth optional parameter does not exist...
@@ -45,6 +45,5 @@ Seq. Name:
 There are 1 cameras in the atlas
 Camera 0 is pinhole
 ============================ 
-Starting the Viewer
 First KF:0; Map init KF:0
-New Map created with 904 points
+New Map created with 267 points

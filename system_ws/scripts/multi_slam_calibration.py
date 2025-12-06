@@ -147,18 +147,19 @@ def create_config_with_atlas(config_file: str, atlas_file: Path, load_atlas: boo
     config_content = re.sub(r'#.*atlas.*\n?', '', config_content, flags=re.IGNORECASE)
     config_content = re.sub(r'#-+\n#-+\n?', '', config_content)  # Clean up dividers
 
-    # NOTE: Atlas saving is disabled due to Boost serialization crash
-    # The KeyFrameTrajectory.txt will be saved instead
-    # TODO: Debug ORB-SLAM3 Atlas serialization issue
-    #
-    # atlas_settings = f"""
-    # # Atlas settings (shared multi-camera atlas)
-    # System.SaveAtlasToFile: {atlas_file}
-    # """
-    # if load_atlas:
-    #     atlas_settings += f'System.LoadAtlasFromFile: {atlas_file}\n'
-    # config_content = config_content.rstrip() + '\n' + atlas_settings
-    pass  # No atlas settings - just save trajectory
+    # NOTE: Viewer is disabled to prevent segfault on shutdown
+    config_content = re.sub(r'Viewer\.Active:\s*\d+', 'Viewer.Active: 0', config_content)
+
+    # Re-enable Atlas saving now that shutdown is fixed
+    atlas_settings = f"""
+# Atlas settings (shared multi-camera atlas)
+System.SaveAtlasToFile: {atlas_file}
+"""
+    if load_atlas:
+        atlas_settings += f'System.LoadAtlasFromFile: {atlas_file}\n'
+
+    # Append atlas settings
+    config_content = config_content.rstrip() + '\n' + atlas_settings
 
     # Write to temporary file
     temp_config = work_dir / "config_with_atlas.yaml"
