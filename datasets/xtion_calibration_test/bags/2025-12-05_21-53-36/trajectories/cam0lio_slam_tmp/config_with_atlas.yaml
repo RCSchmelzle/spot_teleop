@@ -70,8 +70,4 @@ Viewer.ViewpointY: -0.7
 Viewer.ViewpointZ: -1.8
 Viewer.ViewpointF: 500.0
 
-#--------------------------------------------------------------------------------------------
-# Atlas Settings (for map persistence)
-#--------------------------------------------------------------------------------------------
-System.SaveAtlasToFile: /home/rysch01/Projects/teleoperation_spot/datasets/xtion_calibration_test/bags/2025-12-05_21-53-36/orbslam_config/atlas/cam1ona_atlas.osa
-# System.LoadAtlasFromFile: /home/rysch01/Projects/teleoperation_spot/datasets/xtion_calibration_test/bags/2025-12-05_21-53-36/orbslam_config/atlas/cam1ona_atlas.osa  # Uncomment to load existing atlas
+# 

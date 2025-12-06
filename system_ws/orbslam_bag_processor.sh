@@ -7,6 +7,27 @@ set -e
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 cd "$SCRIPT_DIR"
 
+# Parse command line arguments
+HEADLESS=false
+BAG_NUMBER=""
+while [[ $# -gt 0 ]]; do
+    case $1 in
+        --headless|-H)
+            HEADLESS=true
+            shift
+            ;;
+        --bag|-b)
+            BAG_NUMBER="$2"
+            shift 2
+            ;;
+        *)
+            echo "Unknown option: $1"
+            echo "Usage: $0 [--headless|-H] [--bag|-b <number>]"
+            exit 1
+            ;;
+    esac
+done
+
 # Colors for output
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -58,10 +79,17 @@ list_bags() {
 select_bag() {
     list_bags
     echo
-    read -p "Select bag number (or 'q' to quit): " selection
 
-    if [[ "$selection" == "q" ]]; then
-        exit 0
+    if [[ -n "$BAG_NUMBER" ]]; then
+        # Use provided bag number
+        selection="$BAG_NUMBER"
+        echo -e "${GREEN}Using bag number from command line:${NC} $selection"
+    else
+        read -p "Select bag number (or 'q' to quit): " selection
+
+        if [[ "$selection" == "q" ]]; then
+            exit 0
+        fi
     fi
 
     if ! [[ "$selection" =~ ^[0-9]+$ ]] || [ "$selection" -lt 1 ] || [ "$selection" -gt ${#bags[@]} ]; then
@@ -107,6 +135,13 @@ check_config() {
     if [ -d "$config_dir" ] && [ -f "$config_dir/camera_mapping.yaml" ]; then
         echo
         echo -e "${YELLOW}Existing configuration found${NC}"
+
+        if [[ "$HEADLESS" == "true" ]]; then
+            # In headless mode, use existing config
+            echo -e "${GREEN}Using existing configuration (headless mode)${NC}"
+            return 0
+        fi
+
         read -p "Reconfigure? [Y/n]: " reconfigure
         reconfigure=${reconfigure:-y}  # Default to 'y' if empty
 
@@ -130,8 +165,12 @@ configure_cameras() {
     echo
     echo -e "${BLUE}Configuring cameras...${NC}"
 
-    # Run GUI to map cameras
-    python3 "$SCRIPT_DIR/scripts/bag_camera_mapper_gui.py" "$selected_bag" "$session_dir/orbslam_config"
+    # Run camera mapper (GUI or headless)
+    if [[ "$HEADLESS" == "true" ]]; then
+        python3 "$SCRIPT_DIR/scripts/bag_camera_mapper_gui.py" --headless "$selected_bag" "$session_dir/orbslam_config"
+    else
+        python3 "$SCRIPT_DIR/scripts/bag_camera_mapper_gui.py" "$selected_bag" "$session_dir/orbslam_config"
+    fi
 
     if [ $? -ne 0 ]; then
         echo -e "${RED}Camera configuration failed${NC}"
@@ -336,15 +375,26 @@ with open('$mapping_file', 'r') as f:
             echo -e "${BLUE}========================================${NC}"
             echo
 
-            # Ask for number of SLAM runs
-            read -p "Number of SLAM runs [default: 2]: " num_runs
-            num_runs=${num_runs:-2}  # Default to 2 if empty
+            if [[ "$HEADLESS" == "true" ]]; then
+                # In headless mode, use defaults
+                num_runs=2
+                echo -e "${GREEN}Using default settings (headless mode): $num_runs SLAM runs${NC}"
+            else
+                # Ask for number of SLAM runs
+                read -p "Number of SLAM runs [default: 2]: " num_runs
+                num_runs=${num_runs:-2}  # Default to 2 if empty
+            fi
 
             echo -e "${YELLOW}Running multi-SLAM stochastic calibration ($num_runs SLAM runs)...${NC}"
             echo -e "${YELLOW}This will take several minutes...${NC}"
             echo
 
-            python3 "$SCRIPT_DIR/scripts/multi_slam_calibration.py" "$session_dir" "$num_runs"
+            if [[ "$HEADLESS" == "true" ]]; then
+                # Pass --headless to Python script
+                python3 "$SCRIPT_DIR/scripts/multi_slam_calibration.py" "$session_dir" --headless
+            else
+                python3 "$SCRIPT_DIR/scripts/multi_slam_calibration.py" "$session_dir" "$num_runs"
+            fi
 
             if [ $? -eq 0 ]; then
                 echo
@@ -357,6 +407,10 @@ with open('$mapping_file', 'r') as f:
         fi
 
         echo
+        if [[ "$HEADLESS" == "true" ]]; then
+            # In headless mode, exit after one bag
+            break
+        fi
         read -p "Process another bag? [y/n]: " another_bag
         if [[ "$another_bag" != "y" ]]; then
             break

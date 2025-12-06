@@ -7,6 +7,8 @@ Saves all results to stochastic_extrinsics/ with scale normalization.
 """
 
 import sys
+import re
+import time
 import yaml
 import json
 import subprocess
@@ -18,8 +20,14 @@ from scipy.spatial.transform import Rotation
 NUM_SLAM_RUNS = 2
 STRIDE_VALUES = [1, 2, 3, 5]  # Run calibration with each stride value
 
-def get_user_configuration():
+def get_user_configuration(headless=False):
     """Get SLAM run count and stride values from user."""
+    if headless:
+        print(f"\n{'='*70}")
+        print("CONFIGURATION (headless mode - using defaults)")
+        print(f"{'='*70}\n")
+        return 2, [1, 2, 3, 5]
+
     print(f"\n{'='*70}")
     print("CONFIGURATION")
     print(f"{'='*70}\n")
@@ -115,6 +123,51 @@ def extract_azimuth_elevation(R: np.ndarray) -> tuple:
     return azimuth_deg, elevation_deg
 
 
+def create_config_with_atlas(config_file: str, atlas_file: Path, load_atlas: bool, work_dir: Path) -> Path:
+    """
+    Create a temporary config file with Atlas settings injected.
+
+    Args:
+        config_file: Path to original config file
+        atlas_file: Path to Atlas file for save/load
+        load_atlas: Whether to load existing atlas (True) or create new (False)
+        work_dir: Directory to store temporary config
+
+    Returns:
+        Path to temporary config file with Atlas settings
+    """
+    # Read original config
+    with open(config_file, 'r') as f:
+        config_content = f.read()
+
+    # Strip any existing Atlas settings to avoid duplicates
+    config_content = re.sub(r'System\.SaveAtlasToFile:.*\n?', '', config_content)
+    config_content = re.sub(r'System\.LoadAtlasFromFile:.*\n?', '', config_content)
+    config_content = re.sub(r'#.*Atlas Settings.*\n?', '', config_content)
+    config_content = re.sub(r'#.*atlas.*\n?', '', config_content, flags=re.IGNORECASE)
+    config_content = re.sub(r'#-+\n#-+\n?', '', config_content)  # Clean up dividers
+
+    # NOTE: Atlas saving is disabled due to Boost serialization crash
+    # The KeyFrameTrajectory.txt will be saved instead
+    # TODO: Debug ORB-SLAM3 Atlas serialization issue
+    #
+    # atlas_settings = f"""
+    # # Atlas settings (shared multi-camera atlas)
+    # System.SaveAtlasToFile: {atlas_file}
+    # """
+    # if load_atlas:
+    #     atlas_settings += f'System.LoadAtlasFromFile: {atlas_file}\n'
+    # config_content = config_content.rstrip() + '\n' + atlas_settings
+    pass  # No atlas settings - just save trajectory
+
+    # Write to temporary file
+    temp_config = work_dir / "config_with_atlas.yaml"
+    with open(temp_config, 'w') as f:
+        f.write(config_content)
+
+    return temp_config
+
+
 def run_slam_for_camera(bag_path: str, camera_name: str, config_file: str,
                         rgb_topic: str, depth_topic: str,
                         vocab_path: str, output_dir: Path,
@@ -153,30 +206,43 @@ def run_slam_for_camera(bag_path: str, camera_name: str, config_file: str,
     # SHARED Atlas file - all cameras contribute to the same Atlas
     atlas_file = atlas_dir / "shared_atlas.osa"
 
-    # Prepare SLAM command with Atlas mode
-    if is_first_run or not atlas_file.exists():
-        # First run or no atlas: create new atlas
-        print(f"    {'Creating' if not atlas_file.exists() else 'Initializing'} shared Atlas")
-        load_map_arg = ""
+    # Check atlas status and create config with atlas settings injected
+    atlas_exists = atlas_file.exists()
+    if atlas_exists:
+        print(f"    Loading shared Atlas ({atlas_file.stat().st_size} bytes)")
+        load_atlas = True
     else:
-        # Subsequent runs: load existing shared atlas for map merging
-        print(f"    Loading shared Atlas (enables map merging across cameras)")
-        load_map_arg = f"--load_map {atlas_file}"
+        print(f"    Creating shared Atlas")
+        load_atlas = False
 
-    # Source ROS and run SLAM with Atlas mode
+    # Create temp config with Atlas save/load settings in YAML
+    temp_config = create_config_with_atlas(config_file, atlas_file, load_atlas, work_dir)
+
+    # Source ROS and run SLAM with Atlas mode (settings now in YAML config)
     slam_cmd = f"""
     cd {work_dir} && \
     source /opt/ros/jazzy/setup.bash && \
     source {system_ws}/install/setup.bash && \
     export LD_LIBRARY_PATH="$HOME/Projects/teleoperation_spot/cpp/ORB_SLAM3/lib:$LD_LIBRARY_PATH" && \
     bash -c '
-        # Start ORB-SLAM3 FIRST (so viewer comes up before frames arrive)
+        # Cleanup function (only used for abnormal exits like Ctrl+C)
+        cleanup() {{
+            echo "Cleanup triggered..."
+            kill -INT $SLAM_PID 2>/dev/null || true
+            sleep 3
+            kill -9 $SLAM_PID 2>/dev/null || true
+            kill -9 $BAG_PID 2>/dev/null || true
+            # Kill ROS daemon to avoid stale state
+            ros2 daemon stop 2>/dev/null || true
+        }}
+        trap cleanup INT TERM
+
+        # Start ORB-SLAM3 FIRST with simulated time (so viewer comes up before frames arrive)
         {system_ws}/install/orbslam3/lib/orbslam3/rgbd \
             {vocab_path} \
-            {config_file} \
-            {load_map_arg} \
-            --save_map {atlas_file} \
+            {temp_config} \
             --ros-args \
+            -p use_sim_time:=true \
             -r /camera/rgb:={rgb_topic} \
             -r /camera/depth:={depth_topic} \
             > slam.log 2>&1 &
@@ -185,22 +251,42 @@ def run_slam_for_camera(bag_path: str, camera_name: str, config_file: str,
         # Wait for SLAM to initialize (load vocabulary, start viewer)
         sleep 8
 
-        # Now start bag playback
-        ros2 bag play {bag_path} > /dev/null 2>&1 &
+        # Now start bag playback with clock publishing
+        ros2 bag play {bag_path} --clock > /dev/null 2>&1 &
         BAG_PID=$!
 
         # Wait for bag to finish
         wait $BAG_PID 2>/dev/null || true
 
-        # Give SLAM time to process remaining frames and save atlas
+        # Give SLAM time to process remaining frames
+        echo "Bag finished, waiting for SLAM to process..."
         sleep 5
 
-        # Gracefully stop SLAM (allows it to save atlas)
+        # Gracefully stop SLAM (allows it to save trajectory and atlas)
+        echo "Sending SIGINT to SLAM..."
         kill -INT $SLAM_PID 2>/dev/null || true
-        sleep 3
 
-        # Force kill if still running (ignore segfault on exit)
-        kill -9 $SLAM_PID 2>/dev/null || true
+        # Wait for SLAM to finish saving (atlas can take a while)
+        echo "Waiting for SLAM to save files..."
+        for i in 1 2 3 4 5 6 7 8 9 10; do
+            if ! kill -0 $SLAM_PID 2>/dev/null; then
+                echo "SLAM exited gracefully"
+                break
+            fi
+            sleep 1
+        done
+
+        # If still running after 10 seconds, force kill
+        if kill -0 $SLAM_PID 2>/dev/null; then
+            echo "SLAM still running, force killing..."
+            kill -9 $SLAM_PID 2>/dev/null || true
+        fi
+
+        # Clean up ROS
+        ros2 daemon stop 2>/dev/null || true
+
+        # Clear trap and exit
+        trap - INT TERM
         exit 0
     '
     """
@@ -214,22 +300,42 @@ def run_slam_for_camera(bag_path: str, camera_name: str, config_file: str,
         output_traj = output_dir / f"{camera_name}_KeyFrameTrajectory.txt"
         subprocess.run(f"cp {traj_file} {output_traj}", shell=True)
 
-        # Clean up work directory
+        # Clean up work directory on success
         subprocess.run(f"rm -rf {work_dir}", shell=True)
 
         return output_traj
     else:
         print(f"  WARNING: No trajectory generated for {camera_name}")
-        subprocess.run(f"rm -rf {work_dir}", shell=True)
+        # Keep work_dir for debugging - check slam.log for errors
+        print(f"    Check {work_dir}/slam.log for details")
         return None
 
 
-def main():
-    if len(sys.argv) < 2:
-        print("Usage: multi_slam_calibration.py <session_dir>")
-        sys.exit(1)
+def cleanup_ros():
+    """Kill any lingering ROS processes to ensure clean state."""
+    print("Cleaning up ROS processes...")
+    subprocess.run("ros2 daemon stop 2>/dev/null", shell=True, capture_output=True)
+    subprocess.run("pkill -9 -f 'ros2 bag' 2>/dev/null", shell=True, capture_output=True)
+    subprocess.run("pkill -9 -f 'orbslam3' 2>/dev/null", shell=True, capture_output=True)
+    subprocess.run("pkill -9 -f '_ros2_daemon' 2>/dev/null", shell=True, capture_output=True)
+    time.sleep(1)
+    print("  Done.")
 
-    session_dir = Path(sys.argv[1])
+
+def main():
+    import argparse
+    parser = argparse.ArgumentParser(description='Multi-SLAM Stochastic Calibration')
+    parser.add_argument('session_dir', help='Path to session directory')
+    parser.add_argument('--headless', '-H', action='store_true',
+                        help='Run in headless mode (use default settings)')
+
+    args = parser.parse_args()
+
+    # Clean up any lingering ROS processes before starting
+    cleanup_ros()
+
+    session_dir = Path(args.session_dir)
+    headless = args.headless
 
     config_dir = session_dir / "orbslam_config"
     trajectories_dir = session_dir / "trajectories"
@@ -257,7 +363,7 @@ def main():
 
     # Get user configuration
     global NUM_SLAM_RUNS, STRIDE_VALUES
-    NUM_SLAM_RUNS, STRIDE_VALUES = get_user_configuration()
+    NUM_SLAM_RUNS, STRIDE_VALUES = get_user_configuration(headless=headless)
 
     print(f"\n{'='*70}")
     print(f"STOCHASTIC MULTI-SLAM CALIBRATION WITH ATLAS MODE")

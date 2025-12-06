@@ -288,18 +288,107 @@ class BagCameraMapperGUI(QMainWindow):
         self.close()
 
 
-def main():
-    if len(sys.argv) != 3:
-        print("Usage: bag_camera_mapper_gui.py <bag_path> <output_dir>")
+def run_headless(bag_path, output_dir):
+    """Run in headless mode - auto-detect cameras and use default names"""
+    from pathlib import Path
+
+    bag_path = Path(bag_path)
+    output_dir = Path(output_dir)
+    output_dir.mkdir(parents=True, exist_ok=True)
+
+    print(f"Loading frames from: {bag_path}")
+
+    # Get bag info to find image topics
+    result = subprocess.run(
+        ['ros2', 'bag', 'info', str(bag_path)],
+        capture_output=True, text=True
+    )
+
+    # Find RGB image topics
+    rgb_topics = []
+    for line in result.stdout.split('\n'):
+        if 'Topic:' in line and 'Type:' in line:
+            parts = [p.strip() for p in line.split('|')]
+            if len(parts) >= 2:
+                topic_part = parts[0]
+                if 'Topic:' in topic_part:
+                    topic = topic_part.split('Topic:')[1].strip()
+                else:
+                    continue
+
+                type_part = parts[1]
+                if 'Type:' in type_part:
+                    msg_type = type_part.split('Type:')[1].strip()
+                else:
+                    continue
+
+                if 'sensor_msgs/msg/Image' in msg_type and '/rgb/' in topic:
+                    if topic not in rgb_topics:
+                        rgb_topics.append(topic)
+
+    print(f"Found {len(rgb_topics)} RGB camera topics")
+    if rgb_topics:
+        print(f"Topics: {', '.join(rgb_topics)}")
+
+    if not rgb_topics:
+        print("ERROR: No RGB camera topics found in bag!")
         sys.exit(1)
 
-    bag_path = sys.argv[1]
-    output_dir = sys.argv[2]
+    # Generate camera mappings using default names
+    cameras = []
+    for topic in rgb_topics:
+        # Generate default name from topic
+        parts = topic.split('/')
+        name = None
+        for part in parts:
+            if 'cam' in part.lower():
+                name = part
+                break
+        if not name:
+            name = f"cam{topic.replace('/', '_')}"
 
-    app = QApplication(sys.argv)
-    window = BagCameraMapperGUI(bag_path, output_dir)
-    window.show()
-    sys.exit(app.exec_())
+        # Derive depth topic
+        depth_topic = topic.replace('/rgb/', '/depth_raw/').replace('image_raw', 'image')
+
+        cameras.append({
+            'name': name,
+            'topics': {
+                'rgb': topic,
+                'depth': depth_topic
+            }
+        })
+        print(f"  ✓ {name}: {topic}")
+
+    # Save to YAML
+    mapping = {'cameras': cameras}
+    output_file = output_dir / 'camera_mapping.yaml'
+
+    with open(output_file, 'w') as f:
+        yaml.dump(mapping, f, default_flow_style=False)
+
+    print(f"Saved camera mapping to: {output_file}")
+    print(f"Configured {len(cameras)} cameras:")
+    for cam in cameras:
+        print(f"  - {cam['name']}: {cam['topics']['rgb']}")
+
+
+def main():
+    import argparse
+    parser = argparse.ArgumentParser(description='Map camera topics from ROS bag')
+    parser.add_argument('bag_path', help='Path to ROS bag file')
+    parser.add_argument('output_dir', help='Output directory for config')
+    parser.add_argument('--headless', '-H', action='store_true',
+                        help='Run in headless mode (use default camera names)')
+
+    args = parser.parse_args()
+
+    if args.headless:
+        run_headless(args.bag_path, args.output_dir)
+    else:
+        app = QApplication(sys.argv)
+        window = BagCameraMapperGUI(args.bag_path, args.output_dir)
+        window.show()
+        sys.exit(app.exec_())
 
 
 if __name__ == '__main__':

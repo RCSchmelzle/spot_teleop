@@ -15,11 +15,26 @@ def load_template():
         return f.read()
 
 
-def generate_camera_config(camera_name, template):
-    """Generate config for one camera"""
-    # For now, just use template as-is
-    # Could customize per-camera if needed
-    return template
+def generate_camera_config(camera_name, template, config_dir):
+    """Generate config for one camera with Atlas settings"""
+    # Create atlas directory
+    atlas_dir = config_dir / "atlas"
+    atlas_dir.mkdir(exist_ok=True)
+
+    # Atlas file path for this camera
+    atlas_file = atlas_dir / f"{camera_name}_atlas.osa"
+
+    # Add Atlas settings to config
+    # NOTE: OpenCV FileStorage YAML parser doesn't like quoted paths - use unquoted
+    atlas_settings = f"""
+#--------------------------------------------------------------------------------------------
+# Atlas Settings (for map persistence)
+#--------------------------------------------------------------------------------------------
+System.SaveAtlasToFile: {atlas_file}
+# System.LoadAtlasFromFile: {atlas_file}  # Uncomment to load existing atlas
+"""
+
+    return template.rstrip() + '\n' + atlas_settings
 
 
 def generate_extrinsics_placeholder(cam_from, cam_to):
@@ -76,7 +91,7 @@ def main():
         name = cam['name']
         config_file = config_dir / f"{name}_rgbd.yaml"
 
-        config_content = generate_camera_config(name, template)
+        config_content = generate_camera_config(name, template, config_dir)
 
         with open(config_file, 'w') as f:
             f.write(config_content)
@@ -103,10 +118,12 @@ def main():
                 print(f"  ✓ extrinsics/{extr_file.name}")
 
     print(f"\nConfiguration generated in: {config_dir}")
+    print(f"Atlas files will be saved to: {config_dir / 'atlas'}/")
     print("\nNext steps:")
-    print("  1. Run ORB-SLAM3 on each camera to generate trajectories")
+    print("  1. Run ORB-SLAM3 on each camera to generate trajectories (atlas/*.osa)")
     print("  2. Calibrate extrinsics between cameras")
     print("  3. Update extrinsics/*.yaml files with calibration data")
+    print("  4. To reload atlas: uncomment System.LoadAtlasFromFile in configs")
 
 
 if __name__ == '__main__':
