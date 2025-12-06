@@ -464,12 +464,14 @@ def visualize_multi_run_results(all_X_dicts: List[dict], camera_names: List[str]
 
 def main():
     if len(sys.argv) < 2:
-        print("Usage: calibrate_cameras_from_trajectories.py <session_dir>")
+        print("Usage: calibrate_cameras_from_trajectories.py <session_dir> [stride]")
         print("\nExample:")
         print("  ./calibrate_cameras_from_trajectories.py ~/Projects/teleoperation_spot/datasets/xtion_calibration_test/bags/2025-12-05_14-30-22")
+        print("  ./calibrate_cameras_from_trajectories.py ~/Projects/teleoperation_spot/datasets/xtion_calibration_test/bags/2025-12-05_14-30-22 2")
         sys.exit(1)
 
     session_dir = Path(sys.argv[1])
+    stride = int(sys.argv[2]) if len(sys.argv) >= 3 else 1
     trajectories_dir = session_dir / "trajectories"
     config_dir = session_dir / "orbslam_config"
 
@@ -608,7 +610,7 @@ def main():
         X_dict = calibrate_all_cameras_from_synchronized_poses(
             all_synchronized_poses,
             ref_cam_idx=0,
-            stride=1,
+            stride=stride,
             filter_cfg=filter_cfg,
             ransac_cfg=ransac_cfg,
         )

@@ -107,9 +107,10 @@ check_config() {
     if [ -d "$config_dir" ] && [ -f "$config_dir/camera_mapping.yaml" ]; then
         echo
         echo -e "${YELLOW}Existing configuration found${NC}"
-        read -p "Use existing config (y) or reconfigure (n)? [y/n]: " use_existing
+        read -p "Reconfigure? [Y/n]: " reconfigure
+        reconfigure=${reconfigure:-y}  # Default to 'y' if empty
 
-        if [[ "$use_existing" == "y" ]]; then
+        if [[ "$reconfigure" == "n" ]] || [[ "$reconfigure" == "N" ]]; then
             return 0  # Use existing
         else
             # User wants to reconfigure - delete existing config and trajectories
@@ -305,42 +306,50 @@ with open('$mapping_file', 'r') as f:
         done
         echo
 
-        # Process all cameras sequentially (bag playback uses ROS timestamps)
-        for camera_name in "${cameras[@]}"; do
-            echo
-            echo -e "${BLUE}========================================${NC}"
-            echo -e "${BLUE}Processing $camera_name${NC}"
-            echo -e "${BLUE}========================================${NC}"
+        # Skip initial SLAM run - let multi-SLAM calibration handle all runs
+        # (Commented out to avoid duplicate SLAM execution)
+        # # Process all cameras sequentially (bag playback uses ROS timestamps)
+        # for camera_name in "${cameras[@]}"; do
+        #     echo
+        #     echo -e "${BLUE}========================================${NC}"
+        #     echo -e "${BLUE}Processing $camera_name${NC}"
+        #     echo -e "${BLUE}========================================${NC}"
+        #
+        #     run_orbslam "$camera_name"
+        #
+        #     echo
+        #     if [ -f "$session_dir/trajectories/${camera_name}_KeyFrameTrajectory.txt" ]; then
+        #         echo -e "${GREEN}✓${NC} Trajectory saved: ${camera_name}_KeyFrameTrajectory.txt"
+        #     else
+        #         echo -e "${YELLOW}⚠${NC} No trajectory found for $camera_name"
+        #     fi
+        # done
+        #
+        # echo
+        # echo -e "${GREEN}All cameras processed!${NC}"
 
-            run_orbslam "$camera_name"
-
-            echo
-            if [ -f "$session_dir/trajectories/${camera_name}_KeyFrameTrajectory.txt" ]; then
-                echo -e "${GREEN}✓${NC} Trajectory saved: ${camera_name}_KeyFrameTrajectory.txt"
-            else
-                echo -e "${YELLOW}⚠${NC} No trajectory found for $camera_name"
-            fi
-        done
-
-        echo
-        echo -e "${GREEN}All cameras processed!${NC}"
-
-        # Step 7: Calibrate camera extrinsics (automatic)
+        # Step 7: Stochastic multi-SLAM calibration (automatic)
         if [ ${#cameras[@]} -gt 1 ]; then
             echo
             echo -e "${BLUE}========================================${NC}"
-            echo -e "${BLUE}Camera Extrinsic Calibration${NC}"
+            echo -e "${BLUE}Stochastic Multi-SLAM Calibration${NC}"
             echo -e "${BLUE}========================================${NC}"
             echo
-            echo -e "${YELLOW}Running extrinsic calibration...${NC}"
+
+            # Ask for number of SLAM runs
+            read -p "Number of SLAM runs [default: 2]: " num_runs
+            num_runs=${num_runs:-2}  # Default to 2 if empty
+
+            echo -e "${YELLOW}Running multi-SLAM stochastic calibration ($num_runs SLAM runs)...${NC}"
+            echo -e "${YELLOW}This will take several minutes...${NC}"
             echo
 
-            python3 "$SCRIPT_DIR/scripts/calibrate_cameras_from_trajectories.py" "$session_dir"
+            python3 "$SCRIPT_DIR/scripts/multi_slam_calibration.py" "$session_dir" "$num_runs"
 
             if [ $? -eq 0 ]; then
                 echo
-                echo -e "${GREEN}Calibration complete!${NC}"
-                echo "Extrinsics saved to: $session_dir/orbslam_config/extrinsics/"
+                echo -e "${GREEN}Stochastic calibration complete!${NC}"
+                echo "Results saved to: $session_dir/orbslam_config/stochastic_extrinsics/"
             else
                 echo
                 echo -e "${RED}Calibration failed${NC}"
