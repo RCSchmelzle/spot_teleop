@@ -386,7 +386,9 @@ def filter_motion_pairs(A_list: List[np.ndarray],
 def solve_hand_eye_ls(A_list: List[np.ndarray],
                       B_list: List[np.ndarray]) -> np.ndarray:
     """
-    Solve A_i X = X B_i in least squares from relative motions Ai, Bi (4x4).
+    Solve A_i X = X B_i for X, where X maps points from camera B frame to camera A frame.
+
+    Given relative motions Ai, Bi (4x4) in least squares.
     Returns X as a 4x4 SE(3) matrix.
     """
     assert len(A_list) == len(B_list)

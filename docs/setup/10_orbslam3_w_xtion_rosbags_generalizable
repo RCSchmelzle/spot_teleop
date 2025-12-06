@@ -1,7 +1,7 @@
-# ORB-SLAM3 with Multiple Xtion Cameras - Generalizable Workflow
+# Multi-Camera Extrinsic Calibration - Complete Workflow
 
 ## Overview
-Interactive workflow for processing bag files with ORB-SLAM3. Each recording session gets its own configuration and trajectories.
+End-to-end camera extrinsic calibration tool using ORB-SLAM3 trajectories and hand-eye calibration. Supports both live camera recording and processing of existing bag files.
 
 ## Workflow
 
@@ -93,32 +93,75 @@ calibrated: false
 ## Implementation Below
 ## Usage
 
-### Quick Start
+### Quick Start - New Unified Tool
+
+```bash
+cd ~/Projects/teleoperation_spot/system_ws
+./extrinsic_camera_calibration.sh
+```
+
+This new tool provides three modes:
+1. **[0] Live Recording**: Bring up cameras, record calibration bag, then calibrate
+2. **[1-N] Existing Bags**: Process previously recorded bags
+3. **Full Pipeline**: ORB-SLAM3 → Trajectories → Time Sync → Hand-Eye → Extrinsics
+
+### Legacy Tool (still available)
 
 ```bash
 cd ~/Projects/teleoperation_spot/system_ws
 ./orbslam_bag_processor.sh
 ```
 
-### Workflow Example
+### Workflow Examples
 
-1. **First time with a bag:**
-   - Script lists available bags
-   - Select your bag
-   - If not in session folder, automatically organizes it
-   - Opens GUI showing camera frames from middle of bag
+#### Option 1: Live Recording Workflow (Recommended)
+
+1. **Run the calibration tool:**
+   ```bash
+   cd ~/Projects/teleoperation_spot/system_ws
+   ./extrinsic_camera_calibration.sh
+   ```
+
+2. **Select option [0] - Record new calibration bag:**
+   - Tool automatically brings up all Xtion cameras
+   - You'll see recording instructions
+
+3. **Record calibration motion:**
+   - Move the camera rig smoothly for 30-60 seconds
+   - Include rotations and translations
+   - Point at textured surfaces (avoid blank walls)
+   - Press Ctrl+C when done
+
+4. **Automatic processing:**
+   - Bag is saved with timestamp
+   - GUI opens to name cameras
+   - ORB-SLAM3 processes each camera sequentially
+   - Trajectories are extracted
+
+5. **Calibration:**
+   - Choose "yes" to calibrate extrinsics
+   - Hand-eye calibration computes rigid transforms
+   - Extrinsics saved to YAML files
+
+#### Option 2: Existing Bag Workflow
+
+1. **Select existing bag:**
+   - Script lists available bags in datasets folder
+   - Choose bag number [1-N]
+
+2. **Configure cameras:**
+   - GUI shows frame from middle of bag
    - Assign names (camA, camB, etc.)
-   - Generates all configs automatically
+   - Configs generated automatically
 
-2. **Running ORB-SLAM3:**
-   - Select which camera to process
-   - Bag plays automatically in background
-   - ORB-SLAM3 runs with correct config and topic remapping
-   - Trajectory saved to `bags/<session>/trajectories/<camera>_KeyFrameTrajectory.txt`
+3. **SLAM processing:**
+   - Each camera processed sequentially
+   - Trajectories extracted from keyframes
 
-3. **Processing more cameras:**
-   - Repeat for each camera in the session
-   - All trajectories saved in same trajectories folder
+4. **Calibration:**
+   - Time synchronization finds overlapping poses
+   - Hand-eye calibration computes extrinsics
+   - Results saved to extrinsics/ folder
 
 ### Files Created
 

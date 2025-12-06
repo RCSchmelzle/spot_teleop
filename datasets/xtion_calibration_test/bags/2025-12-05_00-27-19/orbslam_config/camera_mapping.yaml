@@ -1,9 +1,9 @@
 cameras:
-- name: camera1
+- name: camAaa
   topics:
     depth: /camA/depth_raw/image
     rgb: /camA/rgb/image_raw
-- name: camera2
+- name: camBbbb
   topics:
     depth: /camB/depth_raw/image
     rgb: /camB/rgb/image_raw

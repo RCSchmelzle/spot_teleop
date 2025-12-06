@@ -1,4 +1,4 @@
-# Extrinsic calibration: camera1 to camera2
+# Extrinsic calibration: camAaa to camBbbb
 # TODO: Calibrate using kalibr, manual measurement, or hand-eye calibration
 
 transform:

@@ -1,6 +1,13 @@
 #!/bin/bash
-# Interactive ORB-SLAM3 Bag Processor
-# Handles bag organization, camera configuration, and trajectory generation
+# Extrinsic Camera Calibration Tool
+#
+# This script calibrates rigid camera extrinsics using ORB-SLAM3 trajectories
+# and multi-trajectory alignment (time alignment + hand-eye calibration).
+#
+# Features:
+#   1. Live capture: Bring up cameras, record bag, then calibrate
+#   2. Existing bags: Process previously recorded bags
+#   3. Full pipeline: ORB-SLAM3 → Trajectory → Time sync → Hand-eye → Extrinsics
 
 set -e
 
@@ -12,20 +19,129 @@ RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
+CYAN='\033[0;36m'
 NC='\033[0m' # No Color
 
 # Paths
 DATASETS_DIR="$HOME/Projects/teleoperation_spot/datasets"
 BAGS_DIR="$DATASETS_DIR/xtion_calibration_test/bags"
 VOCAB_PATH="$HOME/Projects/teleoperation_spot/cpp/ORB_SLAM3/Vocabulary/ORBvoc.txt"
+XTION_CONFIG="$SCRIPT_DIR/src/xtion_bringup/config/xtion_mapping.yaml"
 
 # Ensure bags directory exists
 mkdir -p "$BAGS_DIR"
 
-echo -e "${BLUE}========================================${NC}"
-echo -e "${BLUE}ORB-SLAM3 Bag Processor${NC}"
-echo -e "${BLUE}========================================${NC}"
+echo -e "${CYAN}======================================================${NC}"
+echo -e "${CYAN}   Multi-Camera Extrinsic Calibration Tool${NC}"
+echo -e "${CYAN}   ORB-SLAM3 + Hand-Eye Calibration${NC}"
+echo -e "${CYAN}======================================================${NC}"
 echo
+
+# Function to check if xtion_bringup package is available
+check_xtion_bringup() {
+    if [ ! -f "$XTION_CONFIG" ]; then
+        echo -e "${YELLOW}Warning: Xtion mapping config not found at $XTION_CONFIG${NC}"
+        echo -e "${YELLOW}Live recording option will not be available${NC}"
+        return 1
+    fi
+    return 0
+}
+
+# Function to record new calibration bag
+record_new_bag() {
+    echo
+    echo -e "${BLUE}========================================${NC}"
+    echo -e "${BLUE}Live Camera Recording${NC}"
+    echo -e "${BLUE}========================================${NC}"
+    echo
+
+    # Source ROS workspace
+    source /opt/ros/jazzy/setup.bash
+    source install/setup.bash
+
+    # Create timestamped bag name
+    local timestamp=$(date +%Y%m%d_%H%M%S)
+    local bag_name="xtion_calib_${timestamp}.bag"
+    local bag_path="$BAGS_DIR/$timestamp/$bag_name"
+    mkdir -p "$BAGS_DIR/$timestamp"
+
+    echo -e "${YELLOW}Starting Xtion cameras...${NC}"
+    echo -e "${YELLOW}This will launch all cameras defined in xtion_mapping.yaml${NC}"
+    echo
+
+    # Launch xtion cameras in background
+    ros2 launch xtion_bringup multi_xtion.launch.py > /dev/null 2>&1 &
+    XTION_PID=$!
+    sleep 5  # Wait for cameras to initialize
+
+    # Check if launch succeeded
+    if ! ps -p $XTION_PID > /dev/null; then
+        echo -e "${RED}Failed to launch Xtion cameras${NC}"
+        return 1
+    fi
+
+    echo -e "${GREEN}Cameras launched successfully!${NC}"
+    echo
+
+    # Get list of topics to record
+    echo -e "${YELLOW}Detecting camera topics...${NC}"
+    local topics=$(ros2 topic list | grep -E "/(cam[^/]+)/(rgb/image_raw|depth_raw/image|rgb/camera_info)" | tr '\n' ' ')
+
+    if [ -z "$topics" ]; then
+        echo -e "${RED}No camera topics found!${NC}"
+        kill $XTION_PID 2>/dev/null
+        return 1
+    fi
+
+    echo -e "${GREEN}Topics to record:${NC}"
+    for topic in $topics; do
+        echo -e "  - $topic"
+    done
+    echo
+
+    # Recording instructions
+    echo -e "${CYAN}======================================================${NC}"
+    echo -e "${CYAN}RECORDING INSTRUCTIONS${NC}"
+    echo -e "${CYAN}======================================================${NC}"
+    echo
+    echo -e "${YELLOW}For good calibration:${NC}"
+    echo "  1. Move the camera rig around smoothly"
+    echo "  2. Include rotations (not just translations)"
+    echo "  3. Point at textured surfaces (posters, patterns)"
+    echo "  4. Avoid blank walls and low-light areas"
+    echo "  5. Record for 30-60 seconds"
+    echo "  6. Move SLOWLY to avoid motion blur"
+    echo
+    echo -e "${GREEN}Press ENTER to start recording...${NC}"
+    read
+
+    # Start recording
+    echo -e "${YELLOW}Recording to: $bag_path${NC}"
+    echo -e "${YELLOW}Press Ctrl+C to stop recording${NC}"
+    echo
+
+    # Record bag
+    ros2 bag record -o "$bag_path" $topics &
+    RECORD_PID=$!
+
+    # Wait for user to stop (Ctrl+C)
+    trap "echo ''; echo -e '${YELLOW}Stopping recording...${NC}'; kill $RECORD_PID 2>/dev/null; kill $XTION_PID 2>/dev/null; trap - INT" INT
+    wait $RECORD_PID 2>/dev/null || true
+    trap - INT
+
+    # Stop cameras
+    kill $XTION_PID 2>/dev/null || true
+    sleep 2
+
+    echo
+    echo -e "${GREEN}Recording complete!${NC}"
+    echo -e "${GREEN}Bag saved to: $bag_path${NC}"
+    echo
+
+    # Set this as the selected bag
+    selected_bag="$bag_path"
+    session_dir="$BAGS_DIR/$timestamp"
+}
 
 # Function to list available bags
 list_bags() {
@@ -46,25 +162,46 @@ list_bags() {
         echo -e "  ${YELLOW}[$i]${NC} $bag (in system_ws)"
         ((i++))
     done < <(find "$SCRIPT_DIR" -maxdepth 1 -name "*.bag" -type d -print0 2>/dev/null | sort -z)
-
-    if [ ${#bags[@]} -eq 0 ]; then
-        echo -e "${RED}No bag files found!${NC}"
-        echo "Place .bag directories in $BAGS_DIR"
-        exit 1
-    fi
 }
 
 # Function to select bag
 select_bag() {
     list_bags
+
+    local num_bags=${#bags[@]}
+
     echo
-    read -p "Select bag number (or 'q' to quit): " selection
+    if [ $num_bags -eq 0 ]; then
+        echo -e "${YELLOW}No existing bags found${NC}"
+        if check_xtion_bringup; then
+            echo -e "${GREEN}You can record a new bag using option [0]${NC}"
+        fi
+        echo
+        read -p "Select [0] to record new bag, or 'q' to quit: " selection
+    else
+        if check_xtion_bringup; then
+            echo -e "  ${GREEN}[0]${NC} ${CYAN}[NEW] Record new calibration bag with live cameras${NC}"
+        fi
+        echo
+        read -p "Select bag number ([0] for live, [1-$num_bags] for existing, 'q' to quit): " selection
+    fi
 
     if [[ "$selection" == "q" ]]; then
         exit 0
     fi
 
-    if ! [[ "$selection" =~ ^[0-9]+$ ]] || [ "$selection" -lt 1 ] || [ "$selection" -gt ${#bags[@]} ]; then
+    # Option 0: Record new bag
+    if [[ "$selection" == "0" ]]; then
+        if ! check_xtion_bringup; then
+            echo -e "${RED}Live recording not available (xtion_bringup not configured)${NC}"
+            exit 1
+        fi
+        record_new_bag
+        return
+    fi
+
+    # Existing bag selection
+    if ! [[ "$selection" =~ ^[0-9]+$ ]] || [ "$selection" -lt 1 ] || [ "$selection" -gt $num_bags ]; then
         echo -e "${RED}Invalid selection${NC}"
         exit 1
     fi
@@ -142,37 +279,6 @@ configure_cameras() {
     python3 "$SCRIPT_DIR/scripts/generate_orbslam_configs.py" "$session_dir/orbslam_config"
 
     echo -e "${GREEN}Configuration complete${NC}"
-}
-
-# Function to select camera for ORB-SLAM3
-select_camera() {
-    echo
-    echo -e "${GREEN}Available cameras:${NC}"
-
-    local mapping_file="$session_dir/orbslam_config/camera_mapping.yaml"
-    cameras=($(python3 -c "
-import yaml
-with open('$mapping_file', 'r') as f:
-    data = yaml.safe_load(f)
-    for cam in data['cameras']:
-        print(cam['name'])
-"))
-
-    for i in "${!cameras[@]}"; do
-        echo -e "  ${YELLOW}[$((i+1))]${NC} ${cameras[$i]}"
-    done
-
-    echo
-    read -p "Select camera number: " cam_selection
-
-    if ! [[ "$cam_selection" =~ ^[0-9]+$ ]] || [ "$cam_selection" -lt 1 ] || [ "$cam_selection" -gt ${#cameras[@]} ]; then
-        echo -e "${RED}Invalid selection${NC}"
-        return 1
-    fi
-
-    selected_camera="${cameras[$((cam_selection-1))]}"
-    echo -e "${GREEN}Selected camera:${NC} $selected_camera"
-    return 0
 }
 
 # Function to run ORB-SLAM3
@@ -277,11 +383,13 @@ with open('$mapping_file', 'r') as f:
 # Main workflow
 main() {
     while true; do
-        # Step 1: Select bag
+        # Step 1: Select bag (existing or record new)
         select_bag
 
-        # Step 2: Organize into session folder
-        organize_bag "$selected_bag"
+        # Step 2: Organize into session folder (if not already from live recording)
+        if [ ! -d "$session_dir" ]; then
+            organize_bag "$selected_bag"
+        fi
 
         # Step 3: Check/create configuration
         if ! check_config; then
@@ -325,25 +433,29 @@ with open('$mapping_file', 'r') as f:
         echo
         echo -e "${GREEN}All cameras processed!${NC}"
 
-        # Step 7: Calibrate camera extrinsics (automatic)
+        # Step 7: Calibrate camera extrinsics (optional)
         if [ ${#cameras[@]} -gt 1 ]; then
             echo
             echo -e "${BLUE}========================================${NC}"
             echo -e "${BLUE}Camera Extrinsic Calibration${NC}"
             echo -e "${BLUE}========================================${NC}"
             echo
-            echo -e "${YELLOW}Running extrinsic calibration...${NC}"
-            echo
+            read -p "Calibrate camera extrinsics from trajectories? [y/n]: " do_calibration
 
-            python3 "$SCRIPT_DIR/scripts/calibrate_cameras_from_trajectories.py" "$session_dir"
+            if [[ "$do_calibration" == "y" ]]; then
+                echo -e "${YELLOW}Running extrinsic calibration...${NC}"
+                echo
 
-            if [ $? -eq 0 ]; then
-                echo
-                echo -e "${GREEN}Calibration complete!${NC}"
-                echo "Extrinsics saved to: $session_dir/orbslam_config/extrinsics/"
-            else
-                echo
-                echo -e "${RED}Calibration failed${NC}"
+                python3 "$SCRIPT_DIR/scripts/calibrate_cameras_from_trajectories.py" "$session_dir"
+
+                if [ $? -eq 0 ]; then
+                    echo
+                    echo -e "${GREEN}Calibration complete!${NC}"
+                    echo "Extrinsics saved to: $session_dir/orbslam_config/extrinsics/"
+                else
+                    echo
+                    echo -e "${RED}Calibration failed${NC}"
+                fi
             fi
         fi
 

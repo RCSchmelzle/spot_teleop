@@ -1,0 +1,9 @@
+cameras:
+- name: ref
+  topics:
+    depth: /cam0lio/depth_raw/image
+    rgb: /cam0lio/rgb/image_raw
+- name: tar
+  topics:
+    depth: /cam1ona/depth_raw/image
+    rgb: /cam1ona/rgb/image_raw

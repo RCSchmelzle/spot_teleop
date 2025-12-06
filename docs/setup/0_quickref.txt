@@ -14,33 +14,6 @@ ros2 launch xtion_bringup multi_xtion.launch.py
 rviz2
 
 
-Run# ==== On HOST (your Ubuntu desktop) ====
-cd ~/Projects/teleoperation_spot
-
-# Allow root-in-docker to connect to your X server (safe to repeat)
-xhost +local:root
-
-# Start the existing container and attach
-docker start -ai orbslam3_dev
-
-# ==== Now INSIDE the container shell (root@... prompt) ====
-
-# Sanity check that DISPLAY is set (usually ":1" or ":0")
-echo $DISPLAY
-
-# (Optional: test X)
-xclock &
-
-# Run ORB-SLAM3 on the TUM monocular sequence
-cd /root/_multi_orbslam_ws/src/ORB_SLAM3
-
-./Examples/Monocular/mono_tum \
-  Vocabulary/ORBvoc.txt \
-  Examples/Monocular/TUM1.yaml \
-  /root/data/tum/rgbd_dataset_freiburg1_xyz
-
-
-
 Record based on the generated names 
 cd ~/Projects/teleoperation_spot/system_ws
 source /opt/ros/jazzy/setup.bash

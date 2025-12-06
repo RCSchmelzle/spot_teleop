@@ -1,4 +1,4 @@
-# Extrinsic calibration: camA to camB
+# Extrinsic calibration: camAlumni to camBattle
 # TODO: Calibrate using kalibr, manual measurement, or hand-eye calibration
 
 transform:
