@@ -265,25 +265,61 @@ def run_slam_for_camera(bag_path: str, camera_name: str, config_file: str,
         echo "Bag finished, waiting for SLAM to process..."
         sleep 5
 
-        # Gracefully stop SLAM (allows it to save trajectory and atlas)
-        echo "Sending SIGINT to SLAM..."
-        kill -INT $SLAM_PID 2>/dev/null || true
+        # Wait for SLAM auto-shutdown - node detects bag end and shuts down gracefully
+        echo "Waiting for SLAM auto-shutdown..."
+        TRAJ_SAVED=false
+        ATLAS_SAVED=false
+        i=0
 
-        # Wait for SLAM to finish saving (atlas can take a while)
-        echo "Waiting for SLAM to save files..."
-        for i in 1 2 3 4 5 6 7 8 9 10; do
+        # Max wait 120 seconds - node should auto-shutdown ~5s after bag ends
+        while [ $i -lt 120 ]; do
+            i=$((i + 1))
+
+            # Check if SLAM exited on its own
             if ! kill -0 $SLAM_PID 2>/dev/null; then
-                echo "SLAM exited gracefully"
+                echo "SLAM exited cleanly at $i seconds"
                 break
             fi
+
+            # Check for trajectory save completion
+            if [ "$TRAJ_SAVED" = "false" ]; then
+                if grep -q "End of saving trajectory" slam.log 2>/dev/null; then
+                    echo "  ✓ Trajectory saved at $i seconds"
+                    TRAJ_SAVED=true
+                fi
+            fi
+
+            # Check for atlas save completion
+            if [ "$ATLAS_SAVED" = "false" ]; then
+                if grep -q "End to write save binary file" slam.log 2>/dev/null; then
+                    echo "  ✓ Atlas saved at $i seconds"
+                    ATLAS_SAVED=true
+                fi
+            fi
+
+            # If both saved, we are done - wait for clean exit
+            if [ "$TRAJ_SAVED" = "true" ] && [ "$ATLAS_SAVED" = "true" ]; then
+                echo "Both trajectory and atlas saved! Waiting for clean exit..."
+                sleep 3
+                break
+            fi
+
+            # Progress indicator every 15 seconds
+            if [ $((i % 15)) -eq 0 ]; then
+                echo "  Waiting... $i/120s - Traj:$TRAJ_SAVED Atlas:$ATLAS_SAVED"
+            fi
+
             sleep 1
         done
 
-        # If still running after 10 seconds, force kill
+        # If still running after timeout, force kill
         if kill -0 $SLAM_PID 2>/dev/null; then
-            echo "SLAM still running, force killing..."
+            echo "SLAM still running after 120 seconds, force killing..."
             kill -9 $SLAM_PID 2>/dev/null || true
         fi
+
+        # Report final status
+        echo "Final status: Trajectory=$TRAJ_SAVED, Atlas=$ATLAS_SAVED"
 
         # Clean up ROS
         ros2 daemon stop 2>/dev/null || true
@@ -574,32 +610,30 @@ def main():
 
     if len(all_calibrations) > 0:
         print(f"\n{'='*70}")
-        print("ALL CALIBRATED POSES")
+        print("ALL CALIBRATED POSES (by SLAM run)")
         print(f"{'='*70}\n")
 
-        for i, calib in enumerate(all_calibrations):
-            cam1_data = calib['json_format'][camera_names[1]]
-            t = cam1_data['translation_vector']
-            q = cam1_data['quaternion']
-            azimuth = cam1_data['azimuth_deg']
-            elevation = cam1_data['elevation_deg']
-            scale = calib['original_translation_norm']
-            stride = calib['stride']
+        # Group calibrations by SLAM run
+        for slam_run in range(1, NUM_SLAM_RUNS + 1):
+            print(f"SLAM Run {slam_run}:")
+            run_calibs = [c for c in all_calibrations if c['slam_run'] == slam_run]
 
-            # Calculate ratio x/max:y/max:z/max
-            t_abs = [abs(t[0]), abs(t[1]), abs(t[2])]
-            max_component = max(t_abs)
-            if max_component > 1e-6:
-                ratio = [t_abs[0]/max_component, t_abs[1]/max_component, t_abs[2]/max_component]
-            else:
-                ratio = [0.0, 0.0, 0.0]
+            for stride in STRIDE_VALUES:
+                stride_calibs = [c for c in run_calibs if c['stride'] == stride]
 
-            print(f"Run {i+1:02d} (Stride {stride}):")
-            print(f"  Translation (norm): [{t[0]:8.4f}, {t[1]:8.4f}, {t[2]:8.4f}]")
-            print(f"  Quaternion (xyzw):  [{q[0]:8.4f}, {q[1]:8.4f}, {q[2]:8.4f}, {q[3]:8.4f}]")
-            print(f"  Azimuth/Elevation:  {azimuth:8.2f}° / {elevation:8.2f}°")
-            print(f"  Original scale:     {scale:8.3f} m")
-            print(f"  Ratio (x/max:y/max:z/max): {ratio[0]:.4f}:{ratio[1]:.4f}:{ratio[2]:.4f}")
+                if not stride_calibs:
+                    print(f"  Stride {stride}: ✗ Failed")
+                    continue
+
+                calib = stride_calibs[0]
+                cam1_data = calib['json_format'][camera_names[1]]
+                t = cam1_data['translation_vector']
+                azimuth = cam1_data['azimuth_deg']
+                elevation = cam1_data['elevation_deg']
+                scale = calib['original_translation_norm']
+
+                print(f"  Stride {stride}: t=[{t[0]:7.3f}, {t[1]:7.3f}, {t[2]:7.3f}]  az={azimuth:6.1f}° el={elevation:6.1f}°  scale={scale:.2f}m")
+
             print()
 
         print(f"{'='*70}")

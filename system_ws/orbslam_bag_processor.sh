@@ -375,25 +375,39 @@ with open('$mapping_file', 'r') as f:
             echo -e "${BLUE}========================================${NC}"
             echo
 
+            # Check if atlas/trajectories exist and ask about reset
+            atlas_dir="$session_dir/atlas"
+            traj_dir="$session_dir/trajectories"
             if [[ "$HEADLESS" == "true" ]]; then
-                # In headless mode, use defaults
-                num_runs=2
-                echo -e "${GREEN}Using default settings (headless mode): $num_runs SLAM runs${NC}"
+                # In headless mode, always reset
+                echo -e "${GREEN}Headless mode: resetting atlas and trajectories${NC}"
+                rm -rf "$atlas_dir"/* "$traj_dir"/* 2>/dev/null
             else
-                # Ask for number of SLAM runs
-                read -p "Number of SLAM runs [default: 2]: " num_runs
-                num_runs=${num_runs:-2}  # Default to 2 if empty
+                if [ -d "$atlas_dir" ] && [ "$(ls -A "$atlas_dir" 2>/dev/null)" ]; then
+                    atlas_size=$(du -sh "$atlas_dir" 2>/dev/null | cut -f1)
+                    echo -e "${YELLOW}Existing atlas found ($atlas_size)${NC}"
+                    read -p "Reset atlas and trajectories? [Y/n]: " reset_atlas
+                    reset_atlas=${reset_atlas:-Y}
+                    if [[ "$reset_atlas" =~ ^[Yy] ]]; then
+                        echo "Clearing atlas and trajectories..."
+                        rm -rf "$atlas_dir"/* "$traj_dir"/* 2>/dev/null
+                    else
+                        echo "Keeping existing data (will merge new runs)"
+                    fi
+                    echo
+                fi
             fi
 
-            echo -e "${YELLOW}Running multi-SLAM stochastic calibration ($num_runs SLAM runs)...${NC}"
+            echo -e "${YELLOW}Running multi-SLAM stochastic calibration...${NC}"
             echo -e "${YELLOW}This will take several minutes...${NC}"
             echo
 
             if [[ "$HEADLESS" == "true" ]]; then
-                # Pass --headless to Python script
+                # Pass --headless to Python script (uses defaults)
                 python3 "$SCRIPT_DIR/scripts/multi_slam_calibration.py" "$session_dir" --headless
             else
-                python3 "$SCRIPT_DIR/scripts/multi_slam_calibration.py" "$session_dir" "$num_runs"
+                # Interactive mode - Python script will prompt for settings
+                python3 "$SCRIPT_DIR/scripts/multi_slam_calibration.py" "$session_dir"
             fi
 
             if [ $? -eq 0 ]; then
