@@ -147,10 +147,9 @@ def create_config_with_atlas(config_file: str, atlas_file: Path, load_atlas: boo
     config_content = re.sub(r'#.*atlas.*\n?', '', config_content, flags=re.IGNORECASE)
     config_content = re.sub(r'#-+\n#-+\n?', '', config_content)  # Clean up dividers
 
-    # NOTE: Viewer is disabled to prevent segfault on shutdown
-    config_content = re.sub(r'Viewer\.Active:\s*\d+', 'Viewer.Active: 0', config_content)
+    # Viewer is now enabled - shutdown issues fixed (see docs/12_orbslam_hand_eye_calib_multirun_atlas.rst)
 
-    # Re-enable Atlas saving now that shutdown is fixed
+    # Atlas saving enabled
     atlas_settings = f"""
 # Atlas settings (shared multi-camera atlas)
 System.SaveAtlasToFile: {atlas_file}
@@ -205,12 +204,15 @@ def run_slam_for_camera(bag_path: str, camera_name: str, config_file: str,
     system_ws = Path.home() / "Projects/teleoperation_spot/system_ws"
 
     # SHARED Atlas file - all cameras contribute to the same Atlas
-    atlas_file = atlas_dir / "shared_atlas.osa"
+    # NOTE: Don't include .osa extension - ORB-SLAM3's SaveAtlas() adds it automatically
+    atlas_file = atlas_dir / "shared_atlas"
 
     # Check atlas status and create config with atlas settings injected
-    atlas_exists = atlas_file.exists()
+    # The actual file has .osa extension (added by ORB-SLAM3)
+    atlas_file_actual = Path(str(atlas_file) + ".osa")
+    atlas_exists = atlas_file_actual.exists()
     if atlas_exists:
-        print(f"    Loading shared Atlas ({atlas_file.stat().st_size} bytes)")
+        print(f"    Loading shared Atlas ({atlas_file_actual.stat().st_size} bytes)")
         load_atlas = True
     else:
         print(f"    Creating shared Atlas")
@@ -300,6 +302,12 @@ def run_slam_for_camera(bag_path: str, camera_name: str, config_file: str,
         # Copy to output location
         output_traj = output_dir / f"{camera_name}_KeyFrameTrajectory.txt"
         subprocess.run(f"cp {traj_file} {output_traj}", shell=True)
+
+        # Copy slam.log for debugging (before cleanup)
+        slam_log = work_dir / "slam.log"
+        if slam_log.exists():
+            debug_log = output_dir / f"{camera_name}_slam.log"
+            subprocess.run(f"cp {slam_log} {debug_log}", shell=True)
 
         # Clean up work directory on success
         subprocess.run(f"rm -rf {work_dir}", shell=True)
