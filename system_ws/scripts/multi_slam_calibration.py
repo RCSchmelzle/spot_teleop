@@ -271,8 +271,8 @@ def run_slam_for_camera(bag_path: str, camera_name: str, config_file: str,
         ATLAS_SAVED=false
         i=0
 
-        # Max wait 120 seconds - node should auto-shutdown ~5s after bag ends
-        while [ $i -lt 120 ]; do
+        # Max wait 600 seconds for complete shutdown including atlas save
+        while [ $i -lt 600 ]; do
             i=$((i + 1))
 
             # Check if SLAM exited on its own
@@ -314,7 +314,7 @@ def run_slam_for_camera(bag_path: str, camera_name: str, config_file: str,
 
         # If still running after timeout, force kill
         if kill -0 $SLAM_PID 2>/dev/null; then
-            echo "SLAM still running after 120 seconds, force killing..."
+            echo "SLAM still running after 600 seconds, force killing..."
             kill -9 $SLAM_PID 2>/dev/null || true
         fi
 

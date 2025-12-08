@@ -165,10 +165,19 @@ configure_cameras() {
     echo
     echo -e "${BLUE}Configuring cameras...${NC}"
 
-    # Run camera mapper (GUI or headless)
-    if [[ "$HEADLESS" == "true" ]]; then
+    # Ask if user wants to use default mapping (skip GUI)
+    local use_default="y"
+    if [[ "$HEADLESS" != "true" ]]; then
+        read -p "Use default camera mapping? [Y/n]: " use_default
+        use_default=${use_default:-Y}  # Default to Y if empty
+    fi
+
+    # Run camera mapper (GUI, headless, or default)
+    if [[ "$HEADLESS" == "true" ]] || [[ "$use_default" =~ ^[Yy] ]]; then
+        echo -e "${YELLOW}Using default camera mapping (headless mode)...${NC}"
         python3 "$SCRIPT_DIR/scripts/bag_camera_mapper_gui.py" --headless "$selected_bag" "$session_dir/orbslam_config"
     else
+        echo -e "${YELLOW}Opening camera mapping GUI...${NC}"
         python3 "$SCRIPT_DIR/scripts/bag_camera_mapper_gui.py" "$selected_bag" "$session_dir/orbslam_config"
     fi
 
