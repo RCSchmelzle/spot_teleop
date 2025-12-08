@@ -318,6 +318,27 @@ def run_slam_for_camera(bag_path: str, camera_name: str, config_file: str,
             kill -9 $SLAM_PID 2>/dev/null || true
         fi
 
+        # Re-check log after process exit for atlas save message we may have missed
+        if [ "$ATLAS_SAVED" = "false" ]; then
+            sleep 1  # Give filesystem time to flush
+            if grep -q "End to write save binary file" slam.log 2>/dev/null || \
+               grep -q "SaveAtlas() completed" slam.log 2>/dev/null; then
+                echo "  ✓ Atlas saved - detected after process exit"
+                ATLAS_SAVED=true
+            fi
+        fi
+
+        # Also check if atlas file exists as backup verification
+        if [ "$ATLAS_SAVED" = "false" ]; then
+            if [ -f "$ATLAS_PATH.osa" ]; then
+                ATLAS_SIZE=$(stat -c%s "$ATLAS_PATH.osa" 2>/dev/null || echo 0)
+                if [ "$ATLAS_SIZE" -gt 1000000 ]; then
+                    echo "  ✓ Atlas file exists: $(numfmt --to=iec $ATLAS_SIZE)"
+                    ATLAS_SAVED=true
+                fi
+            fi
+        fi
+
         # Report final status
         echo "Final status: Trajectory=$TRAJ_SAVED, Atlas=$ATLAS_SAVED"
 
